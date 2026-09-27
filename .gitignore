@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Run outputs, written into whichever directory the CLI is invoked from.
+/scout-brief.json
+/scout-report.json
+/scout-run.jsonl
+/scout-corpus.jsonl
+/changeset.json
+/sync.json
+
+# Content-addressed tree and blob cache (HLD section 6.5). Keyed by git object SHA, so it
+# is rebuildable from a fetch and never belongs in history.
+/.scout-cache/

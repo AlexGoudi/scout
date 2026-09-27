@@ -1,0 +1,5 @@
+# Inside sonic-mgmt this package inherited the 120-column limit that repository's
+# .pre-commit-config.yaml passes to flake8. Standalone it inherits nothing, so the same
+# limit is pinned here and the team's existing checks keep passing unchanged.
+[flake8]
+max-line-length = 120

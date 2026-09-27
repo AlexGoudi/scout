@@ -1,0 +1,16 @@
+# Scout deliberately has almost no runtime dependencies beyond the Python standard library
+# and a git binary on PATH. No model provider SDK is listed here: the provider abstraction
+# in scout_impl/provider.py keeps the live provider behind an interface, and every test and
+# backtest run uses the offline ReplayProvider (NFR-10).
+#
+# The stdlib-only rule is broken exactly once, for the pipeline parser
+# (scout_impl/static/pipeline.py). That component is the detector's source of ground truth
+# and the one whose failure mode is silent: a sloppy parse changes every finding while the
+# citations still resolve, the brief still validates and the report still renders (HLD
+# section 6.2.2, risk R3, the only entry in the register that has already occurred). The
+# pipeline definition it reads is real YAML with template indirection, anchors and
+# expression-valued keys, so hand-rolling a parser for the component singled out as the
+# silent-failure risk would be self-defeating. Nothing else in Scout imports yaml.
+PyYAML>=5.1
+#
+# Unit tests and the conformance suite additionally need: pytest
