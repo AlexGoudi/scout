@@ -19,12 +19,15 @@ section 4.
 
 ## Requirements
 
-Python 3, a `git` binary on `PATH`, and **PyYAML**. That one dependency is spent entirely
-on the pipeline parser and the reasoning is written down in `requirements.txt`; nothing
-else imports it. Running the tests additionally needs `pytest`:
+Python 3 (developed and tested on 3.10) and a `git` binary on `PATH`. `requirements.txt`
+lists the runtime dependencies and why each is there: **PyYAML** for the pipeline
+definitions and the commit-mining path taxonomy, and **numpy, pandas, pyarrow and
+scikit-learn** for the commit dataset's feature table and its risk and similarity
+baselines. Running the tests additionally needs `pytest`, and `jsonschema` for the
+record-schema checks:
 
 ```bash
-python3 -m pip install -r requirements.txt pytest
+python3 -m pip install -r requirements.txt pytest jsonschema
 ```
 
 ## Current entrypoint
@@ -226,6 +229,110 @@ un-reverts rather than incidents and would otherwise pollute a recall measuremen
 
 Lead time is computed from **committer** dates, which are when the commits landed, not
 author dates, which are when the patches were written. Both are recorded per side.
+
+## Commit mining, dataset and risk baseline
+
+These `run_scout.py` commands turn a `sonic-buildimage` clone into a commit dataset for
+machine learning and for a language model, and train a first risk baseline on it. The clone
+is only ever read: no checkout, no index refresh, nothing from it executed. Every git call is
+a read (`cat-file`, `log`, `blame`, `rev-parse`, `rev-list`, and `config` with `--get` or
+`--get-regexp`).
+
+```bash
+BUILDIMAGE=/path/to/sonic-buildimage   # a full clone; shallow clones are rejected
+
+# One commit as a scout-commit/1.1 JSON record (schemas/scout-commit-1.1.json)
+python3 run_scout.py mine commit --repo "$BUILDIMAGE" --commit d89a360e2
+
+# The first-parent history of a pinned snapshot, into corpus/buildimage-<short sha>/
+python3 run_scout.py dataset build --repo "$BUILDIMAGE" --rev d89a360e2
+
+# Risk models on the dataset; the default label is bug_introducing
+python3 run_scout.py ml train-risk --dataset corpus/buildimage-d89a360e2 --out models
+python3 run_scout.py ml train-risk --dataset corpus/buildimage-d89a360e2 --label reverted_within_90d
+
+# Earlier commits most like one commit, and neighbour lift on the test split
+python3 run_scout.py ml similar --dataset corpus/buildimage-d89a360e2 --commit 80a6a0fc4
+python3 run_scout.py ml similar --dataset corpus/buildimage-d89a360e2 --evaluate
+
+# The LLM-ready bundle for any commit in the clone, in the dataset or not
+python3 run_scout.py ml score --dataset corpus/buildimage-d89a360e2 \
+    --model models/risk-bug_introducing.joblib --repo "$BUILDIMAGE" --commit 9a331b65f
+```
+
+**A record** holds only facts intrinsic to one commit: metadata with the author as a salted
+hash, the parsed message (subject tags, PR number, revert target, template sections), every
+changed file with its class, hunks and a capped patch, submodule moves, and the components,
+features and entities the paths map to through `scout_impl/repos/buildimage/taxonomy.yaml`.
+Email addresses and every author or committer name reachable from the snapshot are replaced
+before anything is capped or written.
+
+**The dataset directory** holds:
+
+- `records/`: one record per first-parent commit, in landing order, gzipped JSONL shards of 1,000
+- `llm/`: one label-free document per commit for a language model, at most 12,000 characters
+- `annotations/`: each commit's category, history features, split and labels as of the snapshot
+- `features.parquet`: one row per commit, with intrinsic and history features, one-hot areas and `label_*` columns
+- `dataset_card.json` and `DATASET.md`: provenance, counts, label definitions and the split
+
+**Labels.** `reverted` links a later revert by its `This reverts commit` trailer, or by PR
+number when there is none; `reverted_within_{7,30,90}d` adds the lead time. `bug_introducing`
+is SZZ: `git blame -w -M` at a fix-like commit's parent attributes a non-trivial line the fix
+removed or changed to this commit. Merges have no labels. Categories (fix, feature,
+submodule-bump, platform-support and so on) are rule-based and carry their evidence.
+
+**No lookahead.** History features for a commit read only commits that landed before it, so
+building the dataset up to that commit gives the same values. The split follows landing order
+(70% train, 15% validation, 15% test) with a 90-day gap before each boundary and before the
+snapshot. `features.parquet` counts a revert or fix only if it landed before its split ends, and
+`--exclude FILE` moves listed commits into a `holdout` split no model sees.
+
+**Determinism.** Rebuilding gives byte-identical output whatever the worker count, and records
+and blame results are cached under `.scout-cache/` (`--cache ""` disables the cache). Training
+with the same seed gives an identical model card.
+
+Measured at `d89a360e2` on 8 cores:
+
+| | |
+| --- | --- |
+| Commits | 12,881 (24 merges, 1,871 bot-authored), 0 schema errors |
+| Build time | 82 s cold including SZZ, 14 s with a warm cache |
+| Reverts | 148; 133 reverted commits linked (115 by sha, 18 by PR), 15 unlinked, 4 nested |
+| SZZ | 1,857 fix-like commits, 1,710 bug-introducing (17.2% of 9,948 known) |
+| Split | train 8,266, validation 1,423, test 1,834, gap 1,358 |
+| Unmapped paths | 156 of 72,414 (0.22%) |
+
+Test-split results for `bug_introducing` (1,270 commits, 151 positive), with 95% bootstrap
+intervals. Recall at 20% effort is the share of positives found by reviewing the riskiest
+commits until 20% of changed lines are read:
+
+| Model | PR-AUC | ROC-AUC | Recall at 20% effort |
+| --- | --- | --- | --- |
+| Prevalence | 0.119 | 0.500 | 0.258 |
+| Size only (log churn) | 0.263 | 0.735 | 0.000 |
+| Logistic regression | 0.311 | 0.736 | 0.033 |
+| Gradient boosting, selected | 0.376 [0.298, 0.458] | 0.732 | 0.371 |
+
+Of the ten nearest earlier neighbours of a bug-introducing test commit, 20.4% had already been
+found bug-introducing when it landed, against 12.7% for the other test commits: a lift of 1.61.
+
+`reverted_within_90d` is too rare to learn from yet: 8 positives in test and 10 in
+validation, and every model is near chance. The label is in the dataset for when there is more
+history, but it is not a usable risk signal today.
+
+`ml score` returns one JSON bundle for a language model: the commit's label-free document; the
+calibrated risk with its percentile among labelled commits and the logistic regression's five
+largest contributions; and the five most similar earlier commits with their outcomes as known
+when the scored commit landed. A commit outside the dataset is mined and scored as if it landed
+right after the snapshot. `in_training_data` marks a commit whose own label the model saw.
+
+Known limits:
+
+- Only author and committer names are redacted. Other people named in messages and GitHub
+  handles that are not author names stay.
+- A `.gitattributes` in the clone's working tree can change which files git treats as binary.
+- Recall at effort ranks by probability, so a model that learns "big commits are risky" scores
+  low on it even when its PR-AUC is good; read the two together.
 
 ## Tests
 

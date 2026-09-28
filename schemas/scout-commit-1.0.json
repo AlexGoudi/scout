@@ -1,0 +1,178 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://scout.local/schemas/scout-commit-1.0.json",
+  "title": "Scout commit record",
+  "description": "Facts intrinsic to one commit, compared against its first parent. Carries no author names or email addresses and no wall-clock timestamps, so a rerun is byte-identical.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "provenance", "commit", "message", "files", "submodules", "areas", "features", "warnings"],
+  "properties": {
+    "schema": {"const": "scout-commit"},
+    "schema_version": {"const": "1.0"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["extractor_version", "taxonomy_sha", "redaction_sha", "repo"],
+      "properties": {
+        "extractor_version": {"type": "string"},
+        "taxonomy_sha": {"$ref": "#/definitions/sha256"},
+        "redaction_sha": {"type": "string", "pattern": "^[0-9a-f]{16}$", "description": "Digest of the name universe the record was redacted against."},
+        "repo": {"type": ["string", "null"], "description": "Origin URL with credentials removed."}
+      }
+    },
+    "commit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha", "tree", "parents", "is_merge", "is_root", "authored_at", "committed_at", "committed_epoch", "author_id", "author_is_bot", "base", "base_strategy"],
+      "properties": {
+        "sha": {"$ref": "#/definitions/sha1"},
+        "tree": {"$ref": "#/definitions/sha1"},
+        "parents": {"type": "array", "items": {"$ref": "#/definitions/sha1"}},
+        "is_merge": {"type": "boolean"},
+        "is_root": {"type": "boolean"},
+        "authored_at": {"$ref": "#/definitions/utc"},
+        "committed_at": {"$ref": "#/definitions/utc", "description": "When the commit landed; the clock for time splits and lead times."},
+        "committed_epoch": {"type": "integer"},
+        "author_id": {"type": "string", "pattern": "^[0-9a-f]{16}$", "description": "Salted SHA-256 of the author email."},
+        "author_is_bot": {"type": "boolean"},
+        "base": {"$ref": "#/definitions/sha1"},
+        "base_strategy": {"enum": ["first-parent", "empty-tree"]}
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject", "body", "body_truncated", "body_length", "pr_number", "subject_tags", "sections", "trailer_counts", "revert", "pulled_commit_lines"],
+      "properties": {
+        "subject": {"type": "string"},
+        "body": {"type": "string", "maxLength": 20000},
+        "body_truncated": {"type": "boolean"},
+        "body_length": {"type": "integer", "minimum": 0},
+        "pr_number": {"type": ["integer", "null"]},
+        "subject_tags": {"type": "array", "items": {"type": "string"}},
+        "sections": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["why", "how", "verify"],
+          "properties": {
+            "why": {"type": ["string", "null"], "maxLength": 6000},
+            "how": {"type": ["string", "null"], "maxLength": 6000},
+            "verify": {"type": ["string", "null"], "maxLength": 6000}
+          }
+        },
+        "trailer_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["signed_off_by", "co_authored_by", "other"],
+          "properties": {
+            "signed_off_by": {"type": "integer", "minimum": 0},
+            "co_authored_by": {"type": "integer", "minimum": 0},
+            "other": {"type": "integer", "minimum": 0}
+          }
+        },
+        "revert": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["is_revert", "depth", "is_nested", "reverts_sha", "reverts_pr"],
+          "properties": {
+            "is_revert": {"type": "boolean"},
+            "depth": {"type": "integer", "minimum": 0},
+            "is_nested": {"type": "boolean"},
+            "reverts_sha": {"type": ["string", "null"], "pattern": "^[0-9a-f]{7,40}$", "description": "Full SHA when it resolves in the clone, else as written in the trailer."},
+            "reverts_pr": {"type": ["integer", "null"]}
+          }
+        },
+        "pulled_commit_lines": {"type": "integer", "minimum": 0, "description": "Lines listing foreign commits in a submodule-bump body."}
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "old_path", "new_path", "old_mode", "new_mode", "old_blob", "new_blob", "similarity", "additions", "deletions", "binary", "file_class", "hunks", "patch", "patch_truncated"],
+        "properties": {
+          "status": {"enum": ["A", "C", "D", "M", "R", "T", "U", "X"]},
+          "old_path": {"type": ["string", "null"]},
+          "new_path": {"type": ["string", "null"]},
+          "old_mode": {"type": ["string", "null"], "pattern": "^[0-7]{6}$"},
+          "new_mode": {"type": ["string", "null"], "pattern": "^[0-7]{6}$"},
+          "old_blob": {"oneOf": [{"$ref": "#/definitions/sha1"}, {"type": "null"}]},
+          "new_blob": {"oneOf": [{"$ref": "#/definitions/sha1"}, {"type": "null"}]},
+          "similarity": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+          "additions": {"type": ["integer", "null"], "minimum": 0},
+          "deletions": {"type": ["integer", "null"], "minimum": 0},
+          "binary": {"type": "boolean"},
+          "file_class": {"enum": ["code", "test", "doc", "config", "build", "yang", "patch", "binary", "submodule", "other"]},
+          "hunks": {
+            "type": "array",
+            "description": "Unified-diff ranges [old_start, old_count, new_start, new_count].",
+            "items": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "integer", "minimum": 0}}
+          },
+          "patch": {"type": ["string", "null"], "description": "Zero-context patch text, redacted, then capped per file and per commit."},
+          "patch_truncated": {"type": "boolean"}
+        }
+      }
+    },
+    "submodules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "name", "url", "old_sha", "new_sha"],
+        "properties": {
+          "path": {"type": "string"},
+          "name": {"type": "string"},
+          "url": {"type": ["string", "null"]},
+          "old_sha": {"oneOf": [{"$ref": "#/definitions/sha1"}, {"type": "null"}]},
+          "new_sha": {"oneOf": [{"$ref": "#/definitions/sha1"}, {"type": "null"}]}
+        }
+      }
+    },
+    "areas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["components", "features", "entities", "unmapped_paths"],
+      "properties": {
+        "components": {"type": "array", "items": {"$ref": "#/definitions/area"}},
+        "features": {"type": "array", "items": {"$ref": "#/definitions/area"}},
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "name", "path_count"],
+            "properties": {
+              "id": {"type": "string"},
+              "kind": {"enum": ["vendor", "platform", "hwsku", "asic", "docker", "submodule"]},
+              "name": {"type": "string"},
+              "path_count": {"type": "integer", "minimum": 1}
+            }
+          }
+        },
+        "unmapped_paths": {"type": "array", "maxItems": 100, "items": {"type": "string"}}
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "Flat numeric and boolean features known when the commit is made.",
+      "required": ["file_count", "additions", "deletions", "churn", "directory_count", "subsystem_count", "entropy", "entropy_normalized"],
+      "additionalProperties": {"type": ["integer", "number", "boolean"]}
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "definitions": {
+    "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "utc": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"},
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path_count"],
+      "properties": {
+        "id": {"type": "string"},
+        "path_count": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

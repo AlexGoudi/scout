@@ -1,0 +1,252 @@
+# Path taxonomy for sonic-buildimage commit records.
+#
+# Pattern semantics:
+#   - a pattern without "/" matches the file name at any depth ("*.md", "Makefile")
+#   - a pattern with "/" is anchored at the repository root
+#   - "dir/**" matches everything under dir; "**/" matches zero or more directories
+#   - "*" and "?" never cross "/"
+#
+# Every record carries taxonomy_sha, the SHA-256 of this file together with the feature map
+# below, so editing either one invalidates cached records.
+schema_version: 1
+
+# Lower-case substrings matched against the author name and the local part of the email.
+bots:
+  - mssonicbld
+  - dependabot
+  - github-actions
+
+# Identities that are not people. Never redacted, so their words stay readable.
+name_stoplist:
+  - github
+  - ubuntu
+  - root
+  - admin
+  - administrator
+  - unknown
+  - sonic
+  - jenkins
+  - travis
+  - microsoft
+  - azure
+  - mssonicbld
+  - dependabot[bot]
+  - ruijie.com.cn
+
+# Feature areas come from the hand-written map shared with sonic-mgmt. Only entries under
+# the prefix are used, with the prefix stripped, and each is matched as a path prefix.
+features:
+  source: scout_impl/static/datapath.json
+  prefix: sonic-buildimage/
+
+# Coarse, multi-label components. A path matching none of them is reported as unmapped.
+components:
+  - id: build-system
+    patterns:
+      - Makefile*
+      - "*.mk"
+      - "*.dep"
+      - rules/**
+      - build_debian.sh
+      - build_image.sh
+      - build_docker.sh
+      - build_debug_docker_j2.sh
+      - functions.sh
+      - onie-image*.conf
+      - sonic-slave-*/**
+      - files/build/**
+      - scripts/build_*
+      - validated-submodule-commits
+  - id: packages
+    patterns:
+      - src/**
+  - id: containers
+    patterns:
+      - dockers/**
+      - rules/docker-*
+      - platform/*/docker-*/**
+      - platform/*/docker-*.mk
+  - id: platform-vendor
+    patterns:
+      - platform/**
+  - id: device-configuration
+    patterns:
+      - device/**
+  - id: installer-boot
+    patterns:
+      - installer/**
+      - files/initramfs-tools/**
+      - files/grub/**
+      - files/Aboot/**
+      - "*.its"
+  - id: system-files
+    patterns:
+      - files/**
+  - id: scripts
+    patterns:
+      - scripts/**
+      - "*.sh"
+  - id: yang-models
+    patterns:
+      - src/sonic-yang-models/**
+      - src/sonic-yang-mgmt/**
+      - "*.yang"
+  - id: config-engine
+    patterns:
+      - src/sonic-config-engine/**
+  - id: ci
+    patterns:
+      - .github/**
+      - .azure-pipelines/**
+      - azure-pipelines*.yml
+      - "**/azure-pipelines*.yml"
+      - Jenkinsfile
+      - jenkins/**
+  - id: documentation
+    patterns:
+      - "*.md"
+      - "*.rst"
+      - doc/**
+      - docs/**
+      - LICENSE*
+      - README*
+      - ThirdPartyLicenses.txt
+  - id: repository-meta
+    patterns:
+      - .gitignore
+      - .gitattributes
+      - .editorconfig
+      - .pre-commit-config.yaml
+      - .artifactignore
+      - .dockerignore
+      - CODEOWNERS
+      - MAINTAINERS
+      - SECURITY.md
+  - id: external-component
+    patterns:
+      - .gitmodules
+
+# Entities are read from paths alone: device/<vendor>/<platform>/<hwsku>/, platform/<asic>/,
+# dockers/docker-<name>/, rules/docker-<name>.{mk,dep}, platform/<asic>/docker-<name>/, and
+# every gitlink. Directory names below are structure, not entities.
+entities:
+  device_vendor_exclude:
+    - common
+  hwsku_exclude:
+    - plugins
+    - pddf
+    - sonic_platform
+    - sonic_platform_config
+    - CSV
+    - __pycache__
+    - led-code
+    - firmware
+    - thermal_policy
+    - system_health_monitoring_config
+  asic_exclude:
+    - template
+    - components
+    - checkout
+    - generic
+    - pddf
+    - s3ip-sysfs
+
+# First match wins. Gitlinks are "submodule" and files Git reports as binary are "binary"
+# before any rule is consulted; a path matching no rule is "other".
+file_classes:
+  - class: patch
+    patterns:
+      - "*.patch"
+      - "*.diff"
+      - src/*/patch/**
+      - src/*/patches/**
+      - src/**/patch/series
+  - class: test
+    patterns:
+      - "**/tests/**"
+      - "**/test/**"
+      - "**/unit_test/**"
+      - "**/testdata/**"
+      - test_*.py
+      - "*_test.py"
+      - "*_tests.py"
+      - "*_test.go"
+  - class: doc
+    patterns:
+      - "*.md"
+      - "*.rst"
+      - "*.adoc"
+      - doc/**
+      - docs/**
+      - LICENSE*
+      - README*
+      - ThirdPartyLicenses.txt
+  - class: yang
+    patterns:
+      - "*.yang"
+  - class: build
+    patterns:
+      - Makefile*
+      - "*.mk"
+      - "*.dep"
+      - rules/**
+      - Dockerfile*
+      - "*.dockerfile"
+      - "**/debian/**"
+      - setup.py
+      - setup.cfg
+      - pyproject.toml
+      - requirements*.txt
+      - CMakeLists.txt
+      - "*.cmake"
+      - configure.ac
+      - Makefile.am
+      - go.mod
+      - go.sum
+      - build_*.sh
+      - onie-image*.conf
+  - class: code
+    patterns:
+      - "*.py"
+      - "*.c"
+      - "*.h"
+      - "*.cc"
+      - "*.cpp"
+      - "*.hpp"
+      - "*.go"
+      - "*.rs"
+      - "*.sh"
+      - "*.bash"
+      - "*.pl"
+      - "*.lua"
+      - "*.p4"
+      - "*.java"
+      - "*.js"
+      - "*.ts"
+      - "*.awk"
+      - "*.exp"
+      - "*.pyx"
+  - class: config
+    patterns:
+      - "*.json"
+      - "*.yml"
+      - "*.yaml"
+      - "*.j2"
+      - "*.jinja2"
+      - "*.ini"
+      - "*.conf"
+      - "*.cfg"
+      - "*.config"
+      - "*.xml"
+      - "*.csv"
+      - "*.bcm"
+      - "*.soc"
+      - "*.toml"
+      - "*.service"
+      - "*.timer"
+      - "*.rules"
+      - "*.template"
+      - "*.tmpl"
+      - "*.profile"
+      - device/**
+      - files/**
