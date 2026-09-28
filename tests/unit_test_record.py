@@ -170,7 +170,7 @@ def test_scopes_and_line_kinds(repo):
                for name, sha in (("logic", logic), ("comment", comment), ("reindent", reindent))}
 
     scopes = {item["new_path"]: item["scopes"] for item in records["logic"]["files"]}
-    assert scopes == {"src/app.py": ["def load(self):"], "models/sonic-x.yang": ["leaf speed {"]}
+    assert scopes == {"src/app.py": ["class Loader:"], "models/sonic-x.yang": ["module sonic-x {"]}
     features = records["logic"]["features"]
     assert (features["logic_churn"], features["scope_count"], features["is_comment_or_whitespace_only"]) == (
         4, 2, False)

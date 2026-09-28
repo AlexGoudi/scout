@@ -24,6 +24,7 @@ MULTI_MIN_CHARS = 5
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
 TOKEN_RE = re.compile(r"\w+(?:[-'.]\w+)*")
 NAME_GAP_RE = re.compile(r"[ \t.()\[\]]+")
+PR_IN_PARENS_RE = re.compile(r"\(#(\d+)\)")
 PR_SUFFIX_RE = re.compile(r"\(#(\d+)\)\s*$")
 PR_SUFFIXES_RE = re.compile(r"(?:\s*\(#\d+\))+\s*$")
 PR_REFERENCE_RE = re.compile(r"\bPR\s*#?\s*(\d+)|#(\d+)", re.IGNORECASE)

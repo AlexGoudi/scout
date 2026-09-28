@@ -8,14 +8,18 @@ invalidates nothing.
 """
 
 from .base import (
+    AzureDevOpsSpec,
+    CalibrationSpec,
     CiSurface,
     ConstantCoverageSpec,
     EntitySource,
     FileEntitySpec,
+    GitHubApiSpec,
     PathClass,
     PathKind,
     RepoAdapter,
 )
+from .sonic_mgmt_calibration import JOIN_TABLES
 
 NAME = "sonic-mgmt"
 
@@ -156,6 +160,26 @@ COVERAGE_SPEC = ConstantCoverageSpec(
     alias_constant="PR_CHECKER_TOPOLOGY_NAME",
 )
 
+_GH = JOIN_TABLES["github"]
+_AZ = JOIN_TABLES["azure"]
+GITHUB_API = GitHubApiSpec(
+    owner=_GH["owner"],
+    repo=_GH["repo"],
+    ref=_GH.get("ref", "origin/master"),
+    user_agent=_GH.get("user_agent", "sonic-scout"),
+)
+AZURE_DEVOPS = AzureDevOpsSpec(
+    org_url=_AZ["org_url"],
+    pipeline_name=_AZ["pipeline_name"],
+    definition_id=int(_AZ["definition_id"]),
+    pr_builds=int(_AZ.get("pr_builds") or 3000),
+    pr_timelines=int(_AZ.get("pr_timelines") or 800),
+    builds_per_pr=int(_AZ.get("builds_per_pr") or 3),
+    yaml_name_filter=_AZ.get("yaml_name_filter") or "",
+    name_search=_AZ.get("name_search") or "",
+    official_definitions=tuple(sorted((_AZ.get("official_definitions") or {}).items())),
+)
+
 ADAPTER = RepoAdapter(
     name=NAME,
     summary="SONiC test and lab automation: topologies, testbeds, playbooks and the pytest suite",
@@ -170,4 +194,7 @@ ADAPTER = RepoAdapter(
     ci_surfaces=CI_SURFACES,
     entity_model=ENTITY_MODEL,
     coverage_spec=COVERAGE_SPEC,
+    github_api=GITHUB_API,
+    azure_devops=AZURE_DEVOPS,
+    calibration=CalibrationSpec(tables=JOIN_TABLES),
 )

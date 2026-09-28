@@ -339,6 +339,28 @@ def sanitize_url(url: str) -> str | None:
     return f"{scp.group('host')}:{scp.group('path')}" if scp else None
 
 
+def parse_numstat_text(raw: str) -> list[dict]:
+    """Parse ``git diff --numstat`` lines into calibration file rows."""
+    files: list[dict] = []
+    for line in raw.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 3:
+            continue
+        add, dele, path = parts[0], parts[1], parts[2]
+        if " => " in path:
+            path = path.split(" => ")[-1].strip("{").strip("}")
+        binary = add == "-" and dele == "-"
+        files.append(
+            {
+                "path": path,
+                "additions": None if binary else int(add),
+                "deletions": None if binary else int(dele),
+                "binary": binary,
+            }
+        )
+    return files
+
+
 def parse_raw_numstat(data: bytes, shas: Sequence[str]) -> dict[str, tuple[RawChange, ...]]:
     """Split ``git log -z --raw --numstat`` output into per-commit change lists."""
     expected = set(shas)

@@ -24,7 +24,8 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Set
 
 from ..gitcmd import GitError, GitRepo
-from ..incidents import DEFAULT_GREP, Incident, _REVERTS_RE, mine_incidents
+from ..incidents import DEFAULT_GREP, Incident, mine_incidents
+from ..mining.message import REVERTS_SHA_RE
 from ..remote import BLOB_FILTER, COMMIT_FILTER, RemoteRepo, default_cache_root
 from ..source import LocalCheckout, RepoSource
 
@@ -260,7 +261,7 @@ def revert_graph(history: History, grep: str = DEFAULT_GREP) -> Dict[str, List[s
             continue
         sha, _, body = record.partition(_FIELD_SEPARATOR)
         reverts.append(sha.strip())
-        referenced.update(_REVERTS_RE.findall(body))
+        referenced.update(REVERTS_SHA_RE.findall(body))
     on_master = master_commits(history)
     resolved = {sha for sha in _resolve_on(on_master, referenced)}
     return {"reverts": reverts, "causes": sorted(resolved)}

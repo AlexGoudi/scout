@@ -17,7 +17,7 @@ and `PathClass.rank`, the blast-radius order: the prefilter sorts on `rank` and 
 from dataclasses import dataclass
 from enum import Enum
 from fnmatch import fnmatchcase
-from typing import Callable, Optional, Tuple, Union
+from typing import Any, Callable, Mapping, Optional, Tuple, Union
 
 
 class RepoAdapterError(RuntimeError):
@@ -212,6 +212,41 @@ class PipelineCoverageSpec:
 
 
 @dataclass(frozen=True)
+class GitHubApiSpec:
+    """GitHub REST metadata for calibration collectors."""
+
+    owner: str
+    repo: str
+    ref: str = "origin/master"
+    user_agent: str = "sonic-scout"
+
+
+@dataclass(frozen=True)
+class AzureDevOpsSpec:
+    """Azure DevOps pipeline definition and paging limits for PR timelines."""
+
+    org_url: str
+    pipeline_name: str
+    definition_id: int
+    pr_builds: int = 3000
+    pr_timelines: int = 800
+    builds_per_pr: int = 3
+    yaml_name_filter: str = ""
+    name_search: str = ""
+    official_definitions: Tuple[Tuple[str, int], ...] = ()
+
+
+@dataclass(frozen=True)
+class CalibrationSpec:
+    """Per-repo join tables for Azure label mining (path buckets, blast radius, priors)."""
+
+    tables: Mapping[str, Any]
+
+    def table(self, key: str, default: Any = None) -> Any:
+        return self.tables.get(key, default)
+
+
+@dataclass(frozen=True)
 class RuleSpec:
     """One invariant the brief states as a rule for the agent stage to test.
 
@@ -245,6 +280,9 @@ class RepoAdapter:
     # not yet analyzable, which is a legitimate state for a newly added adapter.
     entity_model: Optional[Union[DirectoryEntitySpec, FileEntitySpec]] = None
     coverage_spec: Optional[Union[PipelineCoverageSpec, ConstantCoverageSpec]] = None
+    github_api: Optional[GitHubApiSpec] = None
+    azure_devops: Optional[AzureDevOpsSpec] = None
+    calibration: Optional[CalibrationSpec] = None
     rules: Tuple[RuleSpec, ...] = ()
     detectors: Tuple[str, ...] = ()
 

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://scout.local/schemas/scout-commit-1.0.json",
+  "$id": "https://scout.local/schemas/scout-commit-1.1.json",
   "title": "Scout commit record",
   "description": "Facts intrinsic to one commit, compared against its first parent. Carries no author names or email addresses and no wall-clock timestamps, so a rerun is byte-identical.",
   "type": "object",
@@ -8,7 +8,7 @@
   "required": ["schema", "schema_version", "provenance", "commit", "message", "files", "submodules", "areas", "features", "warnings"],
   "properties": {
     "schema": {"const": "scout-commit"},
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.1"},
     "provenance": {
       "type": "object",
       "additionalProperties": false,
@@ -90,7 +90,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["status", "old_path", "new_path", "old_mode", "new_mode", "old_blob", "new_blob", "similarity", "additions", "deletions", "binary", "file_class", "hunks", "patch", "patch_truncated"],
+        "required": ["status", "old_path", "new_path", "old_mode", "new_mode", "old_blob", "new_blob", "similarity", "additions", "deletions", "binary", "file_class", "hunks", "patch", "patch_truncated", "scopes", "line_kinds"],
         "properties": {
           "status": {"enum": ["A", "C", "D", "M", "R", "T", "U", "X"]},
           "old_path": {"type": ["string", "null"]},
@@ -110,7 +110,18 @@
             "items": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "integer", "minimum": 0}}
           },
           "patch": {"type": ["string", "null"], "description": "Zero-context patch text, redacted, then capped per file and per commit."},
-          "patch_truncated": {"type": "boolean"}
+          "patch_truncated": {"type": "boolean"},
+          "scopes": {"type": "array", "items": {"type": "string"}},
+          "line_kinds": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["blank", "whitespace_only", "comment"],
+            "properties": {
+              "blank": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
+              "whitespace_only": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
+              "comment": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}
+            }
+          }
         }
       }
     },

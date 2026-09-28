@@ -1,9 +1,12 @@
 """Read-only git wrapper used by ingest and the incident miner."""
 
 import logging
+import os
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional
+
+from .mining.gitio import DROPPED_ENVIRONMENT, GitError
 
 logger = logging.getLogger(__name__)
 
@@ -20,10 +23,6 @@ CONFIG_OVERRIDES = (
 EMPTY_TREE_SHA = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
 
-class GitError(RuntimeError):
-    """A git invocation exited non-zero."""
-
-
 class GitRepo:
     """Runs read-only git commands in a working copy."""
 
@@ -34,6 +33,7 @@ class GitRepo:
     def run(self, *args: str, check: bool = True, stdin: Optional[str] = None) -> str:
         command = ["git", *CONFIG_OVERRIDES, *args]
         logger.debug("Running %s in %s", " ".join(args), self.root)
+        environment = {key: value for key, value in os.environ.items() if key not in DROPPED_ENVIRONMENT}
         completed = subprocess.run(
             command,
             cwd=str(self.root),
@@ -42,6 +42,7 @@ class GitRepo:
             text=True,
             errors="replace",
             timeout=self.timeout_seconds,
+            env=environment,
         )
         if check and completed.returncode != 0:
             raise GitError(
@@ -75,3 +76,17 @@ class GitRepo:
         if not output:
             raise GitError(f"No merge base between {left} and {right}")
         return output
+
+    def is_ancestor(self, ancestor: str, descendant: str) -> bool:
+        command = ["git", *CONFIG_OVERRIDES, "merge-base", "--is-ancestor", ancestor, descendant]
+        environment = {key: value for key, value in os.environ.items() if key not in DROPPED_ENVIRONMENT}
+        completed = subprocess.run(
+            command,
+            cwd=str(self.root),
+            capture_output=True,
+            text=True,
+            errors="replace",
+            timeout=self.timeout_seconds,
+            env=environment,
+        )
+        return completed.returncode == 0

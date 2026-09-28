@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .gitcmd import GitRepo
+from .mining.message import PR_SUFFIX_RE, REVERTS_SHA_RE
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +31,6 @@ _RECORD_SEPARATOR = "\x1e"
 _FIELD_SEPARATOR = "\x1f"
 _LOG_FORMAT = _FIELD_SEPARATOR.join(["%H", "%aI", "%cI", "%s", "%B"]) + _FIELD_SEPARATOR
 
-_REVERTS_RE = re.compile(r"^\s*This reverts commit ([0-9a-f]{7,40})", re.MULTILINE)
-_PR_NUMBER_RE = re.compile(r"\(#(\d+)\)\s*$")
 _NESTED_REVERT_RE = re.compile(r'^Revert\s+"Revert')
 
 
@@ -117,17 +116,24 @@ def mine_incidents(
     revision: str = "HEAD",
     limit: Optional[int] = None,
     grep: str = DEFAULT_GREP,
+    range_spec: Optional[str] = None,
 ) -> List[Incident]:
-    """Mine revert incidents from `revision`, newest first."""
+    """Mine revert incidents from `revision`, newest first.
+
+    When ``range_spec`` is set (e.g. ``abc..def``), only commits in that range are walked.
+    """
     log_args = ["log", f"--grep={grep}"]
     if limit:
         log_args += ["-n", str(limit)]
-    log_args.append(revision)
+    if range_spec:
+        log_args.append(range_spec)
+    else:
+        log_args.append(revision)
 
     reverts = _read_commits(repo, log_args)
     logger.info("Found %d commit(s) matching %s on %s", len(reverts), grep, revision)
 
-    referenced = sorted({sha for revert in reverts for sha in _REVERTS_RE.findall(revert.body)})
+    referenced = sorted({sha for revert in reverts for sha in REVERTS_SHA_RE.findall(revert.body)})
     resolved = repo.resolve_commits(referenced)
     logger.info("Resolved %d of %d referenced sha(s) in this clone", len(resolved), len(referenced))
 
@@ -145,8 +151,8 @@ def _build_incident(
     resolved: Dict[str, str],
     causes: Dict[str, _RawCommit],
 ) -> Incident:
-    referenced = _REVERTS_RE.findall(revert.body)
-    pr_match = _PR_NUMBER_RE.search(revert.subject)
+    referenced = REVERTS_SHA_RE.findall(revert.body)
+    pr_match = PR_SUFFIX_RE.search(revert.subject)
     common = {
         "incident_id": incident_id,
         "revert_sha": revert.sha,
@@ -222,7 +228,8 @@ def _days_between(earlier: str, later: str) -> Optional[int]:
 
 def write_corpus(incidents: List[Incident], path: Path) -> None:
     """Write the corpus as JSONL, one incident per line."""
-    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.parent not in (Path(), Path(".")):
+        path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
         for incident in incidents:
             handle.write(json.dumps(incident.to_dict(), sort_keys=True) + "\n")

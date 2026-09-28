@@ -6,10 +6,11 @@ __pycache__/
 venv/
 
 # Run outputs, written into whichever directory the CLI is invoked from.
-/scout-brief.json
-/scout-report.json
-/scout-run.jsonl
-/scout-corpus.jsonl
+/scout-brief*.json
+/scout-report*.json
+/scout-run*.jsonl
+/scout-corpus*.jsonl
+/scout-score-pr*.json
 /changeset.json
 /sync.json
 
@@ -20,6 +21,7 @@ venv/
 # Content-addressed tree and blob cache (HLD section 6.5). Keyed by git object SHA, so it
 # is rebuildable from a fetch and never belongs in history.
 /.scout-cache/
+.env
 
 scout/
 lib/
