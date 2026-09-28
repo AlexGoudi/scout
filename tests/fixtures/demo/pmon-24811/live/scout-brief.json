@@ -1,0 +1,677 @@
+{
+  "brief": {
+    "adapter": {
+      "name": "sonic-buildimage",
+      "rule_pack_sha": "92f7ba59f9aaab07",
+      "version": "1.0"
+    },
+    "base_sha": "1e7ebe495c347916c733cbb205a9e087dda94937",
+    "blob_cache_hits": 1615,
+    "blobs_read": 466,
+    "head_sha": "3589b565dff1229247826b9094529cf676a89c41",
+    "id": "00000000-0000-4000-8000-000000024811",
+    "measured_at": "2026-09-25T00:00:00Z",
+    "mode": "range",
+    "repo": "sonic-net/sonic-buildimage",
+    "static_duration_s": 1.27,
+    "status": "complete",
+    "tree_paths": 17590
+  },
+  "budget": {
+    "max_blob_reads": 30,
+    "max_input_tokens": 120000,
+    "max_tool_calls": 60
+  },
+  "coverage": {
+    "affected": [
+      "platform:arista/x86_64-arista_7050_qx32",
+      "platform:arista/x86_64-arista_7050_qx32s",
+      "platform:arista/x86_64-arista_7050cx3_32c",
+      "platform:arista/x86_64-arista_7050cx3_32s",
+      "platform:arista/x86_64-arista_7050dx4_32s",
+      "platform:arista/x86_64-arista_7050px4_32s",
+      "platform:arista/x86_64-arista_7050sx3_48c8",
+      "platform:arista/x86_64-arista_7050sx3_48yc8",
+      "platform:arista/x86_64-arista_7060_cx32s",
+      "platform:arista/x86_64-arista_7060cx2_32s",
+      "platform:arista/x86_64-arista_7060dx4_32",
+      "platform:arista/x86_64-arista_7060dx5_32",
+      "platform:arista/x86_64-arista_7060dx5_64s",
+      "platform:arista/x86_64-arista_7060px4_32",
+      "platform:arista/x86_64-arista_7060px5_64s",
+      "platform:arista/x86_64-arista_7060x6_16pe_384c",
+      "platform:arista/x86_64-arista_7060x6_16pe_384c_b",
+      "platform:arista/x86_64-arista_7060x6_32pe",
+      "platform:arista/x86_64-arista_7060x6_64de",
+      "platform:arista/x86_64-arista_7060x6_64pe",
+      "platform:arista/x86_64-arista_7060x6_64pe_b",
+      "platform:arista/x86_64-arista_7170_32c",
+      "platform:arista/x86_64-arista_7170_32cd",
+      "platform:arista/x86_64-arista_7170_64c",
+      "platform:arista/x86_64-arista_7170b_64c",
+      "platform:arista/x86_64-arista_720dt_48s",
+      "platform:arista/x86_64-arista_720dt_48s_mgx",
+      "platform:arista/x86_64-arista_7260cx3_64",
+      "platform:arista/x86_64-arista_7280cr3_32d4",
+      "platform:arista/x86_64-arista_7280cr3_32p4",
+      "platform:arista/x86_64-arista_7280cr3mk_32d4",
+      "platform:arista/x86_64-arista_7280cr3mk_32p4",
+      "platform:arista/x86_64-arista_7280dr3a_36",
+      "platform:arista/x86_64-arista_7280dr3ak_36",
+      "platform:arista/x86_64-arista_7280dr3ak_36s",
+      "platform:arista/x86_64-arista_7280dr3am_36",
+      "platform:arista/x86_64-arista_7280r4_32qf_32df",
+      "platform:arista/x86_64-arista_7280r4k_32qf_32df"
+    ],
+    "aliased_as_platform": [
+      "arista/x86_64-arista_7280cr3k_32d4",
+      "arista/x86_64-arista_7280cr3k_32p4",
+      "barefoot/x86_64-accton_as9516bf_32d-r0"
+    ],
+    "aliased_platforms": 3,
+    "ambiguous": [],
+    "covered": [
+      "platform:arista/x86_64-arista_7050_qx32",
+      "platform:arista/x86_64-arista_7050_qx32s",
+      "platform:arista/x86_64-arista_7050cx3_32c",
+      "platform:arista/x86_64-arista_7050cx3_32s",
+      "platform:arista/x86_64-arista_7050dx4_32s",
+      "platform:arista/x86_64-arista_7050px4_32s",
+      "platform:arista/x86_64-arista_7050sx3_48c8",
+      "platform:arista/x86_64-arista_7050sx3_48yc8",
+      "platform:arista/x86_64-arista_7060_cx32s",
+      "platform:arista/x86_64-arista_7060cx2_32s",
+      "platform:arista/x86_64-arista_7060dx4_32",
+      "platform:arista/x86_64-arista_7060dx5_32",
+      "platform:arista/x86_64-arista_7060dx5_64s",
+      "platform:arista/x86_64-arista_7060px4_32",
+      "platform:arista/x86_64-arista_7060px5_64s",
+      "platform:arista/x86_64-arista_7060x6_16pe_384c",
+      "platform:arista/x86_64-arista_7060x6_16pe_384c_b",
+      "platform:arista/x86_64-arista_7060x6_32pe",
+      "platform:arista/x86_64-arista_7060x6_64de",
+      "platform:arista/x86_64-arista_7060x6_64pe",
+      "platform:arista/x86_64-arista_7060x6_64pe_b",
+      "platform:arista/x86_64-arista_720dt_48s",
+      "platform:arista/x86_64-arista_720dt_48s_mgx",
+      "platform:arista/x86_64-arista_7260cx3_64"
+    ],
+    "declarations_in_tree": 260,
+    "excluded_as_non_platform": [
+      "device/arista/x86_64-arista_common",
+      "device/broadcom/x86_64-broadcom_common"
+    ],
+    "job_group_names": [
+      "broadcom",
+      "marvell-prestera-arm64",
+      "marvell-prestera-armhf",
+      "mellanox",
+      "vs"
+    ],
+    "job_groups": 5,
+    "kept_without_hwsku": 24,
+    "model": "pr-build-stage",
+    "multi_family_declarations": 1,
+    "parse": {
+      "limitations": [],
+      "loose_scan_agrees": true,
+      "loose_scan_names": [
+        "broadcom",
+        "marvell-prestera-arm64",
+        "marvell-prestera-armhf",
+        "mellanox",
+        "vs"
+      ],
+      "scope": "Build+BuildVS",
+      "strict": true,
+      "templates_read": [
+        ".azure-pipelines/azure-pipelines-build.yml",
+        ".azure-pipelines/azure-pipelines-image-template.yml",
+        ".azure-pipelines/azure-pipelines-job-groups.yml"
+      ]
+    },
+    "platforms_in_tree": 261,
+    "symlinked_declarations": 17,
+    "uncovered": [
+      "platform:arista/x86_64-arista_7170_32c",
+      "platform:arista/x86_64-arista_7170_32cd",
+      "platform:arista/x86_64-arista_7170_64c",
+      "platform:arista/x86_64-arista_7170b_64c",
+      "platform:arista/x86_64-arista_7280cr3_32d4",
+      "platform:arista/x86_64-arista_7280cr3_32p4",
+      "platform:arista/x86_64-arista_7280cr3mk_32d4",
+      "platform:arista/x86_64-arista_7280cr3mk_32p4",
+      "platform:arista/x86_64-arista_7280dr3a_36",
+      "platform:arista/x86_64-arista_7280dr3ak_36",
+      "platform:arista/x86_64-arista_7280dr3ak_36s",
+      "platform:arista/x86_64-arista_7280dr3am_36",
+      "platform:arista/x86_64-arista_7280r4_32qf_32df",
+      "platform:arista/x86_64-arista_7280r4k_32qf_32df"
+    ],
+    "unresolved_declarations": 0
+  },
+  "entities": [
+    {
+      "id": "asic_family:barefoot",
+      "kind": "asic_family",
+      "members": 14,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7170_32c/platform_asic"
+    },
+    {
+      "id": "asic_family:broadcom",
+      "kind": "asic_family",
+      "members": 145,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050_qx32/platform_asic"
+    },
+    {
+      "id": "asic_family:broadcom-dnx",
+      "kind": "asic_family",
+      "members": 26,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7280cr3_32p4/platform_asic"
+    },
+    {
+      "id": "asic_family:marvell-prestera",
+      "kind": "asic_family",
+      "members": 10,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "amd64",
+      "family": "broadcom",
+      "id": "ci_job_group:broadcom",
+      "kind": "ci_job_group",
+      "members": 145,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "arm64",
+      "family": "marvell-prestera",
+      "id": "ci_job_group:marvell-prestera-arm64",
+      "kind": "ci_job_group",
+      "members": 0,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "armhf",
+      "family": "marvell-prestera",
+      "id": "ci_job_group:marvell-prestera-armhf",
+      "kind": "ci_job_group",
+      "members": 0,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "amd64",
+      "family": "mellanox",
+      "id": "ci_job_group:mellanox",
+      "kind": "ci_job_group",
+      "members": 32,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "amd64",
+      "family": "vs",
+      "id": "ci_job_group:vs",
+      "kind": "ci_job_group",
+      "members": 2,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050_qx32",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050_qx32/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050_qx32s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050_qx32s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050cx3_32c",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7050cx3_32c/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050cx3_32s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050cx3_32s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050dx4_32s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050dx4_32s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050px4_32s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050px4_32s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050sx3_48c8",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050sx3_48c8/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7050sx3_48yc8",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7050sx3_48yc8/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060_cx32s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060_cx32s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060cx2_32s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060cx2_32s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060dx4_32",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060dx4_32/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060dx5_32",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060dx5_32/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060dx5_64s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060dx5_64s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060px4_32",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060px4_32/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060px5_64s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060px5_64s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060x6_16pe_384c",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060x6_16pe_384c/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060x6_16pe_384c_b",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060x6_16pe_384c_b/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060x6_32pe",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060x6_32pe/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060x6_64de",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060x6_64de/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060x6_64pe",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060x6_64pe/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7060x6_64pe_b",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7060x6_64pe_b/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7170_32c",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7170_32c/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7170_32cd",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7170_32cd/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7170_64c",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7170_64c/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7170b_64c",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7170b_64c/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_720dt_48s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_720dt_48s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_720dt_48s_mgx",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_720dt_48s_mgx/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7260cx3_64",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7260cx3_64/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280cr3_32d4",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280cr3_32d4/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280cr3_32p4",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7280cr3_32p4/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280cr3mk_32d4",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280cr3mk_32d4/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280cr3mk_32p4",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280cr3mk_32p4/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280dr3a_36",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7280dr3a_36/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280dr3ak_36",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280dr3ak_36/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280dr3ak_36s",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280dr3ak_36s/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280dr3am_36",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280dr3am_36/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280r4_32qf_32df",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/arista/x86_64-arista_7280r4_32qf_32df/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:arista/x86_64-arista_7280r4k_32qf_32df",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "symlink",
+      "source": "device/arista/x86_64-arista_7280r4k_32qf_32df/platform_asic"
+    },
+    {
+      "id": "vendor:arista",
+      "kind": "vendor",
+      "members": 49,
+      "resolved_via": "tree",
+      "source": "device/arista"
+    }
+  ],
+  "entity_closure": true,
+  "hotspots": [
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:barefoot",
+        "asic_family:broadcom",
+        "asic_family:broadcom-dnx",
+        "platform:arista/x86_64-arista_7050_qx32",
+        "platform:arista/x86_64-arista_7050_qx32s",
+        "platform:arista/x86_64-arista_7050cx3_32c",
+        "platform:arista/x86_64-arista_7050cx3_32s",
+        "platform:arista/x86_64-arista_7050dx4_32s",
+        "platform:arista/x86_64-arista_7050px4_32s",
+        "platform:arista/x86_64-arista_7050sx3_48c8",
+        "platform:arista/x86_64-arista_7050sx3_48yc8",
+        "platform:arista/x86_64-arista_7060_cx32s",
+        "platform:arista/x86_64-arista_7060cx2_32s",
+        "platform:arista/x86_64-arista_7060dx4_32",
+        "platform:arista/x86_64-arista_7060dx5_32",
+        "platform:arista/x86_64-arista_7060dx5_64s",
+        "platform:arista/x86_64-arista_7060px4_32",
+        "platform:arista/x86_64-arista_7060px5_64s",
+        "platform:arista/x86_64-arista_7060x6_16pe_384c",
+        "platform:arista/x86_64-arista_7060x6_16pe_384c_b",
+        "platform:arista/x86_64-arista_7060x6_32pe",
+        "platform:arista/x86_64-arista_7060x6_64de",
+        "platform:arista/x86_64-arista_7060x6_64pe",
+        "platform:arista/x86_64-arista_7060x6_64pe_b",
+        "platform:arista/x86_64-arista_7170_32c",
+        "platform:arista/x86_64-arista_7170_32cd",
+        "platform:arista/x86_64-arista_7170_64c",
+        "platform:arista/x86_64-arista_7170b_64c",
+        "platform:arista/x86_64-arista_720dt_48s",
+        "platform:arista/x86_64-arista_720dt_48s_mgx",
+        "platform:arista/x86_64-arista_7260cx3_64",
+        "platform:arista/x86_64-arista_7280cr3_32d4",
+        "platform:arista/x86_64-arista_7280cr3_32p4",
+        "platform:arista/x86_64-arista_7280cr3mk_32d4",
+        "platform:arista/x86_64-arista_7280cr3mk_32p4",
+        "platform:arista/x86_64-arista_7280dr3a_36",
+        "platform:arista/x86_64-arista_7280dr3ak_36",
+        "platform:arista/x86_64-arista_7280dr3ak_36s",
+        "platform:arista/x86_64-arista_7280dr3am_36",
+        "platform:arista/x86_64-arista_7280r4_32qf_32df",
+        "platform:arista/x86_64-arista_7280r4k_32qf_32df"
+      ],
+      "id": "h-001",
+      "path": "device/arista/x86_64-arista_common/pmon_daemon_control.json",
+      "path_class": "platform_data",
+      "score": 0.489,
+      "score_breakdown": {
+        "ambiguity": 0.0,
+        "coverage_gap": 0.111,
+        "entity_fanout": 0.178,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [],
+      "id": "h-002",
+      "path": "dockers/docker-platform-monitor/docker-pmon.supervisord.conf.j2",
+      "path_class": "container",
+      "score": 0.133,
+      "score_breakdown": {
+        "ambiguity": 0.0,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.0,
+        "path_class": 0.133
+      }
+    }
+  ],
+  "questions": [
+    {
+      "ask": "No job group in either build stage, BuildVS or Build, builds any ASIC family these 14 platform(s) declare. Does this change materially put them at risk, or does it only pass through their directories? Cite the change as cause and each platform's declaration as affected.",
+      "budget": {
+        "blob_reads": 6,
+        "tool_calls": 12
+      },
+      "entities": [
+        "platform:arista/x86_64-arista_7170_32c",
+        "platform:arista/x86_64-arista_7170_32cd",
+        "platform:arista/x86_64-arista_7170_64c",
+        "platform:arista/x86_64-arista_7170b_64c",
+        "platform:arista/x86_64-arista_7280cr3_32d4",
+        "platform:arista/x86_64-arista_7280cr3_32p4",
+        "platform:arista/x86_64-arista_7280cr3mk_32d4",
+        "platform:arista/x86_64-arista_7280cr3mk_32p4",
+        "platform:arista/x86_64-arista_7280dr3a_36",
+        "platform:arista/x86_64-arista_7280dr3ak_36",
+        "platform:arista/x86_64-arista_7280dr3ak_36s",
+        "platform:arista/x86_64-arista_7280dr3am_36",
+        "platform:arista/x86_64-arista_7280r4_32qf_32df",
+        "platform:arista/x86_64-arista_7280r4k_32qf_32df"
+      ],
+      "id": "q-001",
+      "kind": "materiality",
+      "prior": 0.7,
+      "required_evidence": [
+        "cause",
+        "affected"
+      ],
+      "rule": "BI-R1"
+    }
+  ],
+  "rules": [
+    {
+      "citations": [
+        {
+          "line_end": 95,
+          "line_start": 62,
+          "path": "azure-pipelines.yml",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "derivation": "static",
+      "id": "BI-R1",
+      "statement": "A platform is exercised by the PR pipeline only if a job group in one of its build stages \u2014 BuildVS or Build \u2014 builds an ASIC family that the platform declares in its platform_asic file."
+    },
+    {
+      "citations": [
+        {
+          "line_end": 2,
+          "line_start": 1,
+          "path": "device/arista/x86_64-arista_common/platform_asic",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "derivation": "static",
+      "id": "BI-R2",
+      "statement": "A platform_asic file may declare more than one ASIC family, one per line. A platform is covered if any declared family is built."
+    }
+  ],
+  "schema_version": "1.0",
+  "unresolved": []
+}

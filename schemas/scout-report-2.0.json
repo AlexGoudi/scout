@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sonic-net/scout/schemas/scout-report-2.0.json",
+  "title": "SONiC Scout report",
+  "description": "The single source of truth for one review (HLD section 4.10); the advisory comment is a rendering of it. It references the brief rather than inlining it, so the two artifacts version independently. Version 2.0 splits each finding into a `deterministic` half, proven from the tree, and an `adjudication` half, the model's judgement, banded separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run", "findings", "suppressed", "degraded_reason"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run": {"$ref": "#/$defs/run"},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "suppressed": {
+      "type": "array",
+      "description": "What the comment does not show, kept for the eval: adjudications banded low, and findings beyond the NFR-4 cap.",
+      "items": {"$ref": "#/$defs/suppression"}
+    },
+    "degraded_reason": {
+      "type": ["string", "null"],
+      "description": "Why no model adjudication was obtained, when it was not. The deterministic findings are reported regardless (NFR-7)."
+    }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "repo", "adapter", "mode", "base_sha", "head_sha", "brief_ref", "brief_sha", "duration_s", "static_duration_s", "status", "model", "cost", "questions_asked", "questions_answered", "blobs_read", "truncated"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "repo": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "mode": {"enum": ["pr", "range", "sync", "replay", "tree"]},
+        "base_sha": {"type": "string"},
+        "head_sha": {"type": "string", "minLength": 1},
+        "brief_ref": {"type": "string", "minLength": 1},
+        "brief_sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "duration_s": {"type": "number", "minimum": 0},
+        "static_duration_s": {"type": "number", "minimum": 0},
+        "agent_duration_s": {"type": "number", "minimum": 0},
+        "status": {
+          "enum": ["complete", "partial", "degraded"],
+          "description": "`complete`: every question answered or rightly skipped. `partial`: a question truncated by its own budget or left unanswered. `degraded`: no provider, an unreachable one, or the run's budget exhausted; the brief and the deterministic findings still ship."
+        },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "id", "prompt_sha"],
+          "properties": {
+            "provider": {"type": "string", "minLength": 1},
+            "id": {"type": "string"},
+            "prompt_sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "replayed": {"type": "boolean"}
+          }
+        },
+        "cost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input_tokens", "output_tokens", "usd"],
+          "properties": {
+            "input_tokens": {"type": "integer", "minimum": 0},
+            "output_tokens": {"type": "integer", "minimum": 0},
+            "usd": {"type": "number", "minimum": 0}
+          }
+        },
+        "questions_in_brief": {"type": "integer", "minimum": 0},
+        "questions_asked": {"type": "integer", "minimum": 0},
+        "questions_answered": {"type": "integer", "minimum": 0},
+        "model_calls": {"type": "integer", "minimum": 0},
+        "blobs_read": {"type": "integer", "minimum": 0},
+        "truncated": {"type": "array", "items": {"type": "string", "pattern": "^q-[0-9]{3}$"}},
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "How often each code-enforced constraint fired over the run.",
+          "properties": {
+            "question_binding": {"type": "integer", "minimum": 0},
+            "entity_closure": {"type": "integer", "minimum": 0},
+            "cited_job_group": {"type": "integer", "minimum": 0},
+            "citation": {"type": "integer", "minimum": 0},
+            "rule_consistency": {"type": "integer", "minimum": 0}
+          }
+        },
+        "questions": {"type": "array", "items": {"$ref": "#/$defs/question_run"}}
+      }
+    },
+    "question_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "status", "model_calls", "input_tokens", "output_tokens", "latency_s"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^q-[0-9]{3}$"},
+        "kind": {"type": "string", "minLength": 1},
+        "status": {"enum": ["answered", "truncated", "unanswered", "skipped", "not-run"]},
+        "reason": {"type": "string"},
+        "model_calls": {"type": "integer", "minimum": 0},
+        "tool_steps": {"type": "integer", "minimum": 0},
+        "input_tokens": {"type": "integer", "minimum": 0},
+        "output_tokens": {"type": "integer", "minimum": 0},
+        "latency_s": {"type": "number", "minimum": 0}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "detector", "question", "title", "severity", "confidence", "deterministic", "adjudication", "evidence", "affected", "coverage_gap", "verification", "backtest_ref"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^f-[0-9]{3}$"},
+        "detector": {"type": "string", "minLength": 1},
+        "question": {"type": "string", "pattern": "^q-[0-9]{3}$"},
+        "title": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["high", "medium", "low"]},
+        "confidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["band", "score", "basis"],
+          "description": "What the finding is ranked and posted on: its adjudication's band when there is a usable one, else its deterministic half.",
+          "properties": {
+            "band": {"enum": ["proven", "high", "medium", "low"]},
+            "score": {"type": "number", "minimum": 0, "maximum": 1},
+            "basis": {"enum": ["adjudication", "deterministic"]}
+          }
+        },
+        "deterministic": {"$ref": "#/$defs/deterministic"},
+        "adjudication": {"$ref": "#/$defs/adjudication"},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/citation"}},
+        "affected": {"type": "array", "items": {"$ref": "#/$defs/affected"}},
+        "coverage_gap": {"$ref": "#/$defs/coverage_gap"},
+        "verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "result", "reason"],
+          "properties": {
+            "method": {"enum": ["none"]},
+            "result": {"enum": ["not-applicable"]},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        },
+        "backtest_ref": {"type": ["string", "null"]}
+      }
+    },
+    "deterministic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["band", "statement", "affected_count", "covered_by_pr_ci"],
+      "description": "Proven from the tree and the pipeline definition, with citations into both. A claim about the counting, not about whether the platforms matter.",
+      "properties": {
+        "band": {"const": "proven"},
+        "statement": {"type": "string", "minLength": 1},
+        "affected_count": {"type": "integer", "minimum": 0},
+        "covered_by_pr_ci": {"type": "integer", "minimum": 0},
+        "uncovered_count": {"type": "integer", "minimum": 0},
+        "ambiguous_count": {"type": "integer", "minimum": 0},
+        "never_built": {"type": "integer", "minimum": 0},
+        "rule_candidate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rules", "derivation", "statement", "covered", "uncovered"],
+          "description": "The answer the brief's architecture rules imply. It rests on a naming convention, which is why its derivation is carried; it decides the question unless contested with evidence, and a contest never overrides it.",
+          "properties": {
+            "rules": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "derivation": {"type": "string", "minLength": 1},
+            "statement": {"type": "string", "minLength": 1},
+            "covered": {"type": "integer", "minimum": 0},
+            "uncovered": {"type": "integer", "minimum": 0},
+            "undetermined": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "adjudication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "status", "resolution", "rationale", "band", "judgement"],
+      "description": "The model's judgement, never a fact. Banded apart from the deterministic half so a wrong judgement cannot discredit a right number.",
+      "properties": {
+        "question": {"type": "string", "pattern": "^q-[0-9]{3}$"},
+        "status": {"enum": ["answered", "contested", "unanswered", "truncated", "skipped", "not-run"]},
+        "resolution": {"type": ["string", "null"]},
+        "rationale": {"type": "string"},
+        "band": {"enum": ["high", "medium", "low", null]},
+        "score": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "band_reason": {"type": "string"},
+        "posted": {"type": "boolean"},
+        "judgement": {"const": "model"},
+        "model": {"type": "string"},
+        "reason": {"type": "string"},
+        "answers": {"type": "array", "items": {"$ref": "#/$defs/answer"}}
+      }
+    },
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["group", "member_count", "outcome"],
+      "properties": {
+        "group": {"type": "string"},
+        "members": {"type": "array", "items": {"type": "string", "pattern": "^[a-z_]+:.+$"}},
+        "member_count": {"type": "integer", "minimum": 0},
+        "outcome": {"enum": ["answered", "confirmed", "contested", "unconfirmed", "dropped", "unanswered", "unexamined"]},
+        "verdict": {"type": "string"},
+        "covered": {"type": "boolean"},
+        "job_group": {"type": "string"},
+        "reason": {"type": "string"},
+        "cite": {"type": "array", "items": {"type": "string"}},
+        "rule": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "resolution": {"enum": ["covered", "uncovered", "undetermined"]},
+            "job_groups": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "check": {"type": "string"},
+        "detail": {"type": "string"},
+        "agrees_with_rule": {"type": ["boolean", "null"]},
+        "counter_evidence": {"type": "boolean"}
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "line_start", "line_end", "rev", "role", "quote"],
+      "properties": {
+        "id": {"type": "string"},
+        "path": {"type": "string", "minLength": 1},
+        "line_start": {"type": "integer", "minimum": 0},
+        "line_end": {"type": "integer", "minimum": 0},
+        "rev": {"enum": ["head", "base"]},
+        "role": {"enum": ["cause", "affected", "precedent", "contract"]},
+        "quote": {"type": "string"},
+        "label": {"type": "string"}
+      }
+    },
+    "affected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "asic_families", "reason"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "id": {"type": "string", "pattern": "^[a-z_]+:.+$"},
+        "asic_families": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "arch": {"type": "string"},
+        "resolution": {"enum": ["covered", "uncovered", "undetermined"]},
+        "job_groups": {"type": "array", "items": {"type": "string"}},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "coverage_gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["declarations_in_tree", "platforms_in_tree", "affected_count", "covered_by_pr_ci", "ambiguous"],
+      "properties": {
+        "declarations_in_tree": {"type": "integer", "minimum": 0},
+        "platforms_in_tree": {"type": "integer", "minimum": 0},
+        "job_groups": {"type": "integer", "minimum": 0},
+        "affected_count": {"type": "integer", "minimum": 0},
+        "covered_by_pr_ci": {"type": "integer", "minimum": 0},
+        "uncovered": {"type": "integer", "minimum": 0},
+        "ambiguous": {"type": "integer", "minimum": 0},
+        "never_built": {"type": "integer", "minimum": 0}
+      }
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding", "part", "reason"],
+      "properties": {
+        "finding": {"type": "string", "pattern": "^f-[0-9]{3}$"},
+        "part": {"enum": ["adjudication", "finding"]},
+        "band": {"enum": ["proven", "high", "medium", "low", null]},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

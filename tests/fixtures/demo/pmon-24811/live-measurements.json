@@ -1,0 +1,98 @@
+{
+  "agent_duration_s": 5.324,
+  "blobs_read": 475,
+  "checks": {
+    "citation": 0,
+    "cited_job_group": 0,
+    "entity_closure": 0,
+    "question_binding": 0,
+    "rule_consistency": 0
+  },
+  "model": "qwen2.5:7b-instruct",
+  "model_calls": 1,
+  "questions": [
+    {
+      "calls": [
+        {
+          "action": "answer",
+          "cached": false,
+          "finish_reason": "stop",
+          "input_tokens": 1706,
+          "latency_s": 5.237,
+          "output_tokens": 117,
+          "step": 0,
+          "timings": {
+            "eval_duration": 4.945,
+            "load_duration": 0.143,
+            "prompt_eval_duration": 0.045,
+            "total_duration": 5.235
+          }
+        }
+      ],
+      "evidence_items": 12,
+      "groups": 2,
+      "id": "q-001",
+      "input_tokens": 1706,
+      "items": [
+        {
+          "agrees_with_rule": null,
+          "answer": {
+            "cite": [
+              "E1",
+              "E4"
+            ],
+            "group": "A",
+            "reason": "Added xcvrd.dom_temperature_poll_interval for barefoot platforms.",
+            "verdict": "material"
+          },
+          "check": "",
+          "detail": "",
+          "group": "A",
+          "members": 4,
+          "outcome": "answered"
+        },
+        {
+          "agrees_with_rule": null,
+          "answer": {
+            "cite": [
+              "E7",
+              "E6"
+            ],
+            "group": "B",
+            "reason": "Added xcvrd.dom_temperature_poll_interval for broadcom-dnx platforms.",
+            "verdict": "material"
+          },
+          "check": "",
+          "detail": "",
+          "group": "B",
+          "members": 10,
+          "outcome": "answered"
+        }
+      ],
+      "kind": "materiality",
+      "latency_s": 5.24,
+      "model_calls": 1,
+      "output_tokens": 117,
+      "reason": "",
+      "status": "answered",
+      "tool_steps": 0
+    }
+  ],
+  "questions_answered": 1,
+  "questions_asked": 1,
+  "questions_in_brief": 1,
+  "rule_agreement": {
+    "agreed": 0,
+    "groups_judged": 0,
+    "platforms_agreed": 0,
+    "platforms_judged": 0
+  },
+  "static_duration_s": 1.27,
+  "status": "complete",
+  "tokens": {
+    "input_tokens": 1706,
+    "output_tokens": 117,
+    "usd": 0.0
+  },
+  "wall_clock_s": 6.61
+}

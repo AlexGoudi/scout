@@ -1,0 +1,407 @@
+{
+  "degraded_reason": null,
+  "findings": [
+    {
+      "adjudication": {
+        "answers": [
+          {
+            "agrees_with_rule": true,
+            "check": "",
+            "cite": [
+              "E5",
+              "E6",
+              "E3"
+            ],
+            "counter_evidence": false,
+            "covered": false,
+            "detail": "",
+            "group": "A",
+            "job_group": "",
+            "member_count": 5,
+            "members": [
+              "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0",
+              "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0",
+              "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0",
+              "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0",
+              "platform:marvell/x86_64-marvell_rd98DX35xx-r0"
+            ],
+            "outcome": "confirmed",
+            "reason": "No job group builds marvell-prestera for amd64.",
+            "rule": {
+              "job_groups": [],
+              "resolution": "uncovered"
+            }
+          },
+          {
+            "agrees_with_rule": true,
+            "check": "",
+            "cite": [
+              "E8",
+              "E9",
+              "E2"
+            ],
+            "counter_evidence": false,
+            "covered": true,
+            "detail": "",
+            "group": "B",
+            "job_group": "marvell-prestera-arm64",
+            "member_count": 4,
+            "members": [
+              "platform:marvell/arm64-marvell_db98cx8580_32cd-r0",
+              "platform:marvell/arm64-marvell_rd98DX35xx-r0",
+              "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0",
+              "platform:nokia/arm64-nokia_ixs7215_52xb-r0"
+            ],
+            "outcome": "confirmed",
+            "reason": "marvell-prestera-arm64 builds arm64 platforms.",
+            "rule": {
+              "job_groups": [
+                "marvell-prestera-arm64"
+              ],
+              "resolution": "covered"
+            }
+          },
+          {
+            "agrees_with_rule": true,
+            "check": "",
+            "cite": [
+              "E11",
+              "E12",
+              "E1"
+            ],
+            "counter_evidence": false,
+            "covered": true,
+            "detail": "",
+            "group": "C",
+            "job_group": "marvell-prestera-armhf",
+            "member_count": 1,
+            "members": [
+              "platform:nokia/armhf-nokia_ixs7215_52x-r0"
+            ],
+            "outcome": "confirmed",
+            "reason": "marvell-prestera-armhf builds armhf platforms.",
+            "rule": {
+              "job_groups": [
+                "marvell-prestera-armhf"
+              ],
+              "resolution": "covered"
+            }
+          }
+        ],
+        "band": "high",
+        "band_reason": "complete evidence over 10 platform(s)",
+        "judgement": "model",
+        "model": "qwen2.5:7b-instruct",
+        "posted": true,
+        "question": "q-001",
+        "rationale": "A (5 platform(s)): confirmed, not covered. No job group builds marvell-prestera for amd64. B (4 platform(s)): confirmed, covered by marvell-prestera-arm64. marvell-prestera-arm64 builds arm64 platforms. C (1 platform(s)): confirmed, covered by marvell-prestera-armhf. marvell-prestera-armhf builds armhf platforms.",
+        "reason": "",
+        "resolution": "architecture-aware",
+        "score": 0.508,
+        "status": "answered"
+      },
+      "affected": [
+        {
+          "arch": "arm64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/arm64-marvell_db98cx8580_32cd-r0",
+          "job_groups": [
+            "marvell-prestera-arm64"
+          ],
+          "kind": "platform",
+          "reason": "marvell-prestera-arm64 builds marvell-prestera for arm64, the platform's own architecture",
+          "resolution": "covered"
+        },
+        {
+          "arch": "arm64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/arm64-marvell_rd98DX35xx-r0",
+          "job_groups": [
+            "marvell-prestera-arm64"
+          ],
+          "kind": "platform",
+          "reason": "marvell-prestera-arm64 builds marvell-prestera for arm64, the platform's own architecture",
+          "resolution": "covered"
+        },
+        {
+          "arch": "arm64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0",
+          "job_groups": [
+            "marvell-prestera-arm64"
+          ],
+          "kind": "platform",
+          "reason": "marvell-prestera-arm64 builds marvell-prestera for arm64, the platform's own architecture",
+          "resolution": "covered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0",
+          "job_groups": [],
+          "kind": "platform",
+          "reason": "no PR-CI job group builds marvell-prestera for amd64",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0",
+          "job_groups": [],
+          "kind": "platform",
+          "reason": "no PR-CI job group builds marvell-prestera for amd64",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0",
+          "job_groups": [],
+          "kind": "platform",
+          "reason": "no PR-CI job group builds marvell-prestera for amd64",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0",
+          "job_groups": [],
+          "kind": "platform",
+          "reason": "no PR-CI job group builds marvell-prestera for amd64",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:marvell/x86_64-marvell_rd98DX35xx-r0",
+          "job_groups": [],
+          "kind": "platform",
+          "reason": "no PR-CI job group builds marvell-prestera for amd64",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "arm64",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:nokia/arm64-nokia_ixs7215_52xb-r0",
+          "job_groups": [
+            "marvell-prestera-arm64"
+          ],
+          "kind": "platform",
+          "reason": "marvell-prestera-arm64 builds marvell-prestera for arm64, the platform's own architecture",
+          "resolution": "covered"
+        },
+        {
+          "arch": "armhf",
+          "asic_families": [
+            "marvell-prestera"
+          ],
+          "id": "platform:nokia/armhf-nokia_ixs7215_52x-r0",
+          "job_groups": [
+            "marvell-prestera-armhf"
+          ],
+          "kind": "platform",
+          "reason": "marvell-prestera-armhf builds marvell-prestera for armhf, the platform's own architecture",
+          "resolution": "covered"
+        }
+      ],
+      "backtest_ref": null,
+      "confidence": {
+        "band": "high",
+        "basis": "adjudication",
+        "score": 0.508
+      },
+      "coverage_gap": {
+        "affected_count": 10,
+        "ambiguous": 10,
+        "covered_by_pr_ci": 0,
+        "declarations_in_tree": 232,
+        "job_groups": 5,
+        "never_built": 5,
+        "platforms_in_tree": 233,
+        "uncovered": 0
+      },
+      "detector": "D6",
+      "deterministic": {
+        "affected_count": 10,
+        "ambiguous_count": 10,
+        "band": "proven",
+        "covered_by_pr_ci": 0,
+        "never_built": 5,
+        "rule_candidate": {
+          "covered": 5,
+          "derivation": "naming-convention-inference",
+          "rules": [
+            "BI-R3",
+            "BI-R4"
+          ],
+          "statement": "Under BI-R3 and BI-R4, 5 of the 10 ambiguous platform(s) are built for their own CPU architecture, 5 are not, so 5 of the 10 affected platform(s) are never built by PR CI.",
+          "uncovered": 5,
+          "undetermined": 0
+        },
+        "statement": "No PR-CI job group builds marvell-prestera by name: marvell-prestera-arm64 builds marvell-prestera only for arm64; marvell-prestera-armhf builds marvell-prestera only for armhf. Of the 10 platform(s) this change reaches that declare it, BI-R3 and BI-R4, which rest on a naming convention rather than a declaration, find 5 built for their own CPU architecture and 5 not."
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "label": "job group marvell-prestera-arm64",
+          "line_end": 85,
+          "line_start": 81,
+          "path": "azure-pipelines.yml",
+          "quote": "      - name: marvell-prestera-arm64\n        pool: sonicbld-arm64\n        variables:\n           PLATFORM_NAME: marvell-prestera\n           PLATFORM_ARCH: arm64",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "id": "E2",
+          "label": "job group marvell-prestera-armhf",
+          "line_end": 92,
+          "line_start": 86,
+          "path": "azure-pipelines.yml",
+          "quote": "      - name: marvell-prestera-armhf\n        pool: sonicbld-armhf\n        timeoutInMinutes: 1200\n        variables:\n          PLATFORM_NAME: marvell-prestera\n          PLATFORM_ARCH: armhf\n          INCLUDE_RESTAPI: y",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "id": "E3",
+          "label": "pipeline default",
+          "line_end": 39,
+          "line_start": 39,
+          "path": ".azure-pipelines/azure-pipelines-build.yml",
+          "quote": "      PLATFORM_ARCH: amd64",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "id": "E5",
+          "label": "platform_asic of marvell/x86_64-marvell_db98cx8514_10cc-r0",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic",
+          "quote": "marvell-prestera",
+          "rev": "head",
+          "role": "affected"
+        },
+        {
+          "id": "E6",
+          "label": "modified, +1 -1, lines added",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic",
+          "quote": "marvell-prestera",
+          "rev": "head",
+          "role": "cause"
+        },
+        {
+          "id": "E8",
+          "label": "platform_asic of marvell/arm64-marvell_db98cx8580_32cd-r0",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic",
+          "quote": "marvell-prestera",
+          "rev": "head",
+          "role": "affected"
+        },
+        {
+          "id": "E9",
+          "label": "modified, +1 -1, lines added",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic",
+          "quote": "marvell-prestera",
+          "rev": "head",
+          "role": "cause"
+        },
+        {
+          "id": "E11",
+          "label": "platform_asic of nokia/armhf-nokia_ixs7215_52x-r0",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic",
+          "quote": "marvell-prestera",
+          "rev": "head",
+          "role": "affected"
+        }
+      ],
+      "id": "f-001",
+      "question": "q-001",
+      "severity": "high",
+      "title": "5 of 10 platform(s) declaring marvell-prestera are never built for their CPU architecture",
+      "verification": {
+        "method": "none",
+        "reason": "a deterministic claim about two files in the tree; re-running the lookup proves nothing",
+        "result": "not-applicable"
+      }
+    }
+  ],
+  "run": {
+    "adapter": "sonic-buildimage",
+    "agent_duration_s": 9.055,
+    "base_sha": "46eb26ee1f1a02703f7a7ec94732b1fff68e5d19",
+    "blobs_read": 325,
+    "brief_ref": "scout-brief.json",
+    "brief_sha": "029b4284a8f15dd52045c0d2e2473c62d6aff52b9cc67166b5e03377ef9de3bb",
+    "checks": {
+      "citation": 0,
+      "cited_job_group": 0,
+      "entity_closure": 0,
+      "question_binding": 0,
+      "rule_consistency": 0
+    },
+    "cost": {
+      "input_tokens": 1932,
+      "output_tokens": 208,
+      "usd": 0.0
+    },
+    "duration_s": 10.052,
+    "head_sha": "d93686ede1f4a495c5e1b3002d00af8dd1c44531",
+    "id": "00000000-0000-4000-8000-000000020860",
+    "mode": "range",
+    "model": {
+      "id": "qwen2.5:7b-instruct",
+      "prompt_sha": "4ab3b6c390fd322181db3df3a95c9ef7be25e776cbed552ba78d8e1998272d98",
+      "provider": "ollama",
+      "replayed": false
+    },
+    "model_calls": 1,
+    "questions": [
+      {
+        "id": "q-001",
+        "input_tokens": 1932,
+        "kind": "ambiguity",
+        "latency_s": 9.005,
+        "model_calls": 1,
+        "output_tokens": 208,
+        "reason": "",
+        "status": "answered",
+        "tool_steps": 0
+      }
+    ],
+    "questions_answered": 1,
+    "questions_asked": 1,
+    "questions_in_brief": 1,
+    "repo": "sonic-net/sonic-buildimage",
+    "static_duration_s": 0.991,
+    "status": "complete",
+    "truncated": []
+  },
+  "schema_version": "2.0",
+  "suppressed": []
+}

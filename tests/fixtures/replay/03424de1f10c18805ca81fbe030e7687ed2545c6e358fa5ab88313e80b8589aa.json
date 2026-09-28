@@ -1,0 +1,61 @@
+{
+  "fixture_version": "1.0",
+  "key": {
+    "digest": "03424de1f10c18805ca81fbe030e7687ed2545c6e358fa5ab88313e80b8589aa",
+    "input_hash": "4b69fd1605da5b7527c0ef24d9c7a8003f0dee489b3915eff31ee6e3c3767d88",
+    "model_id": "scout-test-model-2026-09-01",
+    "prompt_sha": "e6bcc514203c8a5ed2eb5b3abf30bf703f0ff499e3734a2b3bc0e68a0307a6e2"
+  },
+  "model": {
+    "input_usd_per_1k": 0.003,
+    "max_output_tokens": 4096,
+    "model_id": "scout-test-model-2026-09-01",
+    "output_usd_per_1k": 0.015,
+    "provider": "replay",
+    "temperature": 0.0
+  },
+  "request": {
+    "messages": [
+      {
+        "content": "You are SONiC Scout. Report only risks you can cite by file and line. Every claim needs a cause citation and an affected citation.",
+        "role": "system"
+      },
+      {
+        "content": "Detector D2. The diff makes generate_golden_config_db.py read disabled_host_interfaces. Which ansible/vars/topo_*.yml declare host_interfaces without it?",
+        "role": "user"
+      }
+    ],
+    "tools": [
+      {
+        "description": "Enumerate a data-file family, e.g. every topology file.",
+        "name": "list_artifacts",
+        "parameters": {
+          "properties": {
+            "family": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      }
+    ]
+  },
+  "response": {
+    "finish_reason": "stop",
+    "model_id": "scout-test-model-2026-09-01",
+    "text": "49 topology files declare host_interfaces without disabled_host_interfaces.",
+    "tool_calls": [
+      {
+        "arguments": {
+          "family": "topology"
+        },
+        "id": "call-1",
+        "name": "list_artifacts"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1840,
+      "output_tokens": 91
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "fixture_version": "1.0",
+  "key": {
+    "digest": "41732af4d565b3d3b50645fbac431b073c91d3b7b50ca9f2708e3f6c7d2d3dbd",
+    "input_hash": "016e642482abb31ecd70a3757ba13c1a467452b87754947c9942b1bdba4756f9",
+    "model_id": "qwen2.5:7b-instruct",
+    "prompt_sha": "db08bde3f915d3b784d2bf53ccaa7d82d2ebf3a39ce2186536c6a566c73182b9"
+  },
+  "model": {
+    "input_usd_per_1k": 0.0,
+    "max_output_tokens": 384,
+    "model_id": "qwen2.5:7b-instruct",
+    "output_usd_per_1k": 0.0,
+    "provider": "ollama",
+    "temperature": 0.0
+  },
+  "request": {
+    "messages": [
+      {
+        "content": "You are the adjudicator of SONiC Scout, an advisory reviewer of sonic-buildimage changes. You answer one question about the groups you are given, using only the numbered evidence you are shown.\n- Cite evidence only by its id, such as E2. An answer citing no valid id is discarded.\n- Name only platforms and job groups that appear in the question or the evidence.\n- If the evidence cannot decide, say so rather than guess.\n- Reply with one JSON object in the requested shape. Keep every reason under 30 words.",
+        "role": "system"
+      },
+      {
+        "content": "QUESTION q-001 (rules BI-R3, BI-R4): The architecture rule has already decided all 10 platform(s) declaring marvell-prestera against the architecture-qualified job groups marvell-prestera-arm64, marvell-prestera-armhf; its per-platform answers are in this item's rule_candidate. Confirm it, or contest a specific platform's answer with cited counter-evidence \u2014 a pipeline line or a platform file showing the architecture is not what the directory name implies. Do not re-derive the whole set.\n\nRULES\nBI-R3: A job group in either build stage, BuildVS or Build, builds its ASIC family only for the CPU architecture its PLATFORM_ARCH variable names, and a group naming none builds amd64. By the naming convention this makes explicit, a group named <family>-arm64 builds only arm64 platforms, <family>-armhf only armhf platforms, and a group named exactly <family> builds amd64. A platform is covered only if some group builds a family it declares for the platform's own CPU architecture.\nBI-R4: A platform's CPU architecture is the prefix of its device directory name before the first dash, following the ONIE platform string <arch>-<vendor>_<machine>-r<rev>: x86_64 means amd64, and arm64 and armhf mean themselves. platform_asic states no architecture, so this is a naming convention rather than a declaration.\n\nThe static rule has already answered for each group below, by applying the rules above. Confirm its answer, or contest it only if the evidence shows the rule does not hold for that group. For each group say whether its platforms are covered and, if covered, name the one job group that builds a family they declare for their CPU architecture.\n\nPR-CI JOB GROUPS (name: family, architecture)\nbroadcom: broadcom, amd64; marvell-prestera-arm64: marvell-prestera, arm64; marvell-prestera-armhf: marvell-prestera, armhf; mellanox: mellanox, amd64; vs: vs, amd64\n\nGROUPS\nA: 5 amd64 platform(s) declaring marvell-prestera: marvell/x86_64-marvell_db98cx8514_10cc-r0, marvell/x86_64-marvell_db98cx8522_10cc-r0, marvell/x86_64-marvell_db98cx8540_16cd-r0, marvell/x86_64-marvell_db98cx8580_32cd-r0, marvell/x86_64-marvell_rd98DX35xx-r0. Rule answer: not covered: no job group builds marvell-prestera for amd64. Its evidence: affected E5; cause E6, E7.\nB: 4 arm64 platform(s) declaring marvell-prestera: marvell/arm64-marvell_db98cx8580_32cd-r0, marvell/arm64-marvell_rd98DX35xx-r0, marvell/arm64-marvell_rd98DX35xx_cn9131-r0, nokia/arm64-nokia_ixs7215_52xb-r0. Rule answer: covered by marvell-prestera-arm64. Its evidence: affected E8; cause E9, E10.\nC: 1 armhf platform(s) declaring marvell-prestera: nokia/armhf-nokia_ixs7215_52x-r0. Rule answer: covered by marvell-prestera-armhf. Its evidence: affected E11; cause E12, E13.\n\nEVIDENCE\nE1 [contract] azure-pipelines.yml:81-85 (job group marvell-prestera-arm64)\n          - name: marvell-prestera-arm64\n            pool: sonicbld-arm64\n            variables:\n               PLATFORM_NAME: marvell-prestera\n               PLATFORM_ARCH: arm64\nE2 [contract] azure-pipelines.yml:86-92 (job group marvell-prestera-armhf)\n          - name: marvell-prestera-armhf\n            pool: sonicbld-armhf\n            timeoutInMinutes: 1200\n            variables:\n              PLATFORM_NAME: marvell-prestera\n              PLATFORM_ARCH: armhf\n              INCLUDE_RESTAPI: y\nE3 [contract] .azure-pipelines/azure-pipelines-build.yml:39 (pipeline default)\n          PLATFORM_ARCH: amd64\nE4 [contract] .azure-pipelines/azure-pipelines-image-template.yml:73-74 (pipeline default)\n              [ -z \"$PLATFORM_NAME\" ] && PLATFORM_NAME=$(PLATFORM_AZP)\n              ENABLE_DOCKER_BASE_PULL=y make PLATFORM=$PLATFORM_NAME PLATFORM_ARCH=$(PLATFORM_ARCH) $(BUILD_OPTIONS) configure\nE5 [affected] device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic:1 (platform_asic of marvell/x86_64-marvell_db98cx8514_10cc-r0)\n    marvell-prestera\nE6 [cause] device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic:1 (modified, +1 -1, lines added)\n    marvell-prestera\nE7 [cause] device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic:1 at base (modified, +1 -1, lines removed)\n    marvell\nE8 [affected] device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic:1 (platform_asic of marvell/arm64-marvell_db98cx8580_32cd-r0)\n    marvell-prestera\nE9 [cause] device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic:1 (modified, +1 -1, lines added)\n    marvell-prestera\nE10 [cause] device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic:1 at base (modified, +1 -1, lines removed)\n    marvell\nE11 [affected] device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic:1 (platform_asic of nokia/armhf-nokia_ixs7215_52x-r0)\n    marvell-prestera\nE12 [cause] device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic:1 (modified, +1 -1, lines added)\n    marvell-prestera\nE13 [cause] device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic:1 at base (modified, +1 -1, lines removed)\n    marvell\n\nANSWER for every group (A, B, C) with: {\"action\": \"answer\", \"answers\": [{\"group\": \"A\", \"reason\": \"<why, in under 30 words>\", \"covered\": true or false, \"job_group\": \"<the one job group that builds it, or empty>\", \"cite\": [\"E6\", \"E5\", \"E1\"]}, ...]}\nEach answer must cite at least one cause, one affected, one contract id: the group's own cause and affected ids, and a contract id from E1, E2, E3, E4.\nBefore answering you may read the tree 2 more time(s), with one of:\n{\"action\": \"read_blob\", \"path\": \"<file>\", \"rev\": \"head\", \"start\": 1, \"end\": 40}\n{\"action\": \"list_tree\", \"prefix\": \"<directory>\"}\n{\"action\": \"grep\", \"pattern\": \"<regex>\", \"glob\": \"<glob matching at most 6 files>\"}\nRead only if the evidence above cannot decide.",
+        "role": "user"
+      }
+    ],
+    "tools": [
+      {
+        "description": "The reply's JSON schema",
+        "name": "response_format",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "answer",
+                "read_blob",
+                "list_tree",
+                "grep"
+              ]
+            },
+            "answers": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "cite": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "covered": {
+                    "type": "boolean"
+                  },
+                  "group": {
+                    "type": "string"
+                  },
+                  "job_group": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "group",
+                  "reason",
+                  "covered",
+                  "job_group",
+                  "cite"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "end": {
+              "type": "integer"
+            },
+            "glob": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            },
+            "prefix": {
+              "type": "string"
+            },
+            "rev": {
+              "enum": [
+                "head",
+                "base"
+              ]
+            },
+            "start": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "type": "object"
+        }
+      }
+    ]
+  },
+  "response": {
+    "finish_reason": "stop",
+    "model_id": "qwen2.5:7b-instruct",
+    "text": "{\n  \"action\": \"answer\",\n  \"answers\": [\n    {\n      \"group\": \"A\",\n      \"reason\": \"No job group builds marvell-prestera for amd64.\",\n      \"covered\": false,\n      \"job_group\": \"\",\n      \"cite\": [\"E5\", \"E6\", \"E3\"]\n    },\n    {\n      \"group\": \"B\",\n      \"reason\": \"marvell-prestera-arm64 builds arm64 platforms.\",\n      \"covered\": true,\n      \"job_group\": \"marvell-prestera-arm64\",\n      \"cite\": [\"E8\", \"E9\", \"E2\"]\n    },\n    {\n      \"group\": \"C\",\n      \"reason\": \"marvell-prestera-armhf builds armhf platforms.\",\n      \"covered\": true,\n      \"job_group\": \"marvell-prestera-armhf\",\n      \"cite\": [\"E11\", \"E12\", \"E1\"]\n    }\n  ]\n}",
+    "tool_calls": [],
+    "usage": {
+      "input_tokens": 1932,
+      "output_tokens": 208
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+ "base_sha": "1e7ebe495c347916c733cbb205a9e087dda94937",
+ "commits": [
+  {
+   "author_email": "staphylo@arista.com",
+   "author_name": "Samuel Angebault",
+   "authored_date": "2026-01-05T22:50:35+01:00",
+   "body": "Add support for xcvrd `dom_temperature_poll_interval` option (#24811)\n\nTransceiver DOM update is currently too slow to update values in the database.\nEspecially when it comes to temperature data which is needed to make cooling decisions.\nBecause this case is rather specific a new thread was added to xcvrd which only polls temperature.\nIt doesn't do anything else in an effort to reduce the amount of resources taken for every iteration.\nThis feature was implemented as part of sonic-net/sonic-platform-daemons#685\n\nHow I did it\nAdd the --dom_temperature_poll_interval to xcvrd startup command.\nAdd this option in pmon_daemon_control.json to enable the new xcvrd thread for all Arista devices.\n\nHow to verify it\nVerify that the TRANSCEIVER_DOM_TEMPERATURE table is populated in STATE_DB when xcvrd is running and cables support temperature reporting.\n\nSigned-off-by: Samuel Angebault <staphylo@arista.com>",
+   "committed_date": "2026-01-05T13:50:35-08:00",
+   "files": [
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "{",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "    \"skip_fancontrol\": true,",
+         "kind": " ",
+         "new_lineno": 2,
+         "old_lineno": 2
+        },
+        {
+         "content": "    \"enable_xcvrd_sff_mgr\": true",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 3
+        },
+        {
+         "content": "    \"enable_xcvrd_sff_mgr\": true,",
+         "kind": "+",
+         "new_lineno": 3,
+         "old_lineno": null
+        },
+        {
+         "content": "    \"xcvrd\": {",
+         "kind": "+",
+         "new_lineno": 4,
+         "old_lineno": null
+        },
+        {
+         "content": "        \"dom_temperature_poll_interval\": 10",
+         "kind": "+",
+         "new_lineno": 5,
+         "old_lineno": null
+        },
+        {
+         "content": "    }",
+         "kind": "+",
+         "new_lineno": 6,
+         "old_lineno": null
+        },
+        {
+         "content": "}",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 4
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 8,
+         "old_lineno": 5
+        }
+       ],
+       "new_count": 8,
+       "new_start": 1,
+       "old_count": 5,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/arista/x86_64-arista_common/pmon_daemon_control.json",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "    {%- set options = options + \" --enable_sff_mgr\" %}",
+         "kind": " ",
+         "new_lineno": 128,
+         "old_lineno": 128
+        },
+        {
+         "content": "{% endif -%}",
+         "kind": " ",
+         "new_lineno": 129,
+         "old_lineno": 129
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 130,
+         "old_lineno": 130
+        },
+        {
+         "content": "{% if xcvrd and xcvrd.dom_temperature_poll_interval %}",
+         "kind": "+",
+         "new_lineno": 131,
+         "old_lineno": null
+        },
+        {
+         "content": "    {%- set options = options + \" --dom_temperature_poll_interval \" + xcvrd.dom_temperature_poll_interval|string %}",
+         "kind": "+",
+         "new_lineno": 132,
+         "old_lineno": null
+        },
+        {
+         "content": "{% endif -%}",
+         "kind": "+",
+         "new_lineno": 133,
+         "old_lineno": null
+        },
+        {
+         "content": "",
+         "kind": "+",
+         "new_lineno": 134,
+         "old_lineno": null
+        },
+        {
+         "content": "{% if delay_xcvrd %}",
+         "kind": " ",
+         "new_lineno": 135,
+         "old_lineno": 131
+        },
+        {
+         "content": "    {%- set command = \"bash -c \\\"sleep 30 && \" ~ base_command ~ options ~ \"\\\"\" %}",
+         "kind": " ",
+         "new_lineno": 136,
+         "old_lineno": 132
+        },
+        {
+         "content": "{% else %}",
+         "kind": " ",
+         "new_lineno": 137,
+         "old_lineno": 133
+        }
+       ],
+       "new_count": 10,
+       "new_start": 128,
+       "old_count": 6,
+       "old_start": 128,
+       "section": "dependent_startup_wait_for=rsyslogd:running"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "dockers/docker-platform-monitor/docker-pmon.supervisord.conf.j2",
+     "path_class": "sonic-buildimage:container",
+     "similarity": null
+    }
+   ],
+   "parents": [
+    "1e7ebe495c347916c733cbb205a9e087dda94937"
+   ],
+   "sha": "3589b565dff1229247826b9094529cf676a89c41",
+   "subject": "Add support for xcvrd `dom_temperature_poll_interval` option (#24811)"
+  }
+ ],
+ "head_sha": "3589b565dff1229247826b9094529cf676a89c41",
+ "local_patches": [],
+ "repo": "sonic-buildimage",
+ "schema_version": "1.0",
+ "spec": {
+  "base_ref": "3589b565dff1229247826b9094529cf676a89c41^",
+  "context_lines": 3,
+  "head_ref": "3589b565dff1229247826b9094529cf676a89c41",
+  "include_merges": false,
+  "merge_base": false,
+  "mode": "range"
+ }
+}

@@ -1,0 +1,14 @@
+{
+  "fixture_version": "1.0",
+  "kind": "review",
+  "repo": "sonic-net/sonic-buildimage",
+  "adapter": "sonic-buildimage",
+  "mode": "range",
+  "run_id": "00000000-0000-4000-8000-000000024811",
+  "measured_at": "2026-09-25T00:00:00Z",
+  "note": "sonic-net/sonic-buildimage#24811, 3589b565df: a shared Arista pmon_daemon_control.json that platforms reach through inbound symlinks. Same SHA upstream; captured from the Nokia fork clone's history.",
+  "change_set": "changeset.json",
+  "head_tree": "tree-head.json",
+  "base_tree": "",
+  "replay": "replay"
+}

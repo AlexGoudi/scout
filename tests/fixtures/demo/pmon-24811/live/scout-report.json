@@ -1,0 +1,364 @@
+{
+  "degraded_reason": null,
+  "findings": [
+    {
+      "adjudication": {
+        "answers": [
+          {
+            "agrees_with_rule": null,
+            "check": "",
+            "cite": [
+              "E1",
+              "E4"
+            ],
+            "counter_evidence": false,
+            "detail": "",
+            "group": "A",
+            "member_count": 4,
+            "members": [
+              "platform:arista/x86_64-arista_7170_32c",
+              "platform:arista/x86_64-arista_7170_32cd",
+              "platform:arista/x86_64-arista_7170_64c",
+              "platform:arista/x86_64-arista_7170b_64c"
+            ],
+            "outcome": "answered",
+            "reason": "Added xcvrd.dom_temperature_poll_interval for barefoot platforms.",
+            "rule": null,
+            "verdict": "material"
+          },
+          {
+            "agrees_with_rule": null,
+            "check": "",
+            "cite": [
+              "E7",
+              "E6"
+            ],
+            "counter_evidence": false,
+            "detail": "",
+            "group": "B",
+            "member_count": 10,
+            "members": [
+              "platform:arista/x86_64-arista_7280cr3_32d4",
+              "platform:arista/x86_64-arista_7280cr3_32p4",
+              "platform:arista/x86_64-arista_7280cr3mk_32d4",
+              "platform:arista/x86_64-arista_7280cr3mk_32p4",
+              "platform:arista/x86_64-arista_7280dr3a_36",
+              "platform:arista/x86_64-arista_7280dr3ak_36",
+              "platform:arista/x86_64-arista_7280dr3ak_36s",
+              "platform:arista/x86_64-arista_7280dr3am_36",
+              "platform:arista/x86_64-arista_7280r4_32qf_32df",
+              "platform:arista/x86_64-arista_7280r4k_32qf_32df"
+            ],
+            "outcome": "answered",
+            "reason": "Added xcvrd.dom_temperature_poll_interval for broadcom-dnx platforms.",
+            "rule": null,
+            "verdict": "material"
+          }
+        ],
+        "band": "high",
+        "band_reason": "complete evidence over 14 platform(s)",
+        "judgement": "model",
+        "model": "qwen2.5:7b-instruct",
+        "posted": true,
+        "question": "q-001",
+        "rationale": "A (4 platform(s)): material. Added xcvrd.dom_temperature_poll_interval for barefoot platforms. B (10 platform(s)): material. Added xcvrd.dom_temperature_poll_interval for broadcom-dnx platforms.",
+        "reason": "",
+        "resolution": "material",
+        "score": 0.685,
+        "status": "answered"
+      },
+      "affected": [
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "barefoot"
+          ],
+          "id": "platform:arista/x86_64-arista_7170_32c",
+          "kind": "platform",
+          "reason": "declares only barefoot, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "barefoot"
+          ],
+          "id": "platform:arista/x86_64-arista_7170_32cd",
+          "kind": "platform",
+          "reason": "declares only barefoot, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "barefoot"
+          ],
+          "id": "platform:arista/x86_64-arista_7170_64c",
+          "kind": "platform",
+          "reason": "declares only barefoot, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "barefoot"
+          ],
+          "id": "platform:arista/x86_64-arista_7170b_64c",
+          "kind": "platform",
+          "reason": "declares only barefoot, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280cr3_32d4",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280cr3_32p4",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280cr3mk_32d4",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280cr3mk_32p4",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280dr3a_36",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280dr3ak_36",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280dr3ak_36s",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280dr3am_36",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280r4_32qf_32df",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        },
+        {
+          "arch": "amd64",
+          "asic_families": [
+            "broadcom-dnx"
+          ],
+          "id": "platform:arista/x86_64-arista_7280r4k_32qf_32df",
+          "kind": "platform",
+          "reason": "declares only broadcom-dnx, which no PR-CI job group builds",
+          "resolution": "uncovered"
+        }
+      ],
+      "backtest_ref": null,
+      "confidence": {
+        "band": "high",
+        "basis": "adjudication",
+        "score": 0.685
+      },
+      "coverage_gap": {
+        "affected_count": 38,
+        "ambiguous": 0,
+        "covered_by_pr_ci": 24,
+        "declarations_in_tree": 260,
+        "job_groups": 5,
+        "never_built": 14,
+        "platforms_in_tree": 261,
+        "uncovered": 14
+      },
+      "detector": "D6",
+      "deterministic": {
+        "affected_count": 38,
+        "ambiguous_count": 0,
+        "band": "proven",
+        "covered_by_pr_ci": 24,
+        "never_built": 14,
+        "statement": "Of 38 platform(s) this change reaches, 24 declare an ASIC family one of the 5 PR-CI job groups builds and 14 declare only families none of them builds (barefoot, broadcom-dnx).",
+        "uncovered_count": 14
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "label": "modified, +4 -1, lines added",
+          "line_end": 6,
+          "line_start": 3,
+          "path": "device/arista/x86_64-arista_common/pmon_daemon_control.json",
+          "quote": "    \"enable_xcvrd_sff_mgr\": true,\n    \"xcvrd\": {\n        \"dom_temperature_poll_interval\": 10\n    }",
+          "rev": "head",
+          "role": "cause"
+        },
+        {
+          "id": "E3",
+          "label": "symlink to ../x86_64-arista_common/pmon_daemon_control.json",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/arista/x86_64-arista_7170_32c/pmon_daemon_control.json",
+          "quote": "../x86_64-arista_common/pmon_daemon_control.json",
+          "rev": "head",
+          "role": "affected"
+        },
+        {
+          "id": "E4",
+          "label": "platform_asic of arista/x86_64-arista_7170_32c",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/arista/x86_64-arista_7170_32c/platform_asic",
+          "quote": "barefoot",
+          "rev": "head",
+          "role": "affected"
+        },
+        {
+          "id": "E6",
+          "label": "platform_asic of arista/x86_64-arista_7280cr3_32d4, via symlink device/arista/x86_64-arista_7280cr3_32d4/platform_asic",
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/arista/x86_64-arista_7280cr3_32p4/platform_asic",
+          "quote": "broadcom-dnx",
+          "rev": "head",
+          "role": "affected"
+        },
+        {
+          "id": "E7",
+          "label": "modified, +4 -0, lines added; elsewhere in this change",
+          "line_end": 134,
+          "line_start": 131,
+          "path": "dockers/docker-platform-monitor/docker-pmon.supervisord.conf.j2",
+          "quote": "{% if xcvrd and xcvrd.dom_temperature_poll_interval %}\n    {%- set options = options + \" --dom_temperature_poll_interval \" + xcvrd.dom_temperature_poll_interval|string %}\n{% endif -%}\n",
+          "rev": "head",
+          "role": "cause"
+        },
+        {
+          "id": "E8",
+          "label": "job group vs",
+          "line_end": 69,
+          "line_start": 69,
+          "path": "azure-pipelines.yml",
+          "quote": "      - name: vs",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "id": "f-001",
+      "question": "q-001",
+      "severity": "high",
+      "title": "Change materially affects 14 platform(s) PR CI never builds",
+      "verification": {
+        "method": "none",
+        "reason": "a deterministic claim about two files in the tree; re-running the lookup proves nothing",
+        "result": "not-applicable"
+      }
+    }
+  ],
+  "run": {
+    "adapter": "sonic-buildimage",
+    "agent_duration_s": 5.324,
+    "base_sha": "1e7ebe495c347916c733cbb205a9e087dda94937",
+    "blobs_read": 475,
+    "brief_ref": "scout-brief.json",
+    "brief_sha": "b00f6c499d51fba19fd144279a8019380ba512b0e431fe4b3e30414529a2b16a",
+    "checks": {
+      "citation": 0,
+      "cited_job_group": 0,
+      "entity_closure": 0,
+      "question_binding": 0,
+      "rule_consistency": 0
+    },
+    "cost": {
+      "input_tokens": 1706,
+      "output_tokens": 117,
+      "usd": 0.0
+    },
+    "duration_s": 6.601,
+    "head_sha": "3589b565dff1229247826b9094529cf676a89c41",
+    "id": "00000000-0000-4000-8000-000000024811",
+    "mode": "range",
+    "model": {
+      "id": "qwen2.5:7b-instruct",
+      "prompt_sha": "4ab3b6c390fd322181db3df3a95c9ef7be25e776cbed552ba78d8e1998272d98",
+      "provider": "ollama",
+      "replayed": false
+    },
+    "model_calls": 1,
+    "questions": [
+      {
+        "id": "q-001",
+        "input_tokens": 1706,
+        "kind": "materiality",
+        "latency_s": 5.237,
+        "model_calls": 1,
+        "output_tokens": 117,
+        "reason": "",
+        "status": "answered",
+        "tool_steps": 0
+      }
+    ],
+    "questions_answered": 1,
+    "questions_asked": 1,
+    "questions_in_brief": 1,
+    "repo": "sonic-net/sonic-buildimage",
+    "static_duration_s": 1.27,
+    "status": "complete",
+    "truncated": []
+  },
+  "schema_version": "2.0",
+  "suppressed": []
+}

@@ -1,0 +1,674 @@
+{
+  "brief": {
+    "adapter": {
+      "name": "sonic-buildimage",
+      "rule_pack_sha": "92f7ba59f9aaab07",
+      "version": "1.0"
+    },
+    "base_sha": "46eb26ee1f1a02703f7a7ec94732b1fff68e5d19",
+    "blob_cache_hits": 1365,
+    "blobs_read": 322,
+    "head_sha": "d93686ede1f4a495c5e1b3002d00af8dd1c44531",
+    "id": "00000000-0000-4000-8000-000000020860",
+    "measured_at": "2026-09-25T00:00:00Z",
+    "mode": "range",
+    "repo": "sonic-net/sonic-buildimage",
+    "static_duration_s": 0.991,
+    "status": "complete",
+    "tree_paths": 15498
+  },
+  "budget": {
+    "max_blob_reads": 30,
+    "max_input_tokens": 120000,
+    "max_tool_calls": 60
+  },
+  "coverage": {
+    "affected": [
+      "platform:marvell/arm64-marvell_db98cx8580_32cd-r0",
+      "platform:marvell/arm64-marvell_rd98DX35xx-r0",
+      "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0",
+      "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0",
+      "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0",
+      "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0",
+      "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0",
+      "platform:marvell/x86_64-marvell_rd98DX35xx-r0",
+      "platform:nokia/arm64-nokia_ixs7215_52xb-r0",
+      "platform:nokia/armhf-nokia_ixs7215_52x-r0"
+    ],
+    "aliased_as_platform": [
+      "arista/x86_64-arista_7280cr3k_32d4",
+      "arista/x86_64-arista_7280cr3k_32p4",
+      "barefoot/x86_64-accton_as9516bf_32d-r0"
+    ],
+    "aliased_platforms": 3,
+    "ambiguous": [
+      "platform:marvell/arm64-marvell_db98cx8580_32cd-r0",
+      "platform:marvell/arm64-marvell_rd98DX35xx-r0",
+      "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0",
+      "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0",
+      "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0",
+      "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0",
+      "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0",
+      "platform:marvell/x86_64-marvell_rd98DX35xx-r0",
+      "platform:nokia/arm64-nokia_ixs7215_52xb-r0",
+      "platform:nokia/armhf-nokia_ixs7215_52x-r0"
+    ],
+    "covered": [],
+    "declarations_in_tree": 232,
+    "excluded_as_non_platform": [
+      "device/arista/x86_64-arista_common",
+      "device/broadcom/x86_64-broadcom_common"
+    ],
+    "job_group_names": [
+      "broadcom",
+      "marvell-prestera-arm64",
+      "marvell-prestera-armhf",
+      "mellanox",
+      "vs"
+    ],
+    "job_groups": 5,
+    "kept_without_hwsku": 18,
+    "model": "pr-build-stage",
+    "multi_family_declarations": 1,
+    "parse": {
+      "limitations": [],
+      "loose_scan_agrees": true,
+      "loose_scan_names": [
+        "broadcom",
+        "marvell-prestera-arm64",
+        "marvell-prestera-armhf",
+        "mellanox",
+        "vs"
+      ],
+      "scope": "Build+BuildVS",
+      "strict": true,
+      "templates_read": [
+        ".azure-pipelines/azure-pipelines-build.yml",
+        ".azure-pipelines/azure-pipelines-image-template.yml",
+        ".azure-pipelines/azure-pipelines-job-groups.yml"
+      ]
+    },
+    "platforms_in_tree": 233,
+    "symlinked_declarations": 10,
+    "uncovered": [],
+    "unresolved_declarations": 0
+  },
+  "entities": [
+    {
+      "id": "asic_family:marvell-prestera",
+      "kind": "asic_family",
+      "members": 10,
+      "resolved_via": "blob",
+      "source": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "family": "broadcom",
+      "id": "ci_job_group:broadcom",
+      "kind": "ci_job_group",
+      "members": 127,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "arm64",
+      "family": "marvell-prestera",
+      "id": "ci_job_group:marvell-prestera-arm64",
+      "kind": "ci_job_group",
+      "members": 0,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "armhf",
+      "family": "marvell-prestera",
+      "id": "ci_job_group:marvell-prestera-armhf",
+      "kind": "ci_job_group",
+      "members": 0,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "amd64",
+      "family": "mellanox",
+      "id": "ci_job_group:mellanox",
+      "kind": "ci_job_group",
+      "members": 31,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "amd64",
+      "family": "vs",
+      "id": "ci_job_group:vs",
+      "kind": "ci_job_group",
+      "members": 2,
+      "resolved_via": "blob",
+      "source": "azure-pipelines.yml"
+    },
+    {
+      "arch": "arm64",
+      "id": "platform:marvell/arm64-marvell_db98cx8580_32cd-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic"
+    },
+    {
+      "arch": "arm64",
+      "id": "platform:marvell/arm64-marvell_rd98DX35xx-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/arm64-marvell_rd98DX35xx-r0/platform_asic"
+    },
+    {
+      "arch": "arm64",
+      "id": "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/arm64-marvell_rd98DX35xx_cn9131-r0/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/x86_64-marvell_db98cx8522_10cc-r0/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/x86_64-marvell_db98cx8540_16cd-r0/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/x86_64-marvell_db98cx8580_32cd-r0/platform_asic"
+    },
+    {
+      "arch": "amd64",
+      "id": "platform:marvell/x86_64-marvell_rd98DX35xx-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/marvell/x86_64-marvell_rd98DX35xx-r0/platform_asic"
+    },
+    {
+      "arch": "arm64",
+      "id": "platform:nokia/arm64-nokia_ixs7215_52xb-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/nokia/arm64-nokia_ixs7215_52xb-r0/platform_asic"
+    },
+    {
+      "arch": "armhf",
+      "id": "platform:nokia/armhf-nokia_ixs7215_52x-r0",
+      "kind": "platform",
+      "members": 1,
+      "resolved_via": "blob",
+      "source": "device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic"
+    },
+    {
+      "id": "vendor:marvell",
+      "kind": "vendor",
+      "members": 9,
+      "resolved_via": "tree",
+      "source": "device/marvell"
+    },
+    {
+      "id": "vendor:nokia",
+      "kind": "vendor",
+      "members": 8,
+      "resolved_via": "tree",
+      "source": "device/nokia"
+    }
+  ],
+  "entity_closure": true,
+  "hotspots": [
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/arm64-marvell_db98cx8580_32cd-r0"
+      ],
+      "id": "h-001",
+      "path": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/arm64-marvell_rd98DX35xx-r0"
+      ],
+      "id": "h-002",
+      "path": "device/marvell/arm64-marvell_rd98DX35xx-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0"
+      ],
+      "id": "h-003",
+      "path": "device/marvell/arm64-marvell_rd98DX35xx_cn9131-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0"
+      ],
+      "id": "h-004",
+      "path": "device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0"
+      ],
+      "id": "h-005",
+      "path": "device/marvell/x86_64-marvell_db98cx8522_10cc-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0"
+      ],
+      "id": "h-006",
+      "path": "device/marvell/x86_64-marvell_db98cx8540_16cd-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0"
+      ],
+      "id": "h-007",
+      "path": "device/marvell/x86_64-marvell_db98cx8580_32cd-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:marvell/x86_64-marvell_rd98DX35xx-r0"
+      ],
+      "id": "h-008",
+      "path": "device/marvell/x86_64-marvell_rd98DX35xx-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:nokia/arm64-nokia_ixs7215_52xb-r0"
+      ],
+      "id": "h-009",
+      "path": "device/nokia/arm64-nokia_ixs7215_52xb-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    },
+    {
+      "change_kind": "modified",
+      "entities": [
+        "asic_family:marvell-prestera",
+        "platform:nokia/armhf-nokia_ixs7215_52x-r0"
+      ],
+      "id": "h-010",
+      "path": "device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic",
+      "path_class": "platform_data",
+      "score": 0.434,
+      "score_breakdown": {
+        "ambiguity": 0.2,
+        "coverage_gap": 0.0,
+        "entity_fanout": 0.034,
+        "path_class": 0.2
+      }
+    }
+  ],
+  "questions": [
+    {
+      "ask": "The architecture rule has already decided all 10 platform(s) declaring marvell-prestera against the architecture-qualified job groups marvell-prestera-arm64, marvell-prestera-armhf; its per-platform answers are in this item's rule_candidate. Confirm it, or contest a specific platform's answer with cited counter-evidence \u2014 a pipeline line or a platform file showing the architecture is not what the directory name implies. Do not re-derive the whole set.",
+      "budget": {
+        "blob_reads": 6,
+        "tool_calls": 12
+      },
+      "entities": [
+        "asic_family:marvell-prestera",
+        "ci_job_group:marvell-prestera-arm64",
+        "ci_job_group:marvell-prestera-armhf"
+      ],
+      "id": "q-001",
+      "kind": "ambiguity",
+      "prior": 0.55,
+      "required_evidence": [
+        "cause",
+        "affected",
+        "contract"
+      ],
+      "rule": "BI-R3",
+      "unresolved": "u-001"
+    }
+  ],
+  "rules": [
+    {
+      "citations": [
+        {
+          "line_end": 86,
+          "line_start": 53,
+          "path": "azure-pipelines.yml",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "derivation": "static",
+      "id": "BI-R1",
+      "statement": "A platform is exercised by the PR pipeline only if a job group in one of its build stages \u2014 BuildVS or Build \u2014 builds an ASIC family that the platform declares in its platform_asic file."
+    },
+    {
+      "citations": [
+        {
+          "line_end": 2,
+          "line_start": 1,
+          "path": "device/arista/x86_64-arista_common/platform_asic",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "derivation": "static",
+      "id": "BI-R2",
+      "statement": "A platform_asic file may declare more than one ASIC family, one per line. A platform is covered if any declared family is built."
+    },
+    {
+      "citations": [
+        {
+          "line_end": 85,
+          "line_start": 81,
+          "path": "azure-pipelines.yml",
+          "quote": "      - name: marvell-prestera-arm64\n        pool: sonicbld-arm64\n        variables:\n           PLATFORM_NAME: marvell-prestera\n           PLATFORM_ARCH: arm64",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "line_end": 92,
+          "line_start": 86,
+          "path": "azure-pipelines.yml",
+          "quote": "      - name: marvell-prestera-armhf\n        pool: sonicbld-armhf\n        timeoutInMinutes: 1200\n        variables:\n          PLATFORM_NAME: marvell-prestera\n          PLATFORM_ARCH: armhf\n          INCLUDE_RESTAPI: y",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "line_end": 39,
+          "line_start": 39,
+          "path": ".azure-pipelines/azure-pipelines-build.yml",
+          "quote": "      PLATFORM_ARCH: amd64",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "line_end": 74,
+          "line_start": 73,
+          "path": ".azure-pipelines/azure-pipelines-image-template.yml",
+          "quote": "          [ -z \"$PLATFORM_NAME\" ] && PLATFORM_NAME=$(PLATFORM_AZP)\n          ENABLE_DOCKER_BASE_PULL=y make PLATFORM=$PLATFORM_NAME PLATFORM_ARCH=$(PLATFORM_ARCH) $(BUILD_OPTIONS) configure",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "derivation": "static",
+      "id": "BI-R3",
+      "statement": "A job group in either build stage, BuildVS or Build, builds its ASIC family only for the CPU architecture its PLATFORM_ARCH variable names, and a group naming none builds amd64. By the naming convention this makes explicit, a group named <family>-arm64 builds only arm64 platforms, <family>-armhf only armhf platforms, and a group named exactly <family> builds amd64. A platform is covered only if some group builds a family it declares for the platform's own CPU architecture."
+    },
+    {
+      "citations": [
+        {
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/marvell/x86_64-marvell_db98cx8580_32cd-r0/platform_asic",
+          "rev": "head",
+          "role": "contract"
+        },
+        {
+          "line_end": 1,
+          "line_start": 1,
+          "path": "device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic",
+          "rev": "head",
+          "role": "contract"
+        }
+      ],
+      "derivation": "convention",
+      "id": "BI-R4",
+      "statement": "A platform's CPU architecture is the prefix of its device directory name before the first dash, following the ONIE platform string <arch>-<vendor>_<machine>-r<rev>: x86_64 means amd64, and arm64 and armhf mean themselves. platform_asic states no architecture, so this is a naming convention rather than a declaration."
+    }
+  ],
+  "schema_version": "1.0",
+  "unresolved": [
+    {
+      "adjudicated_by": "agent",
+      "candidates": [
+        {
+          "rule": "string-equality",
+          "uncovered": 10
+        },
+        {
+          "rule": "architecture-aware",
+          "uncovered": 5
+        }
+      ],
+      "entities": [
+        "asic_family:marvell-prestera",
+        "ci_job_group:marvell-prestera-arm64",
+        "ci_job_group:marvell-prestera-armhf"
+      ],
+      "id": "u-001",
+      "kind": "family_name_arity",
+      "rule_candidate": {
+        "candidate": "architecture-aware",
+        "derivation": "naming-convention-inference",
+        "platforms": [
+          {
+            "arch": "arm64",
+            "entity": "platform:marvell/arm64-marvell_db98cx8580_32cd-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [
+              "ci_job_group:marvell-prestera-arm64"
+            ],
+            "resolution": "covered"
+          },
+          {
+            "arch": "arm64",
+            "entity": "platform:marvell/arm64-marvell_rd98DX35xx-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [
+              "ci_job_group:marvell-prestera-arm64"
+            ],
+            "resolution": "covered"
+          },
+          {
+            "arch": "arm64",
+            "entity": "platform:marvell/arm64-marvell_rd98DX35xx_cn9131-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [
+              "ci_job_group:marvell-prestera-arm64"
+            ],
+            "resolution": "covered"
+          },
+          {
+            "arch": "amd64",
+            "entity": "platform:marvell/x86_64-marvell_db98cx8514_10cc-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [],
+            "resolution": "uncovered"
+          },
+          {
+            "arch": "amd64",
+            "entity": "platform:marvell/x86_64-marvell_db98cx8522_10cc-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [],
+            "resolution": "uncovered"
+          },
+          {
+            "arch": "amd64",
+            "entity": "platform:marvell/x86_64-marvell_db98cx8540_16cd-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [],
+            "resolution": "uncovered"
+          },
+          {
+            "arch": "amd64",
+            "entity": "platform:marvell/x86_64-marvell_db98cx8580_32cd-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [],
+            "resolution": "uncovered"
+          },
+          {
+            "arch": "amd64",
+            "entity": "platform:marvell/x86_64-marvell_rd98DX35xx-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [],
+            "resolution": "uncovered"
+          },
+          {
+            "arch": "arm64",
+            "entity": "platform:nokia/arm64-nokia_ixs7215_52xb-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [
+              "ci_job_group:marvell-prestera-arm64"
+            ],
+            "resolution": "covered"
+          },
+          {
+            "arch": "armhf",
+            "entity": "platform:nokia/armhf-nokia_ixs7215_52x-r0",
+            "families": [
+              "marvell-prestera"
+            ],
+            "job_groups": [
+              "ci_job_group:marvell-prestera-armhf"
+            ],
+            "resolution": "covered"
+          }
+        ],
+        "rules": [
+          "BI-R3",
+          "BI-R4"
+        ],
+        "statement": "Under BI-R3 and BI-R4, 5 of the 10 ambiguous platform(s) are built for their own CPU architecture, 5 are not, so 5 of the 10 affected platform(s) are never built by PR CI.",
+        "uncovered": 5
+      },
+      "summary": "Job group names are architecture-qualified; some platforms declare the unqualified family name. Which answer holds depends on each platform's architecture, which its platform_asic file does not state."
+    }
+  ]
+}

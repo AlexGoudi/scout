@@ -1,0 +1,120 @@
+{
+  "fixture_version": "1.0",
+  "key": {
+    "digest": "be8b91bdab977b74585dd990ba7f767a3db4a06cad802f0d73218db729f77bb3",
+    "input_hash": "07d5021a7c69bdaffad814dcc07e0387802587813faba81f15e5bec428e1d16c",
+    "model_id": "qwen2.5:7b-instruct",
+    "prompt_sha": "db08bde3f915d3b784d2bf53ccaa7d82d2ebf3a39ce2186536c6a566c73182b9"
+  },
+  "model": {
+    "input_usd_per_1k": 0.0,
+    "max_output_tokens": 384,
+    "model_id": "qwen2.5:7b-instruct",
+    "output_usd_per_1k": 0.0,
+    "provider": "ollama",
+    "temperature": 0.0
+  },
+  "request": {
+    "messages": [
+      {
+        "content": "You are the adjudicator of SONiC Scout, an advisory reviewer of sonic-buildimage changes. You answer one question about the groups you are given, using only the numbered evidence you are shown.\n- Cite evidence only by its id, such as E2. An answer citing no valid id is discarded.\n- Name only platforms and job groups that appear in the question or the evidence.\n- If the evidence cannot decide, say so rather than guess.\n- Reply with one JSON object in the requested shape. Keep every reason under 30 words.",
+        "role": "system"
+      },
+      {
+        "content": "QUESTION q-001 (rule BI-R1): No job group in either build stage, BuildVS or Build, builds any ASIC family these 14 platform(s) declare. Does this change materially put them at risk, or does it only pass through their directories? Cite the change as cause and each platform's declaration as affected.\n\nNo pull-request CI job builds these platforms, so no CI build would notice if this change broke them. For each group, decide whether the change materially affects the platforms or only passes through their files.\n- \"material\": it changes something these platforms build, install, load or run: configuration, code or data they use, including a file they link to.\n- \"pass-through\": it touches their files without changing what they do: comments, documentation, whitespace, or a rename with identical content.\n- \"unclear\": the evidence cannot tell.\nIn the reason, say what the change alters for these platforms, not only which file it touches.\n\nGROUPS\nA: 4 platform(s) declaring barefoot: arista/x86_64-arista_7170_32c, arista/x86_64-arista_7170_32cd, arista/x86_64-arista_7170_64c, arista/x86_64-arista_7170b_64c. Reached by: device/arista/x86_64-arista_common/pmon_daemon_control.json through a symlink. Its evidence: cause E1, E2; affected E3, E4.\nB: 10 platform(s) declaring broadcom-dnx: arista/x86_64-arista_7280cr3_32d4, arista/x86_64-arista_7280cr3_32p4, arista/x86_64-arista_7280cr3mk_32d4, arista/x86_64-arista_7280cr3mk_32p4, arista/x86_64-arista_7280dr3a_36, arista/x86_64-arista_7280dr3ak_36 and 4 more. Reached by: device/arista/x86_64-arista_common/pmon_daemon_control.json through a symlink. Its evidence: cause E1, E2; affected E5, E6.\n\nCHANGES (lines starting - were removed, + were added)\ndevice/arista/x86_64-arista_common/pmon_daemon_control.json (modified, +4 -1; cite E1 for lines added, E2 for lines removed):\n     {\n         \"skip_fancontrol\": true,\n    -    \"enable_xcvrd_sff_mgr\": true\n    +    \"enable_xcvrd_sff_mgr\": true,\n    +    \"xcvrd\": {\n    +        \"dom_temperature_poll_interval\": 10\n    +    }\n     }\n     \ndockers/docker-platform-monitor/docker-pmon.supervisord.conf.j2 (modified, +4 -0; cite E7 for lines added):\n         {%- set options = options + \" --enable_sff_mgr\" %}\n     {% endif -%}\n     \n    +{% if xcvrd and xcvrd.dom_temperature_poll_interval %}\n    +    {%- set options = options + \" --dom_temperature_poll_interval \" + xcvrd.dom_temperature_poll_interval|string %}\n    +{% endif -%}\n    +\n     {% if delay_xcvrd %}\n         {%- set command = \"bash -c \\\"sleep 30 && \" ~ base_command ~ options ~ \"\\\"\" %}\n     {% else %}\n\nEVIDENCE\nE1 [cause] device/arista/x86_64-arista_common/pmon_daemon_control.json:3-6 (modified, +4 -1, lines added); its lines are under CHANGES\nE2 [cause] device/arista/x86_64-arista_common/pmon_daemon_control.json:3 at base (modified, +4 -1, lines removed); its lines are under CHANGES\nE3 [affected] device/arista/x86_64-arista_7170_32c/pmon_daemon_control.json (symlink to ../x86_64-arista_common/pmon_daemon_control.json)\n    ../x86_64-arista_common/pmon_daemon_control.json\nE4 [affected] device/arista/x86_64-arista_7170_32c/platform_asic:1 (platform_asic of arista/x86_64-arista_7170_32c)\n    barefoot\nE5 [affected] device/arista/x86_64-arista_7280cr3_32d4/pmon_daemon_control.json (symlink to ../x86_64-arista_common/pmon_daemon_control.json)\n    ../x86_64-arista_common/pmon_daemon_control.json\nE6 [affected] device/arista/x86_64-arista_7280cr3_32p4/platform_asic:1 (platform_asic of arista/x86_64-arista_7280cr3_32d4, via symlink device/arista/x86_64-arista_7280cr3_32d4/platform_asic)\n    broadcom-dnx\nE7 [cause] dockers/docker-platform-monitor/docker-pmon.supervisord.conf.j2:131-134 (modified, +4 -0, lines added; elsewhere in this change); its lines are under CHANGES\nE8 [contract] azure-pipelines.yml:69 (job group vs)\n          - name: vs\nE9 [contract] azure-pipelines.yml:79 (job group broadcom)\n          - name: broadcom\nE10 [contract] azure-pipelines.yml:85 (job group mellanox)\n          - name: mellanox\nE11 [contract] azure-pipelines.yml:90 (job group marvell-prestera-arm64)\n          - name: marvell-prestera-arm64\nE12 [contract] azure-pipelines.yml:95 (job group marvell-prestera-armhf)\n          - name: marvell-prestera-armhf\n\nANSWER for every group (A, B) with: {\"action\": \"answer\", \"answers\": [{\"group\": \"A\", \"reason\": \"<why, in under 30 words>\", \"verdict\": \"material\" or \"pass-through\" or \"unclear\", \"cite\": [\"E1\", \"E3\"]}, ...]}\nEach answer must cite at least one cause, one affected id: the group's own cause and affected ids.\nBefore answering you may read the tree 2 more time(s), with one of:\n{\"action\": \"read_blob\", \"path\": \"<file>\", \"rev\": \"head\", \"start\": 1, \"end\": 40}\n{\"action\": \"list_tree\", \"prefix\": \"<directory>\"}\n{\"action\": \"grep\", \"pattern\": \"<regex>\", \"glob\": \"<glob matching at most 6 files>\"}\nRead only if the evidence above cannot decide.",
+        "role": "user"
+      }
+    ],
+    "tools": [
+      {
+        "description": "The reply's JSON schema",
+        "name": "response_format",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "answer",
+                "read_blob",
+                "list_tree",
+                "grep"
+              ]
+            },
+            "answers": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "cite": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "group": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "verdict": {
+                    "enum": [
+                      "material",
+                      "pass-through",
+                      "unclear"
+                    ]
+                  }
+                },
+                "required": [
+                  "group",
+                  "reason",
+                  "verdict",
+                  "cite"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "end": {
+              "type": "integer"
+            },
+            "glob": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            },
+            "prefix": {
+              "type": "string"
+            },
+            "rev": {
+              "enum": [
+                "head",
+                "base"
+              ]
+            },
+            "start": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "type": "object"
+        }
+      }
+    ]
+  },
+  "response": {
+    "finish_reason": "stop",
+    "model_id": "qwen2.5:7b-instruct",
+    "text": "{\n  \"action\": \"answer\",\n  \"answers\": [\n    {\n      \"group\": \"A\",\n      \"reason\": \"Added xcvrd.dom_temperature_poll_interval for barefoot platforms.\",\n      \"verdict\": \"material\",\n      \"cite\": [\"E1\", \"E4\"]\n    },\n    {\n      \"group\": \"B\",\n      \"reason\": \"Added xcvrd.dom_temperature_poll_interval for broadcom-dnx platforms.\",\n      \"verdict\": \"material\",\n      \"cite\": [\"E7\", \"E6\"]\n    }\n  ]\n}",
+    "tool_calls": [],
+    "usage": {
+      "input_tokens": 1706,
+      "output_tokens": 117
+    }
+  }
+}

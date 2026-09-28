@@ -3,3 +3,5 @@
 # limit is pinned here and the team's existing checks keep passing unchanged.
 [flake8]
 max-line-length = 120
+# The tree and blob cache also collects throwaway exploration scripts; it is never source.
+extend-exclude = .scout-cache

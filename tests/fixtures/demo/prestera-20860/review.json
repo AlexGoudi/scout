@@ -1,0 +1,14 @@
+{
+  "fixture_version": "1.0",
+  "kind": "review",
+  "repo": "sonic-net/sonic-buildimage",
+  "adapter": "sonic-buildimage",
+  "mode": "range",
+  "run_id": "00000000-0000-4000-8000-000000020860",
+  "measured_at": "2026-09-25T00:00:00Z",
+  "note": "sonic-net/sonic-buildimage#20860, d93686ede1: renames the family in the platform_asic of ten marvell-prestera platforms across amd64, arm64 and armhf, the ambiguous-architecture case.",
+  "change_set": "changeset.json",
+  "head_tree": "tree-head.json",
+  "base_tree": "",
+  "replay": "replay"
+}

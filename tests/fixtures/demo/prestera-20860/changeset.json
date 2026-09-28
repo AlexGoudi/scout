@@ -1,0 +1,4104 @@
+{
+ "base_sha": "46eb26ee1f1a02703f7a7ec94732b1fff68e5d19",
+ "commits": [
+  {
+   "author_email": "108510436+krismarvell@users.noreply.github.com",
+   "author_name": "krismarvell",
+   "authored_date": "2025-03-12T23:41:49+05:30",
+   "body": "Renaming platform/marvell to platform/marvell-prestera (#20860)\n\nWhy I did it\nRenaming of platforms and asic type for marvell\nThis PR has dependencies on the below submodule PRs",
+   "committed_date": "2025-03-12T11:11:49-07:00",
+   "files": [
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "  - centec",
+         "kind": " ",
+         "new_lineno": 37,
+         "old_lineno": 37
+        },
+        {
+         "content": "  - centec-arm64",
+         "kind": " ",
+         "new_lineno": 38,
+         "old_lineno": 38
+        },
+        {
+         "content": "  - generic",
+         "kind": " ",
+         "new_lineno": 39,
+         "old_lineno": 39
+        },
+        {
+         "content": "  - marvell-armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 40
+        },
+        {
+         "content": "  - marvell-arm64",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 41
+        },
+        {
+         "content": "  - marvell-prestera-armhf",
+         "kind": "+",
+         "new_lineno": 40,
+         "old_lineno": null
+        },
+        {
+         "content": "  - marvell-prestera-arm64",
+         "kind": "+",
+         "new_lineno": 41,
+         "old_lineno": null
+        },
+        {
+         "content": "  - mellanox",
+         "kind": " ",
+         "new_lineno": 42,
+         "old_lineno": 42
+        },
+        {
+         "content": "  - pensando",
+         "kind": " ",
+         "new_lineno": 43,
+         "old_lineno": 43
+        },
+        {
+         "content": "  - nvidia-bluefield",
+         "kind": " ",
+         "new_lineno": 44,
+         "old_lineno": 44
+        }
+       ],
+       "new_count": 8,
+       "new_start": 37,
+       "old_count": 8,
+       "old_start": 37,
+       "section": "parameters:"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": ".azure-pipelines/azure-pipelines-UpgrateVersion.yml",
+     "path_class": "sonic-buildimage:pipeline",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "          variables:",
+         "kind": " ",
+         "new_lineno": 94,
+         "old_lineno": 94
+        },
+        {
+         "content": "            dbg_image: yes",
+         "kind": " ",
+         "new_lineno": 95,
+         "old_lineno": 95
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 96,
+         "old_lineno": 96
+        },
+        {
+         "content": "        - name: marvell-armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 97
+        },
+        {
+         "content": "        - name: marvell-prestera-armhf",
+         "kind": "+",
+         "new_lineno": 97,
+         "old_lineno": null
+        },
+        {
+         "content": "          ${{ if not(parameters.qemuOrCrossBuild) }}:",
+         "kind": " ",
+         "new_lineno": 98,
+         "old_lineno": 98
+        },
+        {
+         "content": "            pool: sonicbld-armhf",
+         "kind": " ",
+         "new_lineno": 99,
+         "old_lineno": 99
+        },
+        {
+         "content": "          timeoutInMinutes: 2880",
+         "kind": " ",
+         "new_lineno": 100,
+         "old_lineno": 100
+        },
+        {
+         "content": "          variables:",
+         "kind": " ",
+         "new_lineno": 101,
+         "old_lineno": 101
+        },
+        {
+         "content": "            PLATFORM_NAME: marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 102
+        },
+        {
+         "content": "            PLATFORM_NAME: marvell-prestera",
+         "kind": "+",
+         "new_lineno": 102,
+         "old_lineno": null
+        },
+        {
+         "content": "            PLATFORM_ARCH: armhf",
+         "kind": " ",
+         "new_lineno": 103,
+         "old_lineno": 103
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 104,
+         "old_lineno": 104
+        },
+        {
+         "content": "        - name: marvell-arm64",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 105
+        },
+        {
+         "content": "        - name: marvell-prestera-arm64",
+         "kind": "+",
+         "new_lineno": 105,
+         "old_lineno": null
+        },
+        {
+         "content": "          ${{ if not(parameters.qemuOrCrossBuild) }}:",
+         "kind": " ",
+         "new_lineno": 106,
+         "old_lineno": 106
+        },
+        {
+         "content": "            pool: sonicbld-arm64",
+         "kind": " ",
+         "new_lineno": 107,
+         "old_lineno": 107
+        },
+        {
+         "content": "          timeoutInMinutes: 2880",
+         "kind": " ",
+         "new_lineno": 108,
+         "old_lineno": 108
+        },
+        {
+         "content": "          variables:",
+         "kind": " ",
+         "new_lineno": 109,
+         "old_lineno": 109
+        },
+        {
+         "content": "            PLATFORM_NAME: marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 110
+        },
+        {
+         "content": "            PLATFORM_NAME: marvell-prestera",
+         "kind": "+",
+         "new_lineno": 110,
+         "old_lineno": null
+        },
+        {
+         "content": "            PLATFORM_ARCH: arm64",
+         "kind": " ",
+         "new_lineno": 111,
+         "old_lineno": 111
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 112,
+         "old_lineno": 112
+        },
+        {
+         "content": "        - name: marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 113
+        },
+        {
+         "content": "        - name: marvell-prestera",
+         "kind": "+",
+         "new_lineno": 113,
+         "old_lineno": null
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 114,
+         "old_lineno": 114
+        },
+        {
+         "content": "        - name: mellanox",
+         "kind": " ",
+         "new_lineno": 115,
+         "old_lineno": 115
+        },
+        {
+         "content": "          variables:",
+         "kind": " ",
+         "new_lineno": 116,
+         "old_lineno": 116
+        }
+       ],
+       "new_count": 23,
+       "new_start": 94,
+       "old_count": 23,
+       "old_start": 94,
+       "section": "jobs:"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": ".azure-pipelines/azure-pipelines-build.yml",
+     "path_class": "sonic-buildimage:pipeline",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "      - script: |",
+         "kind": " ",
+         "new_lineno": 36,
+         "old_lineno": 36
+        },
+        {
+         "content": "          [ -n \"$OVERRIDE_BUILD_OPTIONS\" ] && OVERRIDE_BUILD_OPTIONS=$(OVERRIDE_BUILD_OPTIONS)",
+         "kind": " ",
+         "new_lineno": 37,
+         "old_lineno": 37
+        },
+        {
+         "content": "          BUILD_OPTIONS=\"$(BUILD_OPTIONS) $OVERRIDE_BUILD_OPTIONS\"",
+         "kind": " ",
+         "new_lineno": 38,
+         "old_lineno": 38
+        },
+        {
+         "content": "          if [ -n \"$(CACHE_MODE)\" ] && echo $(PLATFORM_AZP) | grep -E -q \"^(vs|broadcom|mellanox|marvell-armhf|marvell-arm64|vpp)$\"; then",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 39
+        },
+        {
+         "content": "          if [ -n \"$(CACHE_MODE)\" ] && echo $(PLATFORM_AZP) | grep -E -q \"^(vs|broadcom|mellanox|marvell-prestera-armhf|marvell-prestera-arm64|vpp)$\"; then",
+         "kind": "+",
+         "new_lineno": 39,
+         "old_lineno": null
+        },
+        {
+         "content": "            CACHE_OPTIONS=\"SONIC_DPKG_CACHE_METHOD=$(CACHE_MODE) SONIC_DPKG_CACHE_SOURCE=/nfs/dpkg_cache/$(PLATFORM_AZP)\"",
+         "kind": " ",
+         "new_lineno": 40,
+         "old_lineno": 40
+        },
+        {
+         "content": "            BUILD_OPTIONS=\"$BUILD_OPTIONS $CACHE_OPTIONS\"",
+         "kind": " ",
+         "new_lineno": 41,
+         "old_lineno": 41
+        },
+        {
+         "content": "          fi",
+         "kind": " ",
+         "new_lineno": 42,
+         "old_lineno": 42
+        }
+       ],
+       "new_count": 7,
+       "new_start": 36,
+       "old_count": 7,
+       "old_start": 36,
+       "section": "jobs:"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": ".azure-pipelines/azure-pipelines-image-template.yml",
+     "path_class": "sonic-buildimage:pipeline",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "  values:",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "  - broadcom",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "  - centec-arm64",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        },
+        {
+         "content": "  - marvell-armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 7
+        },
+        {
+         "content": "  - marvell-prestera-armhf",
+         "kind": "+",
+         "new_lineno": 7,
+         "old_lineno": null
+        },
+        {
+         "content": "  - mellanox",
+         "kind": " ",
+         "new_lineno": 8,
+         "old_lineno": 8
+        },
+        {
+         "content": "  - vs",
+         "kind": " ",
+         "new_lineno": 9,
+         "old_lineno": 9
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 10,
+         "old_lineno": 10
+        }
+       ],
+       "new_count": 7,
+       "new_start": 4,
+       "old_count": 7,
+       "old_start": 4,
+       "section": "parameters:"
+      },
+      {
+       "lines": [
+        {
+         "content": "  values:",
+         "kind": " ",
+         "new_lineno": 21,
+         "old_lineno": 21
+        },
+        {
+         "content": "  - brcm",
+         "kind": " ",
+         "new_lineno": 22,
+         "old_lineno": 22
+        },
+        {
+         "content": "  - centec-arm64",
+         "kind": " ",
+         "new_lineno": 23,
+         "old_lineno": 23
+        },
+        {
+         "content": "  - marvell-armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 24
+        },
+        {
+         "content": "  - marvell-prestera-armhf",
+         "kind": "+",
+         "new_lineno": 24,
+         "old_lineno": null
+        },
+        {
+         "content": "  - mlnx",
+         "kind": " ",
+         "new_lineno": 25,
+         "old_lineno": 25
+        },
+        {
+         "content": "  - vs",
+         "kind": " ",
+         "new_lineno": 26,
+         "old_lineno": 26
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 27,
+         "old_lineno": 27
+        }
+       ],
+       "new_count": 7,
+       "new_start": 21,
+       "old_count": 7,
+       "old_start": 21,
+       "section": "parameters:"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": ".azure-pipelines/build-template.yml",
+     "path_class": "sonic-buildimage:pipeline",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "          variables:",
+         "kind": " ",
+         "new_lineno": 45,
+         "old_lineno": 45
+        },
+        {
+         "content": "            docker_syncd_rpc_image: yes",
+         "kind": " ",
+         "new_lineno": 46,
+         "old_lineno": 46
+        },
+        {
+         "content": "            platform_rpc: mlnx",
+         "kind": " ",
+         "new_lineno": 47,
+         "old_lineno": 47
+        },
+        {
+         "content": "        - name: marvell-armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 48
+        },
+        {
+         "content": "        - name: marvell-prestera-armhf",
+         "kind": "+",
+         "new_lineno": 48,
+         "old_lineno": null
+        },
+        {
+         "content": "          pool: sonicbld-armhf",
+         "kind": " ",
+         "new_lineno": 49,
+         "old_lineno": 49
+        },
+        {
+         "content": "          timeoutInMinutes: 1200",
+         "kind": " ",
+         "new_lineno": 50,
+         "old_lineno": 50
+        },
+        {
+         "content": "          variables:",
+         "kind": " ",
+         "new_lineno": 51,
+         "old_lineno": 51
+        },
+        {
+         "content": "            PLATFORM_NAME: marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 52
+        },
+        {
+         "content": "            PLATFORM_NAME: marvell-prestera",
+         "kind": "+",
+         "new_lineno": 52,
+         "old_lineno": null
+        },
+        {
+         "content": "            PLATFORM_ARCH: armhf",
+         "kind": " ",
+         "new_lineno": 53,
+         "old_lineno": 53
+        }
+       ],
+       "new_count": 9,
+       "new_start": 45,
+       "old_count": 9,
+       "old_start": 45,
+       "section": "stages:"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": ".azure-pipelines/official-build-cache.yml",
+     "path_class": "sonic-buildimage:pipeline",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "[submodule \"src/sonic-dash-api\"]",
+         "kind": " ",
+         "new_lineno": 118,
+         "old_lineno": 118
+        },
+        {
+         "content": "\tpath = src/sonic-dash-api",
+         "kind": " ",
+         "new_lineno": 119,
+         "old_lineno": 119
+        },
+        {
+         "content": "\turl = https://github.com/sonic-net/sonic-dash-api.git",
+         "kind": " ",
+         "new_lineno": 120,
+         "old_lineno": 120
+        },
+        {
+         "content": "[submodule \"platform/marvell/mrvl-prestera\"]",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 121
+        },
+        {
+         "content": "\tpath = platform/marvell/mrvl-prestera",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 122
+        },
+        {
+         "content": "\turl = https://github.com/Marvell-switching/mrvl-prestera.git",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 123
+        },
+        {
+         "content": "[submodule \"platform/marvell/sonic-platform-marvell\"]",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 124
+        },
+        {
+         "content": "\tpath = platform/marvell/sonic-platform-marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 125
+        },
+        {
+         "content": "\turl = https://github.com/Marvell-switching/sonic-platform-arm64.git",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 126
+        },
+        {
+         "content": "[submodule \"src/sonic-stp\"]",
+         "kind": " ",
+         "new_lineno": 121,
+         "old_lineno": 127
+        },
+        {
+         "content": "\tpath = src/sonic-stp",
+         "kind": " ",
+         "new_lineno": 122,
+         "old_lineno": 128
+        },
+        {
+         "content": "\turl = https://github.com/sonic-net/sonic-stp",
+         "kind": " ",
+         "new_lineno": 123,
+         "old_lineno": 129
+        }
+       ],
+       "new_count": 6,
+       "new_start": 118,
+       "old_count": 12,
+       "old_start": 118,
+       "section": ""
+      },
+      {
+       "lines": [
+        {
+         "content": "[submodule \"src/sonic-framework/gnoi\"]",
+         "kind": " ",
+         "new_lineno": 130,
+         "old_lineno": 136
+        },
+        {
+         "content": "\tpath = src/sonic-framework/gnoi",
+         "kind": " ",
+         "new_lineno": 131,
+         "old_lineno": 137
+        },
+        {
+         "content": "\turl = https://github.com/openconfig/gnoi",
+         "kind": " ",
+         "new_lineno": 132,
+         "old_lineno": 138
+        },
+        {
+         "content": "[submodule \"platform/marvell-prestera/mrvl-prestera\"]",
+         "kind": "+",
+         "new_lineno": 133,
+         "old_lineno": null
+        },
+        {
+         "content": "\tpath = platform/marvell-prestera/mrvl-prestera",
+         "kind": "+",
+         "new_lineno": 134,
+         "old_lineno": null
+        },
+        {
+         "content": "\turl = https://github.com/Marvell-switching/mrvl-prestera.git",
+         "kind": "+",
+         "new_lineno": 135,
+         "old_lineno": null
+        },
+        {
+         "content": "[submodule \"platform/marvell-prestera/sonic-platform-marvell\"]",
+         "kind": "+",
+         "new_lineno": 136,
+         "old_lineno": null
+        },
+        {
+         "content": "\tpath = platform/marvell-prestera/sonic-platform-marvell",
+         "kind": "+",
+         "new_lineno": 137,
+         "old_lineno": null
+        },
+        {
+         "content": "\turl = https://github.com/Marvell-switching/sonic-platform-arm64.git",
+         "kind": "+",
+         "new_lineno": 138,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 9,
+       "new_start": 130,
+       "old_count": 3,
+       "old_start": 136,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": ".gitmodules",
+     "path_class": "sonic-buildimage:component_source",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "[![Centec(arm64)](https://dev.azure.com/mssonic/build/_apis/build/status/centec/Azure.sonic-buildimage.official.centec-arm64?branchName=master&label=Centec-arm64)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=140&branchName=master)",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "[![Marvell-Teralynx](https://dev.azure.com/mssonic/build/_apis/build/status/innovium/Azure.sonic-buildimage.official.marvell-teralynx?branchName=master&label=Marvell-Teralynx)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=148&branchName=master)",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        },
+        {
+         "content": "[![Mellanox](https://dev.azure.com/mssonic/build/_apis/build/status/mellanox/Azure.sonic-buildimage.official.mellanox?branchName=master&label=Mellanox)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=139&branchName=master)",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 7
+        },
+        {
+         "content": "[![Marvell(armhf)](https://dev.azure.com/mssonic/build/_apis/build/status/marvell/Azure.sonic-buildimage.official.marvell-armhf?branchName=master&label=Marvell-armhf)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=141&branchName=master)",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 8
+        },
+        {
+         "content": "[![Marvell(arm64)](https://dev.azure.com/mssonic/build/_apis/build/status/marvell/Azure.sonic-buildimage.official.marvell-arm64?branchName=master&label=Marvell-arm64)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=999&branchName=master)",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 9
+        },
+        {
+         "content": "[![Marvell-Prestera(armhf)](https://dev.azure.com/mssonic/build/_apis/build/status/marvell-prestera/Azure.sonic-buildimage.official.marvell-prestera-armhf?branchName=master&label=Marvell-Prestera-armhf)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=141&branchName=master)",
+         "kind": "+",
+         "new_lineno": 8,
+         "old_lineno": null
+        },
+        {
+         "content": "[![Marvell-Prestera(arm64)](https://dev.azure.com/mssonic/build/_apis/build/status/marvell-prestera/Azure.sonic-buildimage.official.marvell-prestera-arm64?branchName=master&label=Marvell-Prestera-arm64)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=999&branchName=master)",
+         "kind": "+",
+         "new_lineno": 9,
+         "old_lineno": null
+        },
+        {
+         "content": "[![Nephos](https://dev.azure.com/mssonic/build/_apis/build/status/nephos/Azure.sonic-buildimage.official.nephos?branchName=master&label=Nephos)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=149&branchName=master)",
+         "kind": " ",
+         "new_lineno": 10,
+         "old_lineno": 10
+        },
+        {
+         "content": "[![Nvidia-Bluefield](https://dev.azure.com/mssonic/build/_apis/build/status/nvidia/Azure.sonic-buildimage.official.nvidia-bluefield?branchName=master&label=Nvidia-Bluefield)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=1665&branchName=master)",
+         "kind": " ",
+         "new_lineno": 11,
+         "old_lineno": 11
+        },
+        {
+         "content": "[![Pensando](https://dev.azure.com/mssonic/build/_apis/build/status/pensando/Azure.sonic-buildimage.official.pensando?branchName=master&label=Pensando)](https://dev.azure.com/mssonic/build/_build/latest?definitionId=1366&branchName=master)",
+         "kind": " ",
+         "new_lineno": 12,
+         "old_lineno": 12
+        }
+       ],
+       "new_count": 8,
+       "new_start": 5,
+       "old_count": 8,
+       "old_start": 5,
+       "section": ""
+      },
+      {
+       "lines": [
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 209,
+         "old_lineno": 209
+        },
+        {
+         "content": "* PLATFORM=barefoot",
+         "kind": " ",
+         "new_lineno": 210,
+         "old_lineno": 210
+        },
+        {
+         "content": "* PLATFORM=broadcom",
+         "kind": " ",
+         "new_lineno": 211,
+         "old_lineno": 211
+        },
+        {
+         "content": "* PLATFORM=marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 212
+        },
+        {
+         "content": "* PLATFORM=marvell-prestera",
+         "kind": "+",
+         "new_lineno": 212,
+         "old_lineno": null
+        },
+        {
+         "content": "* PLATFORM=marvell-teralynx",
+         "kind": "+",
+         "new_lineno": 213,
+         "old_lineno": null
+        },
+        {
+         "content": "* PLATFORM=mellanox",
+         "kind": " ",
+         "new_lineno": 214,
+         "old_lineno": 213
+        },
+        {
+         "content": "* PLATFORM=centec",
+         "kind": " ",
+         "new_lineno": 215,
+         "old_lineno": 214
+        },
+        {
+         "content": "* PLATFORM=nephos",
+         "kind": " ",
+         "new_lineno": 216,
+         "old_lineno": 215
+        },
+        {
+         "content": "* PLATFORM=nvidia-bluefield",
+         "kind": " ",
+         "new_lineno": 217,
+         "old_lineno": 216
+        },
+        {
+         "content": "* PLATFORM=marvell-teralynx",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 217
+        },
+        {
+         "content": "* PLATFORM=vs",
+         "kind": " ",
+         "new_lineno": 218,
+         "old_lineno": 218
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 219,
+         "old_lineno": 219
+        },
+        {
+         "content": "## Usage for ARM Architecture",
+         "kind": " ",
+         "new_lineno": 220,
+         "old_lineno": 220
+        }
+       ],
+       "new_count": 12,
+       "new_start": 209,
+       "old_count": 12,
+       "old_start": 209,
+       "section": "The supported ASIC vendors are:"
+      },
+      {
+       "lines": [
+        {
+         "content": "_example:_",
+         "kind": " ",
+         "new_lineno": 235,
+         "old_lineno": 235
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 236,
+         "old_lineno": 236
+        },
+        {
+         "content": "```shell",
+         "kind": " ",
+         "new_lineno": 237,
+         "old_lineno": 237
+        },
+        {
+         "content": "make configure PLATFORM=marvell PLATFORM_ARCH=armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 238
+        },
+        {
+         "content": "make target/sonic-marvell-armhf.bin",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 239
+        },
+        {
+         "content": "make configure PLATFORM=marvell-prestera PLATFORM_ARCH=armhf",
+         "kind": "+",
+         "new_lineno": 238,
+         "old_lineno": null
+        },
+        {
+         "content": "make target/sonic-marvell-prestera-armhf.bin",
+         "kind": "+",
+         "new_lineno": 239,
+         "old_lineno": null
+        },
+        {
+         "content": "```",
+         "kind": " ",
+         "new_lineno": 240,
+         "old_lineno": 240
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 241,
+         "old_lineno": 241
+        },
+        {
+         "content": "To build Arm32 bit for (ARMHF) Marvell platform on amd64 host for debian buster",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 242
+        },
+        {
+         "content": "To build Arm32 bit for (ARMHF) Marvell Prestera platform on amd64 host for debian buster",
+         "kind": "+",
+         "new_lineno": 242,
+         "old_lineno": null
+        },
+        {
+         "content": "using cross-compilation, run the following commands:",
+         "kind": " ",
+         "new_lineno": 243,
+         "old_lineno": 243
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 244,
+         "old_lineno": 244
+        },
+        {
+         "content": "```shell",
+         "kind": " ",
+         "new_lineno": 245,
+         "old_lineno": 245
+        },
+        {
+         "content": "# Execute make configure once to configure ASIC and ARCH for cross-compilation build",
+         "kind": " ",
+         "new_lineno": 246,
+         "old_lineno": 246
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 247,
+         "old_lineno": 247
+        },
+        {
+         "content": "NOJESSIE=1 NOSTRETCH=1 BLDENV=buster CROSS_BLDENV=1 \\",
+         "kind": " ",
+         "new_lineno": 248,
+         "old_lineno": 248
+        },
+        {
+         "content": "make configure PLATFORM=marvell PLATFORM_ARCH=armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 249
+        },
+        {
+         "content": "make configure PLATFORM=marvell-prestera PLATFORM_ARCH=armhf",
+         "kind": "+",
+         "new_lineno": 249,
+         "old_lineno": null
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 250,
+         "old_lineno": 250
+        },
+        {
+         "content": "# Execute Arm32 build using cross-compilation environment",
+         "kind": " ",
+         "new_lineno": 251,
+         "old_lineno": 251
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 252,
+         "old_lineno": 252
+        },
+        {
+         "content": "NOJESSIE=1 NOSTRETCH=1 BLDENV=buster CROSS_BLDENV=1 make target/sonic-marvell-armhf.bin",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 253
+        },
+        {
+         "content": "NOJESSIE=1 NOSTRETCH=1 BLDENV=buster CROSS_BLDENV=1 make target/sonic-marvell-prestera-armhf.bin",
+         "kind": "+",
+         "new_lineno": 253,
+         "old_lineno": null
+        },
+        {
+         "content": "```",
+         "kind": " ",
+         "new_lineno": 254,
+         "old_lineno": 254
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 255,
+         "old_lineno": 255
+        },
+        {
+         "content": "Running the above Arm32 build using cross-compilation instead of qemu emulator",
+         "kind": " ",
+         "new_lineno": 256,
+         "old_lineno": 256
+        }
+       ],
+       "new_count": 22,
+       "new_start": 235,
+       "old_count": 22,
+       "old_start": 235,
+       "section": "make target/sonic-[ASIC_VENDER]-armhf.bin"
+      },
+      {
+       "lines": [
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 265,
+         "old_lineno": 265
+        },
+        {
+         "content": "# example:",
+         "kind": " ",
+         "new_lineno": 266,
+         "old_lineno": 266
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 267,
+         "old_lineno": 267
+        },
+        {
+         "content": "make configure PLATFORM=marvell PLATFORM_ARCH=arm64",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 268
+        },
+        {
+         "content": "make configure PLATFORM=marvell-prestera PLATFORM_ARCH=arm64",
+         "kind": "+",
+         "new_lineno": 268,
+         "old_lineno": null
+        },
+        {
+         "content": "```",
+         "kind": " ",
+         "new_lineno": 269,
+         "old_lineno": 269
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 270,
+         "old_lineno": 270
+        },
+        {
+         "content": " **NOTE**:",
+         "kind": " ",
+         "new_lineno": 271,
+         "old_lineno": 271
+        }
+       ],
+       "new_count": 7,
+       "new_start": 265,
+       "old_count": 7,
+       "old_start": 265,
+       "section": "make configure PLATFORM=[ASIC_VENDOR] PLATFORM_ARCH=arm64"
+      },
+      {
+       "lines": [
+        {
+         "content": "    and Nephos switch ASIC (gzip tar archive)",
+         "kind": " ",
+         "new_lineno": 374,
+         "old_lineno": 374
+        },
+        {
+         "content": "  * docker-syncd-mrvl-teralynx.gz: docker image for the daemon to sync database",
+         "kind": " ",
+         "new_lineno": 375,
+         "old_lineno": 375
+        },
+        {
+         "content": "    and Marvell-Teralynx switch ASIC (gzip tar archive)",
+         "kind": " ",
+         "new_lineno": 376,
+         "old_lineno": 376
+        },
+        {
+         "content": "  * docker-syncd-mrvl-prestera.gz: docker image for the daemon to sync database",
+         "kind": "+",
+         "new_lineno": 377,
+         "old_lineno": null
+        },
+        {
+         "content": "    and Marvell-Prestera switch ASIC (gzip tar archive)",
+         "kind": "+",
+         "new_lineno": 378,
+         "old_lineno": null
+        },
+        {
+         "content": "  * docker-sonic-p4.gz: docker image for all-in-one for p4 software switch",
+         "kind": " ",
+         "new_lineno": 379,
+         "old_lineno": 377
+        },
+        {
+         "content": "    (gzip tar archive)",
+         "kind": " ",
+         "new_lineno": 380,
+         "old_lineno": 378
+        },
+        {
+         "content": "  * docker-sonic-vs.gz: docker image for all-in-one for software virtual switch",
+         "kind": " ",
+         "new_lineno": 381,
+         "old_lineno": 379
+        }
+       ],
+       "new_count": 8,
+       "new_start": 374,
+       "old_count": 6,
+       "old_start": 374,
+       "section": "on the SAI version for each SONiC release."
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "README.md",
+     "path_class": "sonic-buildimage:documentation",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "          dbg_image: yes",
+         "kind": " ",
+         "new_lineno": 78,
+         "old_lineno": 78
+        },
+        {
+         "content": "          docker_syncd_rpc_image: yes",
+         "kind": " ",
+         "new_lineno": 79,
+         "old_lineno": 79
+        },
+        {
+         "content": "          platform_rpc: mlnx",
+         "kind": " ",
+         "new_lineno": 80,
+         "old_lineno": 80
+        },
+        {
+         "content": "      - name: marvell-arm64",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 81
+        },
+        {
+         "content": "      - name: marvell-prestera-arm64",
+         "kind": "+",
+         "new_lineno": 81,
+         "old_lineno": null
+        },
+        {
+         "content": "        pool: sonicbld-arm64",
+         "kind": " ",
+         "new_lineno": 82,
+         "old_lineno": 82
+        },
+        {
+         "content": "        variables:",
+         "kind": " ",
+         "new_lineno": 83,
+         "old_lineno": 83
+        },
+        {
+         "content": "           PLATFORM_NAME: marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 84
+        },
+        {
+         "content": "           PLATFORM_NAME: marvell-prestera",
+         "kind": "+",
+         "new_lineno": 84,
+         "old_lineno": null
+        },
+        {
+         "content": "           PLATFORM_ARCH: arm64",
+         "kind": " ",
+         "new_lineno": 85,
+         "old_lineno": 85
+        },
+        {
+         "content": "      - name: marvell-armhf",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 86
+        },
+        {
+         "content": "      - name: marvell-prestera-armhf",
+         "kind": "+",
+         "new_lineno": 86,
+         "old_lineno": null
+        },
+        {
+         "content": "        pool: sonicbld-armhf",
+         "kind": " ",
+         "new_lineno": 87,
+         "old_lineno": 87
+        },
+        {
+         "content": "        timeoutInMinutes: 1200",
+         "kind": " ",
+         "new_lineno": 88,
+         "old_lineno": 88
+        },
+        {
+         "content": "        variables:",
+         "kind": " ",
+         "new_lineno": 89,
+         "old_lineno": 89
+        },
+        {
+         "content": "          PLATFORM_NAME: marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 90
+        },
+        {
+         "content": "          PLATFORM_NAME: marvell-prestera",
+         "kind": "+",
+         "new_lineno": 90,
+         "old_lineno": null
+        },
+        {
+         "content": "          PLATFORM_ARCH: armhf",
+         "kind": " ",
+         "new_lineno": 91,
+         "old_lineno": 91
+        },
+        {
+         "content": "          INCLUDE_RESTAPI: y",
+         "kind": " ",
+         "new_lineno": 92,
+         "old_lineno": 92
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 93,
+         "old_lineno": 93
+        }
+       ],
+       "new_count": 16,
+       "new_start": 78,
+       "old_count": 16,
+       "old_start": 78,
+       "section": "stages:"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "azure-pipelines.yml",
+     "path_class": "sonic-buildimage:pipeline",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/arm64-marvell_db98cx8580_32cd-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/arm64-marvell_rd98DX35xx-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/arm64-marvell_rd98DX35xx_cn9131-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/x86_64-marvell_db98cx8514_10cc-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/x86_64-marvell_db98cx8522_10cc-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/x86_64-marvell_db98cx8540_16cd-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/x86_64-marvell_db98cx8580_32cd-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/marvell/x86_64-marvell_rd98DX35xx-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/nokia/arm64-nokia_ixs7215_52xb-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "marvell-prestera",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        }
+       ],
+       "new_count": 1,
+       "new_start": 1,
+       "old_count": 1,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "device/nokia/armhf-nokia_ixs7215_52x-r0/platform_asic",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": null
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "    [ -e /dev/net/tun ] || ( mkdir -p /dev/net && mknod /dev/net/tun c 10 200 )",
+         "kind": " ",
+         "new_lineno": 153,
+         "old_lineno": 153
+        },
+        {
+         "content": "}",
+         "kind": " ",
+         "new_lineno": 154,
+         "old_lineno": 154
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 155,
+         "old_lineno": 155
+        },
+        {
+         "content": "config_syncd_marvell()",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 156
+        },
+        {
+         "content": "config_syncd_marvell_prestera()",
+         "kind": "+",
+         "new_lineno": 156,
+         "old_lineno": null
+        },
+        {
+         "content": "{",
+         "kind": " ",
+         "new_lineno": 157,
+         "old_lineno": 157
+        },
+        {
+         "content": "    CMD_ARGS+=\" -p $HWSKU_DIR/sai.profile\"",
+         "kind": " ",
+         "new_lineno": 158,
+         "old_lineno": 158
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 159,
+         "old_lineno": 159
+        }
+       ],
+       "new_count": 7,
+       "new_start": 153,
+       "old_count": 7,
+       "old_start": 153,
+       "section": "config_syncd_centec()"
+      },
+      {
+       "lines": [
+        {
+         "content": "        config_syncd_mlnx",
+         "kind": " ",
+         "new_lineno": 214,
+         "old_lineno": 214
+        },
+        {
+         "content": "    elif [ \"$SONIC_ASIC_TYPE\" == \"centec\" ]; then",
+         "kind": " ",
+         "new_lineno": 215,
+         "old_lineno": 215
+        },
+        {
+         "content": "        config_syncd_centec",
+         "kind": " ",
+         "new_lineno": 216,
+         "old_lineno": 216
+        },
+        {
+         "content": "    elif [ \"$SONIC_ASIC_TYPE\" == \"marvell\" ]; then",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 217
+        },
+        {
+         "content": "        config_syncd_marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 218
+        },
+        {
+         "content": "    elif [ \"$SONIC_ASIC_TYPE\" == \"marvell-prestera\" ]; then",
+         "kind": "+",
+         "new_lineno": 217,
+         "old_lineno": null
+        },
+        {
+         "content": "        config_syncd_marvell_prestera",
+         "kind": "+",
+         "new_lineno": 218,
+         "old_lineno": null
+        },
+        {
+         "content": "     elif [ \"$SONIC_ASIC_TYPE\" == \"barefoot\" ]; then",
+         "kind": " ",
+         "new_lineno": 219,
+         "old_lineno": 219
+        },
+        {
+         "content": "         config_syncd_barefoot",
+         "kind": " ",
+         "new_lineno": 220,
+         "old_lineno": 220
+        },
+        {
+         "content": "    elif [ \"$SONIC_ASIC_TYPE\" == \"nephos\" ]; then",
+         "kind": " ",
+         "new_lineno": 221,
+         "old_lineno": 221
+        }
+       ],
+       "new_count": 8,
+       "new_start": 214,
+       "old_count": 8,
+       "old_start": 214,
+       "section": "config_syncd()"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "dockers/docker-pde/syncd_init_common.sh",
+     "path_class": "sonic-buildimage:container",
+     "similarity": null
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "DPATH       := $($(DOCKER_SAISERVER_MRVL)_PATH)",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "DEP_FILES   := $(SONIC_COMMON_FILES_LIST) $(PLATFORM_PATH)/docker-saiserver-mrvl.mk $(PLATFORM_PATH)/docker-saiserver-mrvl.dep",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 2
+        },
+        {
+         "content": "DEP_FILES   := $(SONIC_COMMON_FILES_LIST) $(PLATFORM_PATH)/docker-saiserver-mrvl-prestera.mk $(PLATFORM_PATH)/docker-saiserver-mrvl-prestera.dep",
+         "kind": "+",
+         "new_lineno": 2,
+         "old_lineno": null
+        },
+        {
+         "content": "DEP_FILES   += $(SONIC_COMMON_BASE_FILES_LIST)",
+         "kind": " ",
+         "new_lineno": 3,
+         "old_lineno": 3
+        },
+        {
+         "content": "DEP_FILES   += $(shell git ls-files $(DPATH))",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        }
+       ],
+       "new_count": 5,
+       "new_start": 1,
+       "old_count": 5,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-saiserver-mrvl.dep",
+     "path": "platform/marvell-prestera/docker-saiserver-mrvl-prestera.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 82
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "# docker image for mrvl saiserver",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 2,
+         "old_lineno": 2
+        },
+        {
+         "content": "DOCKER_SAISERVER_MRVL = docker-saiserver$(SAITHRIFT_VER)-mrvl.gz",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 3
+        },
+        {
+         "content": "$(DOCKER_SAISERVER_MRVL)_PATH = $(PLATFORM_PATH)/docker-saiserver-mrvl",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 4
+        },
+        {
+         "content": "DOCKER_SAISERVER_MRVL = docker-saiserver$(SAITHRIFT_VER)-mrvl-prestera.gz",
+         "kind": "+",
+         "new_lineno": 3,
+         "old_lineno": null
+        },
+        {
+         "content": "$(DOCKER_SAISERVER_MRVL)_PATH = $(PLATFORM_PATH)/docker-saiserver-mrvl-prestera",
+         "kind": "+",
+         "new_lineno": 4,
+         "old_lineno": null
+        },
+        {
+         "content": "$(DOCKER_SAISERVER_MRVL)_DEPENDS += $(SAISERVER)",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "$(DOCKER_SAISERVER_MRVL)_LOAD_DOCKERS += $(DOCKER_CONFIG_ENGINE_BOOKWORM)",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        },
+        {
+         "content": "SONIC_DOCKER_IMAGES += $(DOCKER_SAISERVER_MRVL)",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 7
+        }
+       ],
+       "new_count": 7,
+       "new_start": 1,
+       "old_count": 7,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-saiserver-mrvl.mk",
+     "path": "platform/marvell-prestera/docker-saiserver-mrvl-prestera.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 89
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "      libthrift-0.17.0",
+         "kind": " ",
+         "new_lineno": 15,
+         "old_lineno": 15
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 16,
+         "old_lineno": 16
+        },
+        {
+         "content": "COPY \\",
+         "kind": " ",
+         "new_lineno": 17,
+         "old_lineno": 17
+        },
+        {
+         "content": "{% for deb in docker_saiserver_mrvl_debs.split(' ') -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 18
+        },
+        {
+         "content": "{% for deb in docker_saiserver_mrvl_prestera_debs.split(' ') -%}",
+         "kind": "+",
+         "new_lineno": 18,
+         "old_lineno": null
+        },
+        {
+         "content": "debs/{{ deb }}{{' '}}",
+         "kind": " ",
+         "new_lineno": 19,
+         "old_lineno": 19
+        },
+        {
+         "content": "{%- endfor -%}",
+         "kind": " ",
+         "new_lineno": 20,
+         "old_lineno": 20
+        },
+        {
+         "content": "debs/",
+         "kind": " ",
+         "new_lineno": 21,
+         "old_lineno": 21
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 22,
+         "old_lineno": 22
+        },
+        {
+         "content": "RUN dpkg_apt() { [ -f $1 ] && { dpkg -i $1 || apt-get -y install -f; } || return 1; } ; \\",
+         "kind": " ",
+         "new_lineno": 23,
+         "old_lineno": 23
+        },
+        {
+         "content": "{% for deb in docker_saiserver_mrvl_debs.split(' ') -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 24
+        },
+        {
+         "content": "{% for deb in docker_saiserver_mrvl_prestera_debs.split(' ') -%}",
+         "kind": "+",
+         "new_lineno": 24,
+         "old_lineno": null
+        },
+        {
+         "content": "dpkg_apt debs/{{ deb }}{{'; '}}",
+         "kind": " ",
+         "new_lineno": 25,
+         "old_lineno": 25
+        },
+        {
+         "content": "{%- endfor %}",
+         "kind": " ",
+         "new_lineno": 26,
+         "old_lineno": 26
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 27,
+         "old_lineno": 27
+        }
+       ],
+       "new_count": 13,
+       "new_start": 15,
+       "old_count": 13,
+       "old_start": 15,
+       "section": "RUN apt-get update              \\"
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-saiserver-mrvl/Dockerfile.j2",
+     "path": "platform/marvell-prestera/docker-saiserver-mrvl-prestera/Dockerfile.j2",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 87
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-saiserver-mrvl/start.sh",
+     "path": "platform/marvell-prestera/docker-saiserver-mrvl-prestera/start.sh",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-saiserver-mrvl/supervisord.conf",
+     "path": "platform/marvell-prestera/docker-saiserver-mrvl-prestera/supervisord.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "DPATH       := $($(DOCKER_SYNCD_MRVL_RPC)_PATH)",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "DEP_FILES   := $(SONIC_COMMON_FILES_LIST) $(PLATFORM_PATH)/docker-syncd-mrvl-rpc.mk $(PLATFORM_PATH)/docker-syncd-mrvl-rpc.dep",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 2
+        },
+        {
+         "content": "DEP_FILES   := $(SONIC_COMMON_FILES_LIST) $(PLATFORM_PATH)/docker-syncd-mrvl-prestera-rpc.mk $(PLATFORM_PATH)/docker-syncd-mrvl-prestera-rpc.dep",
+         "kind": "+",
+         "new_lineno": 2,
+         "old_lineno": null
+        },
+        {
+         "content": "DEP_FILES   += $(SONIC_COMMON_BASE_FILES_LIST)",
+         "kind": " ",
+         "new_lineno": 3,
+         "old_lineno": 3
+        },
+        {
+         "content": "DEP_FILES   += $(shell git ls-files $(DPATH))",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        }
+       ],
+       "new_count": 5,
+       "new_start": 1,
+       "old_count": 5,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl-rpc.dep",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera-rpc.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 82
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "# docker image for mrvl syncd with rpc",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 2,
+         "old_lineno": 2
+        },
+        {
+         "content": "DOCKER_SYNCD_MRVL_RPC = docker-syncd-mrvl-rpc.gz",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 3
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_PATH = $(PLATFORM_PATH)/docker-syncd-mrvl-rpc",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 4
+        },
+        {
+         "content": "DOCKER_SYNCD_MRVL_RPC = docker-syncd-mrvl-prestera-rpc.gz",
+         "kind": "+",
+         "new_lineno": 3,
+         "old_lineno": null
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_PATH = $(PLATFORM_PATH)/docker-syncd-mrvl-prestera-rpc",
+         "kind": "+",
+         "new_lineno": 4,
+         "old_lineno": null
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_DEPENDS += $(SYNCD_RPC)",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_PYTHON_WHEELS += $(PTF_PY3)",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_FILES += $(SUPERVISOR_PROC_EXIT_LISTENER_SCRIPT)",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 7
+        }
+       ],
+       "new_count": 7,
+       "new_start": 1,
+       "old_count": 7,
+       "old_start": 1,
+       "section": ""
+      },
+      {
+       "lines": [
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_CONTAINER_NAME = syncd",
+         "kind": " ",
+         "new_lineno": 20,
+         "old_lineno": 20
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_VERSION = 1.0.0+rpc",
+         "kind": " ",
+         "new_lineno": 21,
+         "old_lineno": 21
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_PACKAGE_NAME = syncd",
+         "kind": " ",
+         "new_lineno": 22,
+         "old_lineno": 22
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_MACHINE = marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 23
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_MACHINE = marvell-prestera",
+         "kind": "+",
+         "new_lineno": 23,
+         "old_lineno": null
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_RUN_OPT += --privileged -t",
+         "kind": " ",
+         "new_lineno": 24,
+         "old_lineno": 24
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_RUN_OPT += -v /host/machine.conf:/etc/machine.conf",
+         "kind": " ",
+         "new_lineno": 25,
+         "old_lineno": 25
+        },
+        {
+         "content": "$(DOCKER_SYNCD_MRVL_RPC)_RUN_OPT += -v /etc/sonic:/etc/sonic:ro",
+         "kind": " ",
+         "new_lineno": 26,
+         "old_lineno": 26
+        }
+       ],
+       "new_count": 7,
+       "new_start": 20,
+       "old_count": 7,
+       "old_start": 20,
+       "section": "endif"
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl-rpc.mk",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera-rpc.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 90
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl-rpc/99-syncd.conf",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera-rpc/99-syncd.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "FROM docker-syncd-mrvl-{{DOCKER_USERNAME}}:{{DOCKER_USERTAG}}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "FROM docker-syncd-mrvl-prestera-{{DOCKER_USERNAME}}:{{DOCKER_USERTAG}}",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        },
+        {
+         "content": "{% from \"dockers/dockerfile-macros.j2\" import install_python_wheels, copy_files %}",
+         "kind": " ",
+         "new_lineno": 2,
+         "old_lineno": 2
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 3,
+         "old_lineno": 3
+        },
+        {
+         "content": "## Make apt-get non-interactive",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "ENV DEBIAN_FRONTEND=noninteractive",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        },
+        {
+         "content": "COPY \\",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 7
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_rpc_debs.split(' ') -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 8
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_prestera_rpc_debs.split(' ') -%}",
+         "kind": "+",
+         "new_lineno": 8,
+         "old_lineno": null
+        },
+        {
+         "content": "debs/{{ deb }}{{' '}}",
+         "kind": " ",
+         "new_lineno": 9,
+         "old_lineno": 9
+        },
+        {
+         "content": "{%- endfor -%}",
+         "kind": " ",
+         "new_lineno": 10,
+         "old_lineno": 10
+        },
+        {
+         "content": "debs/",
+         "kind": " ",
+         "new_lineno": 11,
+         "old_lineno": 11
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 12,
+         "old_lineno": 12
+        },
+        {
+         "content": "RUN apt-get purge -y syncd",
+         "kind": " ",
+         "new_lineno": 13,
+         "old_lineno": 13
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 14,
+         "old_lineno": 14
+        },
+        {
+         "content": "## Pre-install the fundamental packages",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 15
+        },
+        {
+         "content": "## Pre-install the fundamental packages ##",
+         "kind": "+",
+         "new_lineno": 15,
+         "old_lineno": null
+        },
+        {
+         "content": "RUN apt-get update \\",
+         "kind": " ",
+         "new_lineno": 16,
+         "old_lineno": 16
+        },
+        {
+         "content": " && apt-get -y install  \\",
+         "kind": " ",
+         "new_lineno": 17,
+         "old_lineno": 17
+        },
+        {
+         "content": "    net-tools           \\",
+         "kind": " ",
+         "new_lineno": 18,
+         "old_lineno": 18
+        }
+       ],
+       "new_count": 18,
+       "new_start": 1,
+       "old_count": 18,
+       "old_start": 1,
+       "section": ""
+      },
+      {
+       "lines": [
+        {
+         "content": "    libnanomsg-dev",
+         "kind": " ",
+         "new_lineno": 31,
+         "old_lineno": 31
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 32,
+         "old_lineno": 32
+        },
+        {
+         "content": "RUN dpkg_apt() { [ -f $1 ] && { dpkg -i $1 || apt-get -y install -f; } || return 1; } ; \\",
+         "kind": " ",
+         "new_lineno": 33,
+         "old_lineno": 33
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_rpc_debs.split(' ') -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 34
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_prestera_rpc_debs.split(' ') -%}",
+         "kind": "+",
+         "new_lineno": 34,
+         "old_lineno": null
+        },
+        {
+         "content": "dpkg_apt debs/{{ deb }}{{'; '}}",
+         "kind": " ",
+         "new_lineno": 35,
+         "old_lineno": 35
+        },
+        {
+         "content": "{%- endfor %}",
+         "kind": " ",
+         "new_lineno": 36,
+         "old_lineno": 36
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 37,
+         "old_lineno": 37
+        }
+       ],
+       "new_count": 7,
+       "new_start": 31,
+       "old_count": 7,
+       "old_start": 31,
+       "section": "RUN apt-get update \\"
+      },
+      {
+       "lines": [
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 43,
+         "old_lineno": 43
+        },
+        {
+         "content": "COPY [\"ptf_nn_agent.conf\", \"/etc/supervisor/conf.d/\"]",
+         "kind": " ",
+         "new_lineno": 44,
+         "old_lineno": 44
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 45,
+         "old_lineno": 45
+        },
+        {
+         "content": "{% if docker_syncd_mrvl_rpc_whls.strip() -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 46
+        },
+        {
+         "content": "{% if docker_syncd_mrvl_prestera_rpc_whls.strip() -%}",
+         "kind": "+",
+         "new_lineno": 46,
+         "old_lineno": null
+        },
+        {
+         "content": "# Copy locally-built Python wheel dependencies",
+         "kind": " ",
+         "new_lineno": 47,
+         "old_lineno": 47
+        },
+        {
+         "content": "{{ copy_files(\"python-wheels/\", docker_syncd_mrvl_rpc_whls.split(' '), \"/python-wheels/\") }}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 48
+        },
+        {
+         "content": "{{ copy_files(\"python-wheels/\", docker_syncd_mrvl_prestera_rpc_whls.split(' '), \"/python-wheels/\") }}",
+         "kind": "+",
+         "new_lineno": 48,
+         "old_lineno": null
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 49,
+         "old_lineno": 49
+        },
+        {
+         "content": "# Install locally-built Python wheel dependencies",
+         "kind": " ",
+         "new_lineno": 50,
+         "old_lineno": 50
+        },
+        {
+         "content": "{{ install_python_wheels(docker_syncd_mrvl_rpc_whls.split(' ')) }}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 51
+        },
+        {
+         "content": "{{ install_python_wheels(docker_syncd_mrvl_prestera_rpc_whls.split(' ')) }}",
+         "kind": "+",
+         "new_lineno": 51,
+         "old_lineno": null
+        },
+        {
+         "content": "{% endif %}",
+         "kind": " ",
+         "new_lineno": 52,
+         "old_lineno": 52
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 53,
+         "old_lineno": 53
+        },
+        {
+         "content": "## Clean up",
+         "kind": " ",
+         "new_lineno": 54,
+         "old_lineno": 54
+        }
+       ],
+       "new_count": 12,
+       "new_start": 43,
+       "old_count": 12,
+       "old_start": 43,
+       "section": "RUN pip3 install cffi    \\"
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl-rpc/Dockerfile.j2",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera-rpc/Dockerfile.j2",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 74
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl-rpc/ptf_nn_agent.conf",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera-rpc/ptf_nn_agent.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "DPATH       := $($(DOCKER_SYNCD_BASE)_PATH)",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "DEP_FILES   := $(SONIC_COMMON_FILES_LIST) $(PLATFORM_PATH)/docker-syncd-mrvl.mk $(PLATFORM_PATH)/docker-syncd-mrvl.dep $(PLATFORM_PATH)/sai.mk",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 2
+        },
+        {
+         "content": "DEP_FILES   := $(SONIC_COMMON_FILES_LIST) $(PLATFORM_PATH)/docker-syncd-mrvl-prestera.mk $(PLATFORM_PATH)/docker-syncd-mrvl-prestera.dep $(PLATFORM_PATH)/sai.mk",
+         "kind": "+",
+         "new_lineno": 2,
+         "old_lineno": null
+        },
+        {
+         "content": "DEP_FILES   += $(SONIC_COMMON_BASE_FILES_LIST)",
+         "kind": " ",
+         "new_lineno": 3,
+         "old_lineno": 3
+        },
+        {
+         "content": "DEP_FILES   += $(shell git ls-files $(DPATH))",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        }
+       ],
+       "new_count": 5,
+       "new_start": 1,
+       "old_count": 5,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl.dep",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 82
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "# docker image for mrvl syncd",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 2,
+         "old_lineno": 2
+        },
+        {
+         "content": "DOCKER_SYNCD_PLATFORM_CODE = mrvl",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 3
+        },
+        {
+         "content": "DOCKER_SYNCD_PLATFORM_CODE = mrvl-prestera",
+         "kind": "+",
+         "new_lineno": 3,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/../template/docker-syncd-bookworm.mk",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "$(DOCKER_SYNCD_BASE)_DEPENDS += $(SYNCD)",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        }
+       ],
+       "new_count": 6,
+       "new_start": 1,
+       "old_count": 6,
+       "old_start": 1,
+       "section": ""
+      },
+      {
+       "lines": [
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 13,
+         "old_lineno": 13
+        },
+        {
+         "content": "$(DOCKER_SYNCD_BASE)_VERSION = 1.0.0",
+         "kind": " ",
+         "new_lineno": 14,
+         "old_lineno": 14
+        },
+        {
+         "content": "$(DOCKER_SYNCD_BASE)_PACKAGE_NAME = syncd",
+         "kind": " ",
+         "new_lineno": 15,
+         "old_lineno": 15
+        },
+        {
+         "content": "$(DOCKER_SYNCD_BASE)_MACHINE = marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 16
+        },
+        {
+         "content": "$(DOCKER_SYNCD_BASE)_MACHINE = marvell-prestera",
+         "kind": "+",
+         "new_lineno": 16,
+         "old_lineno": null
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 17,
+         "old_lineno": 17
+        },
+        {
+         "content": "$(DOCKER_SYNCD_BASE)_RUN_OPT += -v /host/warmboot:/var/warmboot",
+         "kind": " ",
+         "new_lineno": 18,
+         "old_lineno": 18
+        }
+       ],
+       "new_count": 6,
+       "new_start": 13,
+       "old_count": 6,
+       "old_start": 13,
+       "section": "$(DOCKER_SYNCD_BASE)_DBG_DEPENDS += $(SYNCD_DBG) \\"
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl.mk",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 85
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "RUN apt-get update",
+         "kind": " ",
+         "new_lineno": 9,
+         "old_lineno": 9
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 10,
+         "old_lineno": 10
+        },
+        {
+         "content": "COPY \\",
+         "kind": " ",
+         "new_lineno": 11,
+         "old_lineno": 11
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_debs.split(' ') -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 12
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_prestera_debs.split(' ') -%}",
+         "kind": "+",
+         "new_lineno": 12,
+         "old_lineno": null
+        },
+        {
+         "content": "debs/{{ deb }}{{' '}}",
+         "kind": " ",
+         "new_lineno": 13,
+         "old_lineno": 13
+        },
+        {
+         "content": "{%- endfor -%}",
+         "kind": " ",
+         "new_lineno": 14,
+         "old_lineno": 14
+        },
+        {
+         "content": "debs/",
+         "kind": " ",
+         "new_lineno": 15,
+         "old_lineno": 15
+        }
+       ],
+       "new_count": 7,
+       "new_start": 9,
+       "old_count": 7,
+       "old_start": 9,
+       "section": "ENV DEBIAN_FRONTEND=noninteractive"
+      },
+      {
+       "lines": [
+        {
+         "content": "RUN apt-get -y install libpcap-dev libxml2-dev python3-dev swig",
+         "kind": " ",
+         "new_lineno": 22,
+         "old_lineno": 22
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 23,
+         "old_lineno": 23
+        },
+        {
+         "content": "RUN dpkg -i \\",
+         "kind": " ",
+         "new_lineno": 24,
+         "old_lineno": 24
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_debs.split(' ') -%}",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 25
+        },
+        {
+         "content": "{% for deb in docker_syncd_mrvl_prestera_debs.split(' ') -%}",
+         "kind": "+",
+         "new_lineno": 25,
+         "old_lineno": null
+        },
+        {
+         "content": "debs/{{ deb }}{{' '}}",
+         "kind": " ",
+         "new_lineno": 26,
+         "old_lineno": 26
+        },
+        {
+         "content": "{%- endfor %}",
+         "kind": " ",
+         "new_lineno": 27,
+         "old_lineno": 27
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 28,
+         "old_lineno": 28
+        }
+       ],
+       "new_count": 7,
+       "new_start": 22,
+       "old_count": 7,
+       "old_start": 22,
+       "section": "RUN apt-get update \\"
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl/Dockerfile.j2",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera/Dockerfile.j2",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 87
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl/critical_processes",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera/critical_processes",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl/supervisord.conf",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera/supervisord.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/docker-syncd-mrvl/syncd.sh",
+     "path": "platform/marvell-prestera/docker-syncd-mrvl-prestera/syncd.sh",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/libsaithrift-dev.dep",
+     "path": "platform/marvell-prestera/libsaithrift-dev.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/libsaithrift-dev.mk",
+     "path": "platform/marvell-prestera/libsaithrift-dev.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/mrvl-prestera",
+     "path": "platform/marvell-prestera/mrvl-prestera",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/mrvl-prestera.dep",
+     "path": "platform/marvell-prestera/mrvl-prestera.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/mrvl-prestera.mk",
+     "path": "platform/marvell-prestera/mrvl-prestera.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/one-image.dep",
+     "path": "platform/marvell-prestera/one-image.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "# sonic marvell one image installer",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "# sonic marvell-prestera one image installer",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 2,
+         "old_lineno": 2
+        },
+        {
+         "content": "ifeq ($(CONFIGURED_ARCH),$(filter $(CONFIGURED_ARCH),arm64 armhf))",
+         "kind": " ",
+         "new_lineno": 3,
+         "old_lineno": 3
+        },
+        {
+         "content": "SONIC_ONE_IMAGE = sonic-marvell-$(CONFIGURED_ARCH).bin",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 4
+        },
+        {
+         "content": "SONIC_ONE_IMAGE = sonic-marvell-prestera-$(CONFIGURED_ARCH).bin",
+         "kind": "+",
+         "new_lineno": 4,
+         "old_lineno": null
+        },
+        {
+         "content": "else",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "SONIC_ONE_IMAGE = sonic-marvell.bin",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 6
+        },
+        {
+         "content": "SONIC_ONE_IMAGE = sonic-marvell-prestera.bin",
+         "kind": "+",
+         "new_lineno": 6,
+         "old_lineno": null
+        },
+        {
+         "content": "endif",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 7
+        },
+        {
+         "content": "$(SONIC_ONE_IMAGE)_MACHINE = marvell",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 8
+        },
+        {
+         "content": "$(SONIC_ONE_IMAGE)_MACHINE = marvell-prestera",
+         "kind": "+",
+         "new_lineno": 8,
+         "old_lineno": null
+        },
+        {
+         "content": "$(SONIC_ONE_IMAGE)_IMAGE_TYPE = onie",
+         "kind": " ",
+         "new_lineno": 9,
+         "old_lineno": 9
+        },
+        {
+         "content": "$(SONIC_ONE_IMAGE)_INSTALLS += $(SYSTEMD_SONIC_GENERATOR)",
+         "kind": " ",
+         "new_lineno": 10,
+         "old_lineno": 10
+        },
+        {
+         "content": "ifeq ($(CONFIGURED_ARCH),arm64)",
+         "kind": " ",
+         "new_lineno": 11,
+         "old_lineno": 11
+        }
+       ],
+       "new_count": 11,
+       "new_start": 1,
+       "old_count": 11,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/one-image.mk",
+     "path": "platform/marvell-prestera/one-image.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 86
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/onie-image-arm64.conf",
+     "path": "platform/marvell-prestera/onie-image-arm64.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/platform-marvell.dep",
+     "path": "platform/marvell-prestera/platform-marvell.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/platform-marvell.mk",
+     "path": "platform/marvell-prestera/platform-marvell.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/platform-nokia.dep",
+     "path": "platform/marvell-prestera/platform-nokia.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/platform-nokia.mk",
+     "path": "platform/marvell-prestera/platform-nokia.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/platform_arm64.conf",
+     "path": "platform/marvell-prestera/platform_arm64.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/platform_armhf.conf",
+     "path": "platform/marvell-prestera/platform_armhf.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "include $(PLATFORM_PATH)/docker-saiserver-mrvl.dep",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 1
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl-rpc.dep",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 2
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl.dep",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 3
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-saiserver-mrvl-prestera.dep",
+         "kind": "+",
+         "new_lineno": 1,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl-prestera-rpc.dep",
+         "kind": "+",
+         "new_lineno": 2,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl-prestera.dep",
+         "kind": "+",
+         "new_lineno": 3,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/libsaithrift-dev.dep",
+         "kind": " ",
+         "new_lineno": 4,
+         "old_lineno": 4
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/one-image.dep",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/platform-marvell.dep",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        }
+       ],
+       "new_count": 6,
+       "new_start": 1,
+       "old_count": 6,
+       "old_start": 1,
+       "section": ""
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/rules.dep",
+     "path": "platform/marvell-prestera/rules.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 64
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "include $(PLATFORM_PATH)/sai.mk",
+         "kind": " ",
+         "new_lineno": 1,
+         "old_lineno": 1
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl.mk",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 2
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl-rpc.mk",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 3
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-saiserver-mrvl.mk",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 4
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl-prestera.mk",
+         "kind": "+",
+         "new_lineno": 2,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-syncd-mrvl-prestera-rpc.mk",
+         "kind": "+",
+         "new_lineno": 3,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/docker-saiserver-mrvl-prestera.mk",
+         "kind": "+",
+         "new_lineno": 4,
+         "old_lineno": null
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/libsaithrift-dev.mk",
+         "kind": " ",
+         "new_lineno": 5,
+         "old_lineno": 5
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/one-image.mk",
+         "kind": " ",
+         "new_lineno": 6,
+         "old_lineno": 6
+        },
+        {
+         "content": "include $(PLATFORM_PATH)/platform-marvell.mk",
+         "kind": " ",
+         "new_lineno": 7,
+         "old_lineno": 7
+        }
+       ],
+       "new_count": 7,
+       "new_start": 1,
+       "old_count": 7,
+       "old_start": 1,
+       "section": ""
+      },
+      {
+       "lines": [
+        {
+         "content": "             $(DOCKER_FPM) \t\\",
+         "kind": " ",
+         "new_lineno": 14,
+         "old_lineno": 14
+        },
+        {
+         "content": "             $(DOCKER_SYNCD_MRVL_RPC)",
+         "kind": " ",
+         "new_lineno": 15,
+         "old_lineno": 15
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 16,
+         "old_lineno": 16
+        },
+        {
+         "content": "# Inject mrvl sai into syncd",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 17
+        },
+        {
+         "content": "# Inject mrvl-prestera sai into syncd",
+         "kind": "+",
+         "new_lineno": 17,
+         "old_lineno": null
+        },
+        {
+         "content": "$(SYNCD)_DEPENDS += $(MRVL_SAI)",
+         "kind": " ",
+         "new_lineno": 18,
+         "old_lineno": 18
+        },
+        {
+         "content": "$(SYNCD)_UNINSTALLS += $(MRVL_SAI)",
+         "kind": " ",
+         "new_lineno": 19,
+         "old_lineno": 19
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 20,
+         "old_lineno": 20
+        }
+       ],
+       "new_count": 7,
+       "new_start": 14,
+       "old_count": 7,
+       "old_start": 14,
+       "section": "SONIC_ALL += $(SONIC_ONE_IMAGE) \\"
+      },
+      {
+       "lines": [
+        {
+         "content": "$(SYNCD)_DEPENDS += $(LIBSAITHRIFT_DEV)",
+         "kind": " ",
+         "new_lineno": 23,
+         "old_lineno": 23
+        },
+        {
+         "content": "endif",
+         "kind": " ",
+         "new_lineno": 24,
+         "old_lineno": 24
+        },
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 25,
+         "old_lineno": 25
+        },
+        {
+         "content": "# Runtime dependency on mrvl sai is set only for syncd",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 26
+        },
+        {
+         "content": "# Runtime dependency on mrvl-prestera sai is set only for syncd",
+         "kind": "+",
+         "new_lineno": 26,
+         "old_lineno": null
+        },
+        {
+         "content": "$(SYNCD)_RDEPENDS += $(MRVL_SAI)",
+         "kind": " ",
+         "new_lineno": 27,
+         "old_lineno": 27
+        }
+       ],
+       "new_count": 5,
+       "new_start": 23,
+       "old_count": 5,
+       "old_start": 23,
+       "section": "$(SYNCD)_DEPENDS := $(filter-out $(LIBTHRIFT_DEV),$($(SYNCD)_DEPENDS))"
+      }
+     ],
+     "is_binary": false,
+     "old_path": "platform/marvell/rules.mk",
+     "path": "platform/marvell-prestera/rules.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 70
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sai.dep",
+     "path": "platform/marvell-prestera/sai.dep",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sai.mk",
+     "path": "platform/marvell-prestera/sai.mk",
+     "path_class": "sonic-buildimage:build_rule",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-marvell",
+     "path": "platform/marvell-prestera/sonic-platform-marvell",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/modules/Makefile",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/modules/Makefile",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/modules/cn9130_cpu_thermal_sensor.c",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/modules/cn9130_cpu_thermal_sensor.c",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/modules/nokia_7215_ixs_a1_cpld.c",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/modules/nokia_7215_ixs_a1_cpld.c",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/scripts/cpu_wdt.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/scripts/cpu_wdt.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/scripts/nokia-7215-init.sh",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/scripts/nokia-7215-init.sh",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/service/cpu_wdt.service",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/service/cpu_wdt.service",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/service/nokia-7215init.service",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/service/nokia-7215init.service",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/setup.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/setup.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/__init__.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/__init__.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/chassis.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/chassis.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/component.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/component.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/eeprom.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/eeprom.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/fan.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/fan.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/fan_drawer.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/fan_drawer.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/platform.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/platform.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/psu.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/psu.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/sfp.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/sfp.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/sfp_event.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/sfp_event.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/README",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/README",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-chassis.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-chassis.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-component.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-component.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-eeprom.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-eeprom.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-fan.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-fan.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-psu.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-psu.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-sfp.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-sfp.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-thermal.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-thermal.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/test/test-watchdog.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/test/test-watchdog.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/thermal.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/thermal.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/thermal_actions.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/thermal_actions.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/thermal_conditions.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/thermal_conditions.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/thermal_infos.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/thermal_infos.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/thermal_manager.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/thermal_manager.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/sonic_platform/watchdog.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/sonic_platform/watchdog.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215-a1/utils/sonic_ssd.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215-a1/utils/sonic_ssd.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/scripts/cpu_wdt.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/scripts/cpu_wdt.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/scripts/inband_mgmt.sh",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/scripts/inband_mgmt.sh",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/scripts/nokia-7215_plt_setup.sh",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/scripts/nokia-7215_plt_setup.sh",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/scripts/nokia-7215init.sh",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/scripts/nokia-7215init.sh",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/service/cpu_wdt.service",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/service/cpu_wdt.service",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/service/fstrim.timer/timer-override.conf",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/service/fstrim.timer/timer-override.conf",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/service/nokia-7215init.service",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/service/nokia-7215init.service",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/setup.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/setup.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/__init__.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/__init__.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/chassis.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/chassis.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/component.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/component.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/eeprom.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/eeprom.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/fan.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/fan.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/fan_drawer.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/fan_drawer.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/platform.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/platform.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/psu.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/psu.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/sfp.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/sfp.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/sfp_event.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/sfp_event.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/README",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/README",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-chassis.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-chassis.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-component.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-component.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-eeprom.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-eeprom.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-fan.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-fan.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-psu.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-psu.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-sfp.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-sfp.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-thermal.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-thermal.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/test/test-watchdog.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/test/test-watchdog.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/thermal.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/thermal.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/thermal_actions.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/thermal_actions.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/thermal_conditions.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/thermal_conditions.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/thermal_infos.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/thermal_infos.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/thermal_manager.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/thermal_manager.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/7215/sonic_platform/watchdog.py",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/7215/sonic_platform/watchdog.py",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/changelog",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/changelog",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/compat",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/compat",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/control",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/control",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/rules",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/rules",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/sonic-platform-nokia-7215-a1.install",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/sonic-platform-nokia-7215-a1.install",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/sonic-platform-nokia-7215-a1.postinst",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/sonic-platform-nokia-7215-a1.postinst",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/sonic-platform-nokia-7215.install",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/sonic-platform-nokia-7215.install",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic-platform-nokia/debian/sonic-platform-nokia-7215.postinst",
+     "path": "platform/marvell-prestera/sonic-platform-nokia/debian/sonic-platform-nokia-7215.postinst",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "renamed",
+     "hunks": [],
+     "is_binary": false,
+     "old_path": "platform/marvell/sonic_fit.its",
+     "path": "platform/marvell-prestera/sonic_fit.its",
+     "path_class": "sonic-buildimage:platform_data",
+     "similarity": 100
+    },
+    {
+     "change_type": "modified",
+     "hunks": [
+      {
+       "lines": [
+        {
+         "content": "",
+         "kind": " ",
+         "new_lineno": 800,
+         "old_lineno": 800
+        },
+        {
+         "content": "        (mac, err) = run_command(syseeprom_cmd)",
+         "kind": " ",
+         "new_lineno": 801,
+         "old_lineno": 801
+        },
+        {
+         "content": "        hw_mac_entry_outputs.append((mac, err))",
+         "kind": " ",
+         "new_lineno": 802,
+         "old_lineno": 802
+        },
+        {
+         "content": "    elif (version_info['asic_type'] == 'marvell'):",
+         "kind": "-",
+         "new_lineno": null,
+         "old_lineno": 803
+        },
+        {
+         "content": "    elif (version_info['asic_type'] == 'marvell-prestera'):",
+         "kind": "+",
+         "new_lineno": 803,
+         "old_lineno": null
+        },
+        {
+         "content": "        # Try valid mac in eeprom, else fetch it from eth0",
+         "kind": " ",
+         "new_lineno": 804,
+         "old_lineno": 804
+        },
+        {
+         "content": "        machine_key = \"onie_machine\"",
+         "kind": " ",
+         "new_lineno": 805,
+         "old_lineno": 805
+        },
+        {
+         "content": "        machine_vars = get_machine_info()",
+         "kind": " ",
+         "new_lineno": 806,
+         "old_lineno": 806
+        }
+       ],
+       "new_count": 7,
+       "new_start": 800,
+       "old_count": 7,
+       "old_start": 800,
+       "section": "def get_system_mac(namespace=None, hostname=None):"
+      }
+     ],
+     "is_binary": false,
+     "old_path": null,
+     "path": "src/sonic-py-common/sonic_py_common/device_info.py",
+     "path_class": "sonic-buildimage:component_source",
+     "similarity": null
+    }
+   ],
+   "parents": [
+    "46eb26ee1f1a02703f7a7ec94732b1fff68e5d19"
+   ],
+   "sha": "d93686ede1f4a495c5e1b3002d00af8dd1c44531",
+   "subject": "Renaming platform/marvell to platform/marvell-prestera (#20860)"
+  }
+ ],
+ "head_sha": "d93686ede1f4a495c5e1b3002d00af8dd1c44531",
+ "local_patches": [],
+ "repo": "sonic-buildimage",
+ "schema_version": "1.0",
+ "spec": {
+  "base_ref": "d93686ede1f4a495c5e1b3002d00af8dd1c44531^",
+  "context_lines": 3,
+  "head_ref": "d93686ede1f4a495c5e1b3002d00af8dd1c44531",
+  "include_merges": false,
+  "merge_base": false,
+  "mode": "range"
+ }
+}
