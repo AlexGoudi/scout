@@ -291,7 +291,7 @@ def _card(
             "patch_max_lines_per_file": limits.max_lines_per_file,
             "patch_max_line_bytes": limits.max_line_bytes,
             "patch_max_bytes_per_commit": PATCH_MAX_BYTES_PER_COMMIT,
-            "szz_file_classes": sorted(SZZ_CLASSES),
+            "szz_file_classes": provenance.get("szz_file_classes") or sorted(SZZ_CLASSES),
             "szz_max_deleted_lines": SZZ_MAX_DELETED_LINES,
             "szz_blame": f"git blame -w -M (cache v{BLAME_VERSION}); blank, bracket-only and comment lines ignored",
             "llm_char_budget": LLM_BUDGET,

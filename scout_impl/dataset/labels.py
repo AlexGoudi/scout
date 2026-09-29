@@ -19,6 +19,8 @@ from .shards import write_bytes_atomic
 
 REVERT_WINDOWS_DAYS = (7, 30, 90)
 BLAME_VERSION = "1"
+# 2: bug_introducing is unknown, not false, for a commit touching no SZZ-eligible file.
+LABELS_VERSION = "2"
 # A fix deleting more lines than this is most likely a refactor or a rewrite, and blaming
 # it would mark every author of the old code as having introduced the bug.
 SZZ_MAX_DELETED_LINES = 1000
@@ -189,7 +191,7 @@ def commit_labels(
             row.update({f"reverted_within_{days}d": lead <= days for days in REVERT_WINDOWS_DAYS})
 
         bug = bugs.get(fact.index) if bugs is not None else None
-        if bugs is None or fact.is_merge or fact.submodule_only:
+        if bugs is None or fact.is_merge or fact.submodule_only or not fact.szz_eligible:
             row.update(bug_introducing=None, fixed_by=None, fixed_landed=None, fix_lead_days=None, fix_count=None)
         elif bug is None:
             row.update(bug_introducing=False, fixed_by=None, fixed_landed=None, fix_lead_days=None, fix_count=0)

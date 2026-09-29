@@ -40,17 +40,29 @@ class CommitFacts:
     szz_targets: tuple[tuple[str, tuple[tuple[int, int], ...]], ...]
     szz_deleted_lines: int
     churn: int
+    szz_eligible: bool = True
 
 
-def facts_from_record(index: int, record: Mapping[str, Any], category: Category, landed: int) -> CommitFacts:
-    """``landed`` is the running maximum of committer times, so landing time never goes backwards."""
+def facts_from_record(
+    index: int,
+    record: Mapping[str, Any],
+    category: Category,
+    landed: int,
+    szz_classes: frozenset[str] = SZZ_CLASSES,
+) -> CommitFacts:
+    """``landed`` is the running maximum of committer times, so landing time never goes backwards.
+
+    ``szz_eligible`` is false when the commit touches no file SZZ can blame, so its
+    ``bug_introducing`` label is unknown rather than a structural false.
+    """
     commit = record["commit"]
     message = record["message"]
     areas = record["areas"]
     targets = []
     deleted = 0
+    eligible = any(item["file_class"] in szz_classes and not item["binary"] for item in record["files"])
     for item in record["files"]:
-        if item["file_class"] not in SZZ_CLASSES or item["binary"] or not item["old_path"]:
+        if item["file_class"] not in szz_classes or item["binary"] or not item["old_path"]:
             continue
         ranges = tuple(
             (old_start, old_start + old_count - 1) for old_start, old_count, _, _ in item["hunks"] if old_count > 0
@@ -79,6 +91,7 @@ def facts_from_record(index: int, record: Mapping[str, Any], category: Category,
         szz_targets=tuple(targets),
         szz_deleted_lines=deleted,
         churn=record["features"]["churn"],
+        szz_eligible=eligible,
     )
 
 

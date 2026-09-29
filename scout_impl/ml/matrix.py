@@ -20,6 +20,9 @@ SPLITS = ("train", "validation", "test")
 ID_COLUMNS = ("sha", "index", "landed", "committed_at", "split", "change_type", "is_merge")
 LABEL_PREFIX = "label_"
 AS_IS_MARKERS = ("rate", "share", "normalized", "__")
+# Stay in the feature table for analysis, but never reach a model: who wrote a change is not a
+# property of the change.
+IDENTITY_PREFIXES = ("author_", "committer_", "file_prior_authors")
 
 
 @dataclass(frozen=True)
@@ -84,7 +87,7 @@ def load_table(dataset: str | Path) -> pd.DataFrame:
 def column_spec(frame: pd.DataFrame) -> ColumnSpec:
     numeric = []
     for name in frame.columns:
-        if name in ID_COLUMNS or name.startswith(LABEL_PREFIX):
+        if name in ID_COLUMNS or name.startswith(LABEL_PREFIX) or name.startswith(IDENTITY_PREFIXES):
             continue
         if pd.api.types.is_bool_dtype(frame[name]) or pd.api.types.is_numeric_dtype(frame[name]):
             numeric.append(name)
@@ -95,7 +98,7 @@ def column_spec(frame: pd.DataFrame) -> ColumnSpec:
         for name in numeric
         if not pd.api.types.is_bool_dtype(frame[name])
         and not any(marker in name for marker in AS_IS_MARKERS)
-        and not name.startswith(("is_", "has_", "touches_", "author_is_", "author_first_"))
+        and not name.startswith(("is_", "has_", "touches_"))
     ]
     missing = [name for name in numeric if frame[name].isna().any()]
     return ColumnSpec(tuple(numeric), tuple(log_columns), tuple(missing))

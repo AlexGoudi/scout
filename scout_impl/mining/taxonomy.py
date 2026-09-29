@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 from collections import Counter
 from dataclasses import dataclass
@@ -13,9 +12,12 @@ from typing import Any, Iterable, Mapping
 
 import yaml
 
+from ..static.related import FeatureMap, FeatureMapError, load_feature_map
+
 SCOUT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TAXONOMY = SCOUT_ROOT / "scout_impl" / "repos" / "buildimage" / "taxonomy.yaml"
 FILE_CLASSES = ("code", "test", "doc", "config", "build", "yang", "patch", "binary", "submodule", "other")
+DEFAULT_SZZ_CLASSES = frozenset({"code", "config", "build", "yang", "patch"})
 ENTITY_KINDS = ("vendor", "platform", "hwsku", "asic", "docker", "submodule")
 DOCKER_RULE_RE = re.compile(r"docker-(?P<name>.+)\.(?:mk|dep)")
 
@@ -54,6 +56,7 @@ class Taxonomy:
     device_vendor_exclude: frozenset[str]
     hwsku_exclude: frozenset[str]
     asic_exclude: frozenset[str]
+    szz_file_classes: frozenset[str] = DEFAULT_SZZ_CLASSES
 
 
 @dataclass(frozen=True)
@@ -119,17 +122,19 @@ def load_taxonomy(path: str | Path | None = None) -> Taxonomy:
         raise TaxonomyError(f"{taxonomy_path}: schema_version must be 1")
 
     feature_spec = _mapping(data, "features")
-    feature_path = SCOUT_ROOT / str(feature_spec.get("source", ""))
     try:
-        feature_raw = feature_path.read_bytes()
-        feature_map = json.loads(feature_raw)
-    except (OSError, ValueError) as exc:
-        raise TaxonomyError(f"cannot read feature map {feature_path}: {exc}") from exc
+        feature_map = load_feature_map(SCOUT_ROOT / str(feature_spec.get("source", "")))
+    except FeatureMapError as exc:
+        raise TaxonomyError(str(exc)) from exc
     prefix = str(feature_spec.get("prefix", ""))
 
     entities = _mapping(data, "entities")
+    szz_classes = frozenset(str(item) for item in data.get("szz_file_classes") or DEFAULT_SZZ_CLASSES)
+    unknown = sorted(szz_classes - set(FILE_CLASSES))
+    if unknown:
+        raise TaxonomyError(f"{taxonomy_path}: szz_file_classes names unknown classes {unknown}")
     return Taxonomy(
-        sha256=hashlib.sha256(raw + b"\x00" + feature_raw).hexdigest(),
+        sha256=hashlib.sha256(raw + b"\x00" + feature_map.raw).hexdigest(),
         bots=tuple(str(item).lower() for item in _list(data, "bots")),
         name_stoplist=tuple(str(item) for item in _list(data, "name_stoplist")),
         components=_rules(_list(data, "components"), "id"),
@@ -138,6 +143,7 @@ def load_taxonomy(path: str | Path | None = None) -> Taxonomy:
         device_vendor_exclude=frozenset(str(item) for item in entities.get("device_vendor_exclude", ())),
         hwsku_exclude=frozenset(str(item) for item in entities.get("hwsku_exclude", ())),
         asic_exclude=frozenset(str(item) for item in entities.get("asic_exclude", ())),
+        szz_file_classes=szz_classes,
     )
 
 
@@ -224,13 +230,11 @@ def _rules(items: list[Any], key: str, allowed: tuple[str, ...] | None = None) -
     return tuple(rules)
 
 
-def _features(feature_map: Any, prefix: str) -> tuple[FeatureArea, ...]:
-    if not isinstance(feature_map, dict):
-        raise TaxonomyError("feature map must be an object of area -> paths")
+def _features(feature_map: FeatureMap, prefix: str) -> tuple[FeatureArea, ...]:
     areas = []
-    for area_id in sorted(feature_map):
+    for area_id in sorted(feature_map.entries):
         prefixes = sorted(
-            {entry[len(prefix):].strip("/") for entry in feature_map[area_id] if str(entry).startswith(prefix)}
+            {entry[len(prefix):].strip("/") for entry in feature_map.entries[area_id] if entry.startswith(prefix)}
         )
         if prefixes:
             areas.append(FeatureArea(str(area_id), tuple(prefixes)))

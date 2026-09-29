@@ -117,7 +117,15 @@ class Platt:
         return 1.0 / (1.0 + np.exp(-(self.slope * _logit(scores) + self.intercept)))
 
 
-def train_risk(dataset: str | Path, label: str, out: str | Path, *, seed: int = 0) -> dict[str, Any]:
+def train_risk(
+    dataset: str | Path,
+    label: str,
+    out: str | Path,
+    *,
+    seed: int = 0,
+    refresh: bool = False,
+    final: bool = False,
+) -> dict[str, Any]:
     """Train, select, calibrate and evaluate; write the model, its card and a report."""
     import joblib
     import sklearn
@@ -130,6 +138,17 @@ def train_risk(dataset: str | Path, label: str, out: str | Path, *, seed: int = 
     if label not in LABELS:
         raise ValueError(f"label must be one of {LABELS}")
     dataset = Path(dataset)
+    card_path = dataset / "dataset_card.json"
+    card_sha = hashlib.sha256(card_path.read_bytes()).hexdigest() if card_path.is_file() else ""
+    suffix = "-final" if final else ""
+    input_hash = hashlib.sha256(f"{card_sha}:{label}:{seed}{suffix}".encode()).hexdigest()[:16]
+    out_path = Path(out)
+    model_file = out_path / f"risk-{label}{suffix}.joblib"
+    model_card_file = out_path / f"risk-{label}{suffix}.model_card.json"
+    if not refresh and model_file.is_file() and model_card_file.is_file():
+        cached = json.loads(model_card_file.read_text(encoding="utf-8"))
+        if cached.get("input_hash") == input_hash:
+            return cached
     matrix = build_matrix(load_table(dataset), label)
     masks = {name: matrix.mask(name) for name in ("train", "validation", "test")}
     counts = {
@@ -219,6 +238,8 @@ def train_risk(dataset: str | Path, label: str, out: str | Path, *, seed: int = 
         "card_version": "1",
         "label": label,
         "seed": seed,
+        "input_hash": input_hash,
+        "final_refit": final,
         "dataset": {
             "path_name": dataset.name,
             "card_sha256": hashlib.sha256((dataset / "dataset_card.json").read_bytes()).hexdigest(),
@@ -244,8 +265,10 @@ def train_risk(dataset: str | Path, label: str, out: str | Path, *, seed: int = 
         "versions": {"scikit-learn": sklearn.__version__, "numpy": np.__version__},
     }
 
-    out = Path(out)
-    out.mkdir(parents=True, exist_ok=True)
+    out_path.mkdir(parents=True, exist_ok=True)
+    if final:
+        train_mask = matrix.mask("train") | matrix.mask("validation") | matrix.mask("test")
+        fitted[selected].fit(matrix.x[train_mask], matrix.y[train_mask])
     joblib.dump(
         {
             "label": label,
@@ -257,10 +280,10 @@ def train_risk(dataset: str | Path, label: str, out: str | Path, *, seed: int = 
             "reference_scores": reference,
             "card": card,
         },
-        out / f"risk-{label}.joblib",
+        model_file,
     )
-    (out / f"risk-{label}.model_card.json").write_text(json.dumps(card, indent=2, sort_keys=True) + "\n")
-    (out / f"risk-{label}.report.md").write_text(render_report(card))
+    model_card_file.write_text(json.dumps(card, indent=2, sort_keys=True) + "\n")
+    (out_path / f"risk-{label}{suffix}.report.md").write_text(render_report(card))
     return card
 
 

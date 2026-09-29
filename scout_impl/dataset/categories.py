@@ -10,6 +10,8 @@ import re
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from ..mining.taxonomy import DEFAULT_SZZ_CLASSES
+
 PRECEDENCE = (
     "revert",
     "submodule-bump",
@@ -47,7 +49,7 @@ TEST_TAGS = frozenset({"test", "tests", "unit test", "unittest", "pytest", "ut"}
 BUILD_CI_TAGS = frozenset({"ci", "build", "azp", "pipeline", "pipelines", "github", "actions", "makefile"})
 DEPENDENCY_PATHS_RE = re.compile(r"(^|/)(files/build/versions/|requirements[^/]*\.txt$|go\.(mod|sum)$)")
 CI_PATHS_RE = re.compile(r"^(\.github/|\.azure-pipelines/|azure-pipelines[^/]*\.yml$|jenkins/|Jenkinsfile$)")
-SZZ_CLASSES = frozenset({"code", "config", "build", "yang", "patch"})
+SZZ_CLASSES = DEFAULT_SZZ_CLASSES
 
 
 @dataclass(frozen=True)

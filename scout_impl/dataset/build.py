@@ -21,17 +21,40 @@ from ..mining import EXTRACTOR_VERSION
 from ..mining.gitio import Git, GitError
 from ..mining.message import DEFAULT_AUTHOR_SALT
 from ..mining.record import Context, extract_records, make_context, record_to_json
+from ..mining.taxonomy import Taxonomy
 from .categories import Category, categorize
 from .export import export_dataset, intrinsic_columns, llm_document
 from .history import CommitFacts, facts_from_record, history_features
-from .labels import BlameCache, commit_labels, link_reverts
+from .labels import LABELS_VERSION, BlameCache, commit_labels, link_reverts
 from .labels import szz as run_szz
 from .shards import ShardWriter, dumps, gzip_bytes, write_bytes_atomic, write_shards
 from .split import assign_splits, read_exclusions
 
 CHUNK_SIZE = 100
 SHORT_SHA = 9
+FINGERPRINT_FILE = ".scout-dataset-fingerprint"
 Progress = Callable[[str], None]
+
+
+def build_fingerprint(
+    snapshot: str,
+    context: Context,
+    exclude: str | Path | None,
+    szz: bool,
+    repo_type: str,
+) -> str:
+    material = "\x00".join(
+        (
+            EXTRACTOR_VERSION,
+            LABELS_VERSION,
+            context.taxonomy.sha256,
+            snapshot,
+            str(exclude or ""),
+            "szz" if szz else "no-szz",
+            repo_type,
+        )
+    )
+    return hashlib.sha256(material.encode("utf-8")).hexdigest()[:16]
 
 
 class RecordCache:
@@ -147,6 +170,9 @@ def build_dataset(
     szz: bool = True,
     cache: str | Path | None = None,
     salt: str = DEFAULT_AUTHOR_SALT,
+    taxonomy: Taxonomy | None = None,
+    repo_type: str = "sonic-buildimage",
+    refresh: bool = False,
     progress: Progress | None = None,
 ) -> dict:
     """Build the dataset for the first-parent history of ``rev``; returns the dataset card."""
@@ -156,9 +182,19 @@ def build_dataset(
     if git.is_shallow():
         raise GitError("the clone is shallow; labels and history features need the full history")
     snapshot = git.resolve_commit(rev)
-    directory = Path(out) if out else Path("corpus") / f"buildimage-{snapshot[:SHORT_SHA]}"
+    directory = Path(out) if out else Path("corpus") / f"{repo_type}-{snapshot[:SHORT_SHA]}"
+    context = make_context(git, snapshot, taxonomy=taxonomy, salt=salt)
+    fingerprint = build_fingerprint(snapshot, context, exclude, szz, repo_type)
+    fp_path = directory / FINGERPRINT_FILE
+    card_path = directory / "dataset_card.json"
+    if (
+        not refresh
+        and card_path.is_file()
+        and fp_path.is_file()
+        and fp_path.read_text(encoding="utf-8").strip() == fingerprint
+    ):
+        return json.loads(card_path.read_text(encoding="utf-8"))
     shas = git.first_parent_shas(snapshot)
-    context = make_context(git, snapshot, salt=salt)
     record_cache = RecordCache(cache, context)
     texts = mine_records(
         git,
@@ -181,7 +217,7 @@ def build_dataset(
             record = json.loads(text)
             category = categorize(record)
             landed = max(landed, record["commit"]["committed_epoch"])
-            facts.append(facts_from_record(index, record, category, landed))
+            facts.append(facts_from_record(index, record, category, landed, context.taxonomy.szz_file_classes))
             categories.append(category)
             intrinsic.append(intrinsic_columns(record))
             documents.write(dumps(llm_document(record)))
@@ -211,6 +247,7 @@ def build_dataset(
             "taxonomy_sha": context.taxonomy.sha256,
             "redaction_sha": context.redactor.digest,
             "author_salt": "default" if salt == DEFAULT_AUTHOR_SALT else "custom",
+            "szz_file_classes": sorted(context.taxonomy.szz_file_classes),
         },
         component_ids=[rule.id for rule in context.taxonomy.components],
         feature_ids=[area.id for area in context.taxonomy.features],
@@ -224,5 +261,6 @@ def build_dataset(
         szz_stats=szz_stats,
         shards={"records": record_names, "llm": document_names},
     )
+    fp_path.write_text(fingerprint + "\n", encoding="utf-8")
     say(f"dataset: {directory} in {time.monotonic() - started:.1f}s")
     return card

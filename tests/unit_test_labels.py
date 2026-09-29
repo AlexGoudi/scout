@@ -1,7 +1,8 @@
 import pytest
 
 from conftest import ALICE, BOB, DAY, RepoBuilder, mine_facts
-from scout_impl.dataset.history import CommitFacts
+from scout_impl.dataset.categories import categorize
+from scout_impl.dataset.history import CommitFacts, facts_from_record
 from scout_impl.dataset.labels import BlameCache, _meaningful, commit_labels, link_reverts, szz
 
 
@@ -69,6 +70,29 @@ def test_revert_labels_windows_and_nulls():
     assert rows[2]["reverted"] is False and rows[2]["bug_introducing"] is None
     assert rows[3]["bug_introducing"] is False
     assert commit_labels(facts, links, bugs=None)[0]["bug_introducing"] is None
+
+
+def test_a_commit_szz_cannot_blame_has_an_unknown_bug_label():
+    facts = [fact(0), CommitFacts(**{**fact(1).__dict__, "szz_eligible": False})]
+    rows = commit_labels(facts, {}, bugs={})
+    assert rows[0]["bug_introducing"] is False and rows[1]["bug_introducing"] is None
+    assert rows[1]["reverted"] is False
+
+
+def test_szz_eligibility_follows_the_taxonomy_classes(tmp_path):
+    repo = RepoBuilder(tmp_path / "repo")
+    repo.write("src/x.py", "x = 1\n")
+    repo.commit("Add x (#1)")
+    repo.write("tests/test_x.py", "def test_x():\n    assert True\n")
+    repo.commit("Test x (#2)")
+    repo.write("docs/x.md", "x\n")
+    repo.commit("Doc x (#3)")
+    _, records, facts = mine_facts(repo.path)
+    assert [item.szz_eligible for item in facts] == [True, False, False]
+    with_tests = frozenset({"code", "test"})
+    widened = [facts_from_record(item.index, record, categorize(record), item.landed, with_tests)
+               for item, record in zip(facts, records)]
+    assert [item.szz_eligible for item in widened] == [True, True, False]
 
 
 @pytest.mark.parametrize(
