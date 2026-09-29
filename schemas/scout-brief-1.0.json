@@ -28,9 +28,48 @@
         "max_blob_reads": {"type": "integer", "minimum": 0},
         "max_input_tokens": {"type": "integer", "minimum": 0}
       }
-    }
+    },
+    "paths_to_assess": {"$ref": "#/$defs/paths_to_assess"}
   },
   "$defs": {
+    "paths_to_assess": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional. The feature groups of scout_impl/static/datapath.json the change touches, and the other paths in those groups, per repository. Omitted when the change touches no group. Advisory context for a reviewer; not an input to stage 2.",
+      "required": ["repo", "rule", "features", "repos"],
+      "properties": {
+        "repo": {"type": "string", "minLength": 1, "description": "The feature-map repository the changed paths are relative to."},
+        "rule": {
+          "enum": ["shared", "union"],
+          "description": "`shared`: the groups every matched changed path is in. `union`: they share none, so every group any of them is in."
+        },
+        "features": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "changed"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "changed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        },
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["repo", "paths"],
+            "properties": {
+              "repo": {"type": "string", "minLength": 1},
+              "paths": {"type": "array", "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        }
+      }
+    },
     "run": {
       "type": "object",
       "additionalProperties": false,

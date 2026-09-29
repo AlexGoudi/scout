@@ -1,7 +1,8 @@
 """The static analyzer engine: run an adapter over a tree and produce a brief.
 
 Substages in the order HLD section 4.3 gives them — classify paths, resolve entities,
-model coverage, query the gap, rank hotspots, synthesize rules and questions — with the
+model coverage, query the gap, rank hotspots, synthesize rules and questions — then the
+feature groups the change touches (`related.py`), with the
 whole thing timed and its blob reads counted, because `static_duration_s` and
 `blobs_read` are fields in the artifact rather than log lines (NFR-12).
 
@@ -30,6 +31,7 @@ from .extract import build_coverage, build_index
 from .hotspots import Hotspot, rank_hotspots
 from .pipeline import CoverageModel
 from .platforms import EntityIndex
+from .related import Related, load_feature_map
 from .treeindex import TreeIndex
 
 ADAPTER_VERSION = "1.0"
@@ -51,6 +53,7 @@ class StaticResult:
     duration_s: float
     blobs_read: int
     blob_cache_hits: int
+    related: Optional[Related] = None
 
     @property
     def rules(self) -> Tuple[Rule, ...]:
@@ -94,6 +97,8 @@ def analyze(
         for detector in detectors_for(adapter):
             synthesis = _merge(synthesis, detector.synthesize(index, model, coverage, adapter.rules))
 
+    related = load_feature_map().related(adapter.name, [item.path for item in files]) if files else None
+
     return StaticResult(
         adapter=adapter,
         rev=rev,
@@ -106,6 +111,7 @@ def analyze(
         duration_s=time.monotonic() - started,
         blobs_read=tree.blob_reads,
         blob_cache_hits=tree.cache_hits,
+        related=related,
     )
 
 
@@ -137,6 +143,7 @@ def build_brief(
         rules=result.rules,
         questions=result.questions,
         unresolved=result.unresolved,
+        paths_to_assess=result.related.to_dict() if result.related and not result.related.empty else None,
     )
     return builder.build(result.duration_s, result.blobs_read, result.blob_cache_hits)
 

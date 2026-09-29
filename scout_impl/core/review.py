@@ -122,7 +122,7 @@ def run_review(
     log.emit("stage_start", stage="report")
     report = build_report(brief, agent, brief_ref=BRIEF_FILE, run_id=run_id or brief.id,
                           duration_s=time.monotonic() - started)
-    comment = render_comment(report)
+    comment = render_comment(report, brief)
     log.emit("stage_end", stage="report", findings=len(report.findings),
              posted=sum(1 for finding in report.findings if finding["adjudication"]["posted"]),
              suppressed=len(report.payload["suppressed"]))

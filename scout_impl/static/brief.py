@@ -135,6 +135,9 @@ class BriefBuilder:
     budget: Dict[str, int] = field(default_factory=lambda: dict(DEFAULT_BUDGET))
     status: str = STATUS_COMPLETE
     entity_closure: bool = True
+    # Omitted, not emptied, when the change touches no feature group: every brief that
+    # predates the block then keeps its bytes, and with them its `sha()` cache key.
+    paths_to_assess: Optional[Dict[str, Any]] = None
 
     def build(self, static_duration_s: float, blobs_read: int, blob_cache_hits: int = 0) -> Brief:
         payload = {
@@ -166,6 +169,8 @@ class BriefBuilder:
             "entity_closure": self.entity_closure,
             "budget": dict(self.budget),
         }
+        if self.paths_to_assess is not None:
+            payload["paths_to_assess"] = json.loads(json.dumps(self.paths_to_assess))
         brief = Brief(payload=payload)
         brief.validate()
         _check_invariants(payload)
@@ -276,6 +281,19 @@ def _check_invariants(payload: Dict[str, Any]) -> None:
                         f"{named_candidate['uncovered']} uncovered while its own per-platform answers "
                         f"say {candidate['uncovered']}"
                     )
+
+    related = payload.get("paths_to_assess")
+    if related is not None:
+        changed = {path for feature in related["features"] for path in feature["changed"]}
+        if not related["features"]:
+            problems.append("paths_to_assess: present but names no feature group")
+        for feature in related["features"]:
+            if not feature["changed"]:
+                problems.append(f"paths_to_assess: feature {feature['id']!r} names no changed path")
+        own = next((item["paths"] for item in related["repos"] if item["repo"] == related["repo"]), [])
+        restated = sorted(changed & set(own))
+        if restated:
+            problems.append(f"paths_to_assess: lists changed paths as paths to assess: {restated}")
 
     if problems:
         raise BriefContractError(problems)

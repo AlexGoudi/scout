@@ -101,7 +101,10 @@ class TreeFixture:
         version = str(payload.get("fixture_version") or "")
         if version != FIXTURE_VERSION:
             raise FixtureError(f"{path} is fixture version {version!r}, this Scout reads {FIXTURE_VERSION!r}")
+        return cls.from_dict(payload)
 
+    @classmethod
+    def from_dict(cls, payload: Dict[str, object]) -> "TreeFixture":
         return cls(
             repo=str(payload["repo"]),
             rev=str(payload["rev"]),

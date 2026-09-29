@@ -1,4 +1,8 @@
-"""Render the advisory comment from `scout-report.json`, and from nothing else (HLD section 4.10).
+"""Render the advisory comment from `scout-report.json` (HLD section 4.10).
+
+The one other input is the brief's optional `paths_to_assess` block, a fact of the static
+stage the report does not carry; without a brief, or without that block, the comment is
+exactly what the report alone renders.
 
 Per finding: a one-line title, the deterministic statement with its numbers, the snippet it
 rests on, the affected-platform count with the first few named, and then the model's
@@ -11,12 +15,14 @@ few names per list, a few lines per snippet, and `MAX_CHARS` in all. An adjudica
 report banded `low` is not shown, only noted, because HLD 4.9 suppresses it.
 """
 
-from typing import Any, Dict, List, Sequence, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
+from ..static.brief import Brief
 from .builder import Report
 
 MAX_FINDINGS = 10
 MAX_NAMED = 5
+MAX_PATHS = 10
 MAX_SNIPPET_LINES = 8
 MAX_CHARS = 16000
 
@@ -29,8 +35,10 @@ CHECK_NAMES = {
 }
 
 
-def render_comment(report: Union[Report, Dict[str, Any]]) -> str:
+def render_comment(report: Union[Report, Dict[str, Any]],
+                   brief: Optional[Union[Brief, Dict[str, Any]]] = None) -> str:
     payload = report.payload if isinstance(report, Report) else report
+    brief_payload = brief.payload if isinstance(brief, Brief) else (brief or {})
     run = payload["run"]
     lines = ["## SONiC Scout: PR-CI coverage advisory", "",
              "> Advisory only: Scout never blocks a merge. **Facts** are computed from the tree and the pipeline "
@@ -49,6 +57,8 @@ def render_comment(report: Union[Report, Dict[str, Any]]) -> str:
     hidden = len(payload["findings"]) - len(findings)
     if hidden > 0:
         lines.extend(["", f"_{hidden} more finding(s) are in `scout-report.json`, beyond the cap of {MAX_FINDINGS}._"])
+    if brief_payload.get("paths_to_assess"):
+        lines.extend([""] + _paths_to_assess(brief_payload["paths_to_assess"]))
     lines.extend(["", _footer(run)])
 
     text = "\n".join(lines) + "\n"
@@ -185,6 +195,21 @@ def _outcome(answer: Dict[str, Any]) -> str:
     if outcome == "confirmed" and answer.get("covered"):
         return "confirmed; its job group checks out for family and architecture"
     return outcome
+
+
+def _paths_to_assess(related: Dict[str, Any]) -> List[str]:
+    features = ", ".join(f"`{feature['id']}` ({len(feature['changed'])} changed)" for feature in related["features"])
+    how = ("the groups every matched path shares" if related["rule"] == "shared"
+           else "no group is shared, so every group touched")
+    lines = ["### Paths to assess", "",
+             f"**Fact** (feature map `datapath.json`; {how}): this change touches {features}. Other paths in "
+             f"the same feature group(s), worth checking alongside it:"]
+    for item in related["repos"]:
+        paths = item["paths"]
+        named = ", ".join(f"`{path}`" for path in paths[:MAX_PATHS])
+        more = f", and {len(paths) - MAX_PATHS} more in `scout-brief.json`" if len(paths) > MAX_PATHS else ""
+        lines.append(f"- `{item['repo']}` ({len(paths)}): {named}{more}")
+    return lines
 
 
 def _footer(run: Dict[str, Any]) -> str:
