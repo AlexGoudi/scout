@@ -1,7 +1,17 @@
-# Inside sonic-mgmt this package inherited the 120-column limit that repository's
-# .pre-commit-config.yaml passes to flake8. Standalone it inherits nothing, so the same
-# limit is pinned here and the team's existing checks keep passing unchanged.
+# Scout Python lint and format
+#
+# Primary config: pyproject.toml
+#   [tool.ruff] / [tool.ruff.format]  —  ruff check .   and   ruff format .
+#   [tool.flake8]                     —  flake8 with flake8-pyproject, or [flake8] below
+#
+# This file mirrors [tool.flake8] for `python3 -m flake8` without extra plugins.
+# E203 conflicts with `ruff format` slice spacing.
+
 [flake8]
 max-line-length = 120
-# The tree and blob cache also collects throwaway exploration scripts; it is never source.
-extend-exclude = .scout-cache
+extend-ignore = E203
+extend-exclude = .scout-cache,.venv,venv,corpus,models,mined-data,.ruff_cache
+per-file-ignores =
+    scout_impl/repos/sonic_mgmt_calibration.py:E501
+    scout_impl/repos/sonic_buildimage_calibration.py:E501
+    scout_impl/eval/join_labels.py:E501

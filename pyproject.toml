@@ -1,0 +1,70 @@
+# Scout Python lint and format. Flake8 reads [tool.flake8] here when flake8-pyproject
+# is installed; Ruff always reads [tool.ruff]. .flake8 keeps a [flake8] mirror for
+# plain `python3 -m flake8` without that plugin.
+# Dependencies: requirements.txt (runtime), requirements-dev.txt (tests + lint).
+
+[project]
+name = "sonic-scout"
+version = "0.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=5.1",
+    "numpy>=1.23",
+    "pandas>=1.5",
+    "pyarrow>=10",
+    "scikit-learn>=1.3",
+    "scipy>=1.9",
+    "joblib>=1.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "jsonschema>=4.0",
+    "ruff>=0.8.0",
+    "flake8>=6.0",
+    "flake8-pyproject>=1.2",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = [
+    ".scout-cache",
+    "corpus",
+    "models",
+    "mined-data",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"scout_impl/repos/sonic_mgmt_calibration.py" = ["E501"]
+"scout_impl/repos/sonic_buildimage_calibration.py" = ["E501"]
+"scout_impl/eval/join_labels.py" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["scout_impl"]
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "auto"
+
+[tool.flake8]
+max-line-length = 120
+# E203 conflicts with `ruff format` slice spacing.
+extend-ignore = ["E203"]
+extend-exclude = [".scout-cache", ".venv", "venv", "corpus", "models", "mined-data", ".ruff_cache"]
+# Long calibration tables and model-schema strings are intentional one-liners.
+per-file-ignores = [
+    "scout_impl/repos/sonic_mgmt_calibration.py:E501",
+    "scout_impl/repos/sonic_buildimage_calibration.py:E501",
+    "scout_impl/eval/join_labels.py:E501",
+]

@@ -1,0 +1,11 @@
+# Everything needed to run the test suite and lint/format (includes runtime via -r).
+-r requirements.txt
+
+# Tests
+pytest>=7.4
+jsonschema>=4.0
+
+# Lint and format (see pyproject.toml)
+ruff>=0.8.0
+flake8>=6.0
+flake8-pyproject>=1.2
