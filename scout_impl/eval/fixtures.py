@@ -96,27 +96,10 @@ class ItemFixture:
             item_id=str(payload["item_id"]),
             cause_sha=str(payload["cause_sha"]),
             parent_sha=str(payload["parent_sha"]),
-            tree=_tree_from_dict(payload["tree"]),
+            tree=TreeFixture.from_dict(payload["tree"]),
             change_set=ChangeSet.from_dict(payload["change_set"]),
             capture=dict(payload.get("capture") or {}),
         )
-
-
-def _tree_from_dict(payload: Dict[str, Any]) -> TreeFixture:
-    return TreeFixture(
-        repo=str(payload["repo"]),
-        rev=str(payload["rev"]),
-        tree_paths=int(payload["tree_paths"]),
-        entries=tuple(TreeEntry(path=item[3], mode=item[0], kind=item[1], sha=item[2])
-                      for item in payload.get("entries") or []),
-        blobs=dict(payload.get("blobs") or {}),
-        path_globs=tuple(payload.get("path_globs") or ()),
-        blob_globs=tuple(payload.get("blob_globs") or ()),
-        rev_date=str(payload.get("rev_date") or ""),
-        captured_at=str(payload.get("captured_at") or ""),
-        note=str(payload.get("note") or ""),
-        adapter=str(payload.get("adapter") or ""),
-    )
 
 
 class RecordingSource(RepoSource):
@@ -142,6 +125,9 @@ class RecordingSource(RepoSource):
 
     def path_count(self, commit: str, prefix: str = "") -> int:
         return self.inner.path_count(commit, prefix)
+
+    def prefetch_blobs(self, shas: Sequence[str]) -> int:
+        return self.inner.prefetch_blobs(shas)
 
     def read_file(self, commit: str, path: str) -> str:
         content = self.inner.read_file(commit, path)

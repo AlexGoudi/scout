@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+import sys
 import time
 from pathlib import Path
 from typing import Optional, Tuple
@@ -9,9 +10,19 @@ from .agent.budget import DEFAULT_DEADLINE_S
 from .core.review import ReviewResult, review_fixture, run_review
 from .core.review_fixture import ReviewFixture
 from .core.static_run import run_static, write_brief
+from .eval.azure_dumps import join_cfg, run_azure
+from .eval.calibration_rules import excluded_jobs
+from .eval.backtest_run import BacktestError, run_backtest
+from .eval.git_dumps import run_git_dumps
+from .eval.incidents_cache import run_incidents_cache
+from .eval.join_labels import run_labels
+from .eval.paths import eval_calibration_dir
+from .eval.score_pr import score_from_brief, score_pr_repo
 from .gitcmd import GitError, GitRepo
-from .incidents import DEFAULT_GREP, mine_incidents, summarize, write_corpus
+from .incidents import DEFAULT_GREP, summarize, write_corpus
 from .ingest import resolve
+from .mining.taxonomy import TaxonomyError
+from .mining_cli import MINING_GROUPS, main as mining_main
 from .models import ChangeSetSpec, MODE_RANGE, MODE_SYNC
 from .ollama import DEFAULT_MODEL, DEFAULT_TIMEOUT_S, OllamaProvider, ollama_spec
 from .provider import Provider, ProviderError, RecordingProvider, ReplayProvider
@@ -30,12 +41,13 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_CORPUS_PATH = "scout-corpus.jsonl"
 DEFAULT_BRIEF_PATH = "scout-brief.json"
+DEFAULT_SCOUT_CACHE = Path(__file__).resolve().parents[1] / ".scout-cache"
 # Part of every replay key, through `ModelSpec.max_output_tokens`, so recordings made at one
 # value replay only at that value.
 REVIEW_MAX_OUTPUT_TOKENS = 384
 
 
-def _parse_args() -> argparse.Namespace:
+def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="SONiC Scout offline utilities")
     parser.add_argument(
         "--repo-root",
@@ -70,6 +82,12 @@ def _parse_args() -> argparse.Namespace:
         "--log-level",
         default="INFO",
         help="Logging level (DEBUG, INFO, WARNING, ERROR)",
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="Log progress only; do not print JSON summaries to stdout",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -193,8 +211,147 @@ def _parse_args() -> argparse.Namespace:
     miner_parser.add_argument("--grep", default=DEFAULT_GREP, help="Commit message pattern selecting reverts")
     miner_parser.add_argument("--limit", type=int, help="Only mine the most recent N matching commits")
     miner_parser.add_argument("--output", default=DEFAULT_CORPUS_PATH, help="JSONL corpus output path")
+    miner_parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Re-mine incidents from scratch instead of appending since the cached tip",
+    )
 
-    return parser.parse_args()
+    git_dumps_parser = subparsers.add_parser(
+        "mine-git-dumps",
+        help="Mine git log statistics into the calibration cache",
+    )
+    git_dumps_parser.add_argument("--revision", default="origin/master", help="Revision to walk")
+    git_dumps_parser.add_argument("--output", help="Calibration directory override")
+    git_dumps_parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Re-mine all git-* files even when the cache for this ref/tip is complete",
+    )
+
+    azure_parser = subparsers.add_parser(
+        "mine-azure",
+        help="Fetch Azure PR timelines (and GitHub meta) into the calibration cache",
+    )
+    azure_parser.add_argument("--output", help="Calibration directory override")
+    azure_parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="Concurrent Azure timeline HTTP fetches (default: SCOUT_AZURE_WORKERS or 6; use 1 for serial)",
+    )
+    azure_parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Re-fetch GitHub/Azure from scratch (default: resume missing timelines only)",
+    )
+
+    labels_parser = subparsers.add_parser(
+        "mine-labels",
+        help="Join Azure timelines with git paths into model-* calibration files",
+    )
+    labels_parser.add_argument("--output", help="Calibration directory override")
+    labels_parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Re-run join even when model-* already exists in the calibration dir",
+    )
+
+    score_parser = subparsers.add_parser("score-pr", help="Heuristic break-risk score from changed paths")
+    score_parser.add_argument("--base", default="origin/master", help="Diff base ref")
+    score_parser.add_argument("--brief", default=None, help="Optional scout-brief.json (alias view)")
+    score_parser.add_argument(
+        "--calibration",
+        help="Directory with scoring-plan.json from mine-labels (default: adapter calibration cache)",
+    )
+
+    fidelity_parser = subparsers.add_parser(
+        "check-fidelity",
+        help="Compare adapter coverage job groups with Azure timeline job keys",
+    )
+    fidelity_parser.add_argument("--output", help="Calibration directory with azure-pr-job-timelines.json")
+
+    mine_group = subparsers.add_parser("mine", help="extract records from a local clone")
+    mine_sub = mine_group.add_subparsers(dest="subcommand", required=True)
+    mine_commit = mine_sub.add_parser("commit", help="emit the JSON record of one commit")
+    mine_commit.add_argument("--repo", required=True)
+    mine_commit.add_argument("--commit", required=True)
+    mine_commit.add_argument("--names-from", default="HEAD")
+    mine_commit.add_argument("--output")
+
+    dataset_group = subparsers.add_parser("dataset", help="build the commit dataset")
+    dataset_sub = dataset_group.add_subparsers(dest="subcommand", required=True)
+    dataset_build = dataset_sub.add_parser("build", help="mine first-parent history into a dataset")
+    dataset_build.add_argument("--repo", required=True)
+    dataset_build.add_argument("--rev", required=True)
+    dataset_build.add_argument("--repo-type", choices=available_adapters())
+    dataset_build.add_argument("--out")
+    dataset_build.add_argument("--workers", type=int, default=0)
+    dataset_build.add_argument("--exclude")
+    dataset_build.add_argument("--no-szz", action="store_true")
+    dataset_build.add_argument("--cache", default=str(DEFAULT_SCOUT_CACHE))
+    dataset_build.add_argument("--refresh", action="store_true")
+
+    ml_group = subparsers.add_parser("ml", help="risk and similarity baselines over a dataset")
+    ml_sub = ml_group.add_subparsers(dest="subcommand", required=True)
+    ml_train = ml_sub.add_parser("train-risk", help="train and evaluate commit risk models")
+    ml_train.add_argument("--dataset", required=True)
+    ml_train.add_argument("--label", default="bug_introducing", choices=("bug_introducing", "reverted_within_90d"))
+    ml_train.add_argument("--out", default="models")
+    ml_train.add_argument("--seed", type=int, default=0)
+    ml_train.add_argument("--refresh", action="store_true")
+    ml_train.add_argument("--final", action="store_true")
+    ml_similar = ml_sub.add_parser("similar", help="similar commits in a dataset")
+    ml_similar.add_argument("--dataset", required=True)
+    similar_target = ml_similar.add_mutually_exclusive_group(required=True)
+    similar_target.add_argument("--commit")
+    similar_target.add_argument("--evaluate", action="store_true")
+    ml_similar.add_argument("-k", type=int, default=10)
+    ml_score = ml_sub.add_parser("score", help="LLM-ready risk bundle for one commit")
+    ml_score.add_argument("--dataset", required=True)
+    ml_score.add_argument("--model", required=True)
+    ml_score.add_argument("--repo", required=True)
+    ml_score.add_argument("--commit", required=True)
+    ml_score.add_argument("-k", type=int, default=5)
+    ml_pr = ml_sub.add_parser("train-pr-job", help="train PR-job model (gated by fidelity)")
+    ml_pr.add_argument("--calibration")
+    ml_pr.add_argument("--out", default="models")
+    ml_pr.add_argument("--repo-type", choices=available_adapters(), required=True)
+    ml_pr.add_argument("--repo-root", required=True)
+    ml_walk = ml_sub.add_parser("walk-forward", help="score held-out commits into the online ledger")
+    ml_walk.add_argument("--dataset", required=True)
+    ml_walk.add_argument("--model", required=True)
+    ml_walk.add_argument("--repo-type", choices=available_adapters(), required=True)
+    ml_watch = ml_sub.add_parser("watch", help="score open PRs with the phase-0 heuristic into the online ledger")
+    ml_watch.add_argument("--remote", required=True)
+    ml_watch.add_argument("--repo-type", choices=available_adapters(), required=True)
+    ml_watch.add_argument("--calibration")
+    ml_watch.add_argument("--max-prs", type=int, default=100)
+    ml_grade = ml_sub.add_parser("grade", help="fill PR outcomes from Azure gold labels and score the ledger")
+    ml_grade.add_argument("--repo-type", choices=available_adapters(), required=True)
+    ml_grade.add_argument("--calibration")
+
+    backtest_parser = subparsers.add_parser(
+        "backtest",
+        help="Grade D6 on the seed corpus: recall on incidents, flag rate on controls. Offline once captured",
+    )
+    backtest_parser.add_argument(
+        "--adapter",
+        default="sonic-buildimage",
+        choices=available_adapters(),
+        help="Repository adapter to grade against (the seed corpus exists for sonic-buildimage only)",
+    )
+    backtest_parser.add_argument(
+        "--capture",
+        action="store_true",
+        help="Allow network: mine the corpus and capture missing item fixtures. Without it, replay only",
+    )
+    backtest_parser.add_argument(
+        "--corpus-dir", help="Pinned corpus directory (default: <cache>/eval/backtest/<adapter>)"
+    )
+    backtest_parser.add_argument("--revision", help="Pin the history tip when mining a new corpus")
+
+    return parser.parse_args(argv)
 
 
 def _open_source(args: argparse.Namespace) -> RepoSource:
@@ -473,24 +630,185 @@ def _log_review(result: ReviewResult) -> None:
         logger.info("  wrote %s: %s", name, path)
 
 
+def _calibration_adapter(args: argparse.Namespace, source: RepoSource) -> RepoAdapter:
+    adapter = _adapter(args)
+    if adapter is None:
+        if isinstance(source, LocalCheckout):
+            adapter = resolve_adapter(root=source.root)
+        else:
+            raise ValueError(f"{args.command} needs --repo-type when using --remote")
+    return adapter
+
+
+def _calibration_out(args: argparse.Namespace, source: RepoSource, adapter: RepoAdapter) -> Path:
+    """Calibration dump directory. ``mine-incidents --output`` is a corpus file, not this path."""
+    output = getattr(args, "output", None)
+    if output and getattr(args, "command", None) != "mine-incidents":
+        return Path(output)
+    cache_dir = getattr(args, "cache_dir", None)
+    return eval_calibration_dir(adapter, source, Path(cache_dir) if cache_dir else None)
+
+
+def _require_local(source: RepoSource, command: str) -> Optional[LocalCheckout]:
+    if not isinstance(source, LocalCheckout):
+        logger.fatal("%s needs a working copy; pass --repo-root", command)
+        return None
+    return source
+
+
+def _run_mine_git_dumps(args: argparse.Namespace, source: RepoSource) -> int:
+    checkout = _require_local(source, "mine-git-dumps")
+    if checkout is None:
+        return 2
+    adapter = _adapter(args) or resolve_adapter(root=checkout.root)
+    out = _calibration_out(args, source, adapter)
+    logger.info("mine-git-dumps writing under %s (ref %s)", out, args.revision)
+    tip = run_git_dumps(
+        adapter,
+        GitRepo(checkout.root),
+        str(out),
+        ref=args.revision,
+        resume=not args.refresh,
+    )
+    logger.info("Wrote git dumps for %s at %s under %s", adapter.name, tip[:12], out)
+    return 0
+
+
+def _run_mine_azure(args: argparse.Namespace, source: RepoSource) -> int:
+    adapter = _calibration_adapter(args, source)
+    out = _calibration_out(args, source, adapter)
+    logger.info("mine-azure writing under %s", out)
+    run_azure(adapter, str(out), workers=args.workers, resume=not args.refresh)
+    logger.info("Wrote Azure dumps under %s", out)
+    return 0
+
+
+def _run_mine_labels(args: argparse.Namespace, source: RepoSource) -> int:
+    checkout = _require_local(source, "mine-labels")
+    if checkout is None:
+        return 2
+    adapter = _adapter(args) or resolve_adapter(root=checkout.root)
+    out = _calibration_out(args, source, adapter)
+    run_labels(adapter, str(out), repo=GitRepo(checkout.root), resume=not args.refresh)
+    logger.info("Wrote model-* join under %s", out)
+    return 0
+
+
+def _run_score_pr(args: argparse.Namespace, source: RepoSource) -> int:
+    checkout = _require_local(source, "score-pr")
+    if checkout is None:
+        return 2
+    adapter = _adapter(args) or resolve_adapter(root=checkout.root)
+    cal_dir = Path(args.calibration) if args.calibration else _calibration_out(args, source, adapter)
+    if args.brief:
+        payload = score_from_brief(args.brief, adapter, calibration_dir=cal_dir, repo=GitRepo(checkout.root))
+    else:
+        payload = score_pr_repo(GitRepo(checkout.root), adapter, args.base, calibration_dir=cal_dir)
+    # Primary output is JSON on stdout; --quiet must not silence it (redirect-friendly).
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+def _run_check_fidelity(args: argparse.Namespace, source: RepoSource) -> int:
+    adapter = _calibration_adapter(args, source)
+    out = _calibration_out(args, source, adapter)
+    from .eval._io import load
+    from .eval.fidelity import check_coverage_fidelity, check_mgmt_topology_fidelity
+
+    timelines = load(str(out), "azure-pr-job-timelines.json")
+    azure_jobs = set()
+    for build in timelines.get("builds") or []:
+        for group in (build.get("groupJobs") or {}).values():
+            azure_jobs.update(group.keys())
+    cfg = join_cfg(adapter)
+    model_groups = set((cfg.get("jobs") or {}).get("gold") or [])
+    excluded = set(excluded_jobs(cfg))
+    result = check_coverage_fidelity(model_groups, azure_jobs, excluded=excluded)
+    if adapter.name == "sonic-mgmt":
+        pretest = set((cfg.get("jobs") or {}).get("pretest") or [])
+        kvm_model = model_groups - pretest
+        kvm_azure = azure_jobs - pretest - excluded
+        topo = check_mgmt_topology_fidelity(kvm_model, kvm_azure)
+        result = {"coverage": result, "topology": topo, "ok": result["ok"] and topo["ok"]}
+    if args.quiet:
+        logger.info("check-fidelity: ok=%s", result["ok"])
+    else:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    return 0 if result["ok"] else 1
+
+
+def _run_backtest(args: argparse.Namespace) -> int:
+    try:
+        payload = run_backtest(
+            adapter_name=args.adapter,
+            cache_root=Path(args.cache_dir) if args.cache_dir else None,
+            capture=args.capture,
+            directory=Path(args.corpus_dir) if args.corpus_dir else None,
+            revision=args.revision,
+        )
+    except BacktestError as error:
+        logger.error("%s", error)
+        return 2
+    if not args.quiet:
+        summary = {key: value for key, value in payload.items() if key != "rows"}
+        print(json.dumps(summary, indent=2, sort_keys=True))
+    return 0
+
+
 def _run_miner(args: argparse.Namespace, source: RepoSource) -> int:
     if not isinstance(source, LocalCheckout):
         logger.fatal("mine-incidents walks whole history, so it needs a working copy; pass --repo-root")
         return 2
 
-    incidents = mine_incidents(
+    adapter = _adapter(args) or resolve_adapter(root=source.root)
+    out = _calibration_out(args, source, adapter)
+    incidents = run_incidents_cache(
         GitRepo(source.root),
+        out,
         revision=args.revision,
-        limit=args.limit,
         grep=args.grep,
+        limit=args.limit,
+        refresh=args.refresh,
     )
     write_corpus(incidents, Path(args.output))
-    print(json.dumps(summarize(incidents), indent=2, sort_keys=True))
+    stats = summarize(incidents)
+    if args.quiet:
+        logger.info(
+            "mine-incidents: %d reverts, %d linked, corpus %s",
+            stats["reverts"],
+            stats["linked"],
+            args.output,
+        )
+    else:
+        print(json.dumps(stats, indent=2, sort_keys=True))
     return 0
 
 
-def run() -> int:
-    args = _parse_args()
+def _pop_global_quiet(argv: list[str]) -> Tuple[bool, list[str]]:
+    quiet = False
+    rest: list[str] = []
+    for arg in argv:
+        if arg in ("-q", "--quiet"):
+            quiet = True
+        else:
+            rest.append(arg)
+    return quiet, rest
+
+
+def run(argv: Optional[list[str]] = None) -> int:
+    argv = list(argv if argv is not None else sys.argv[1:])
+    global_quiet, argv = _pop_global_quiet(argv)
+    if argv and argv[0] in MINING_GROUPS:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
+        try:
+            return mining_main(argv, quiet=global_quiet)
+        except TaxonomyError as error:
+            logger.fatal("mining failed: %s", error)
+            return 1
+
+    args = _parse_args(argv)
+    if global_quiet:
+        args.quiet = True
     logging.basicConfig(
         level=getattr(logging, args.log_level.upper(), logging.INFO),
         format="%(asctime)s %(levelname)s %(name)s - %(message)s",
@@ -501,6 +819,8 @@ def run() -> int:
         return 2
 
     try:
+        if args.command == "backtest":
+            return _run_backtest(args)
         source = _open_source(args) if not getattr(args, "fixture", None) else None
         if args.command == "ingest":
             return _run_ingest(args, source)
@@ -510,8 +830,21 @@ def run() -> int:
             return _run_brief(args, source)
         if args.command == "review":
             return _run_review(args, source)
-        return _run_miner(args, source)
-    except (GitError, RepoAdapterError, ValueError, FixtureError, SchemaError, EntityIndexError,
+        if args.command == "mine-git-dumps":
+            return _run_mine_git_dumps(args, source)
+        if args.command == "mine-azure":
+            return _run_mine_azure(args, source)
+        if args.command == "mine-labels":
+            return _run_mine_labels(args, source)
+        if args.command == "score-pr":
+            return _run_score_pr(args, source)
+        if args.command == "check-fidelity":
+            return _run_check_fidelity(args, source)
+        if args.command == "mine-incidents":
+            return _run_miner(args, source)
+        logger.fatal("Unknown command %s", args.command)
+        return 2
+    except (GitError, TaxonomyError, RepoAdapterError, ValueError, FixtureError, SchemaError, EntityIndexError,
             PipelineParseError, BriefContractError, ValidationError, ReportContractError) as error:
         logger.fatal("%s failed: %s", args.command, error)
         return 1
