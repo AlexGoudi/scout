@@ -8,7 +8,7 @@ so `python3 -m pytest tests/unit_test_*.py -q` stays hermetic and model-free (NF
 
 `$SCOUT_OLLAMA_URL` names the server, defaulting here to `http://127.0.0.1:11435` rather
 than ollama's own 11434, because on this machine the user-level server on 11435 is the one
-with models. `$SCOUT_OLLAMA_MODEL` names the model, defaulting to `qwen2.5:7b-instruct`.
+with models. `$SCOUT_OLLAMA_MODEL` names the model, defaulting to `DEFAULT_MODEL` (`qwen2.5-coder:7b`).
 
 What these prove that the stub cannot: that the wire shape is one a real server accepts,
 that `format` really constrains the answer to the schema, that the token counts are real,

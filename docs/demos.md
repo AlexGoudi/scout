@@ -96,8 +96,9 @@ With `ollama` selected and no server answering, the review still completes, degr
 and the deterministic findings. For a fully offline run with recorded answers, use
 `SCOUT_DEMO_PROVIDER=replay ./demo.sh sonic-buildimage`.
 
-The demo's default model, `qwen2.5-coder:7b`, differs from the CLI's own default for
-`review --model`, `qwen2.5:7b-instruct`.
+The demo's default model, `qwen2.5-coder:7b`, is also the CLI's default for `review --model`. The
+recorded replays under `tests/fixtures/demo/` were made with `qwen2.5:7b-instruct` and keep that
+model in their replay keys, so `SCOUT_DEMO_PROVIDER=replay` serves them whatever the default is.
 
 ## `demo-serve.sh`
 

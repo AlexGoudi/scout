@@ -13,8 +13,8 @@ Where the server is. `resolve_base_url` takes, in order, an explicit URL (the CL
 `--ollama-url`), `$SCOUT_OLLAMA_URL`, `$OLLAMA_HOST` (ollama's own variable, usually a bare
 `host:port`), and ollama's default `http://127.0.0.1:11434`. On this machine the default is
 the wrong answer: the system service on 11434 has no models and cannot download any, and
-the models live under a user-level server on `http://127.0.0.1:11435` serving
-`qwen2.5:7b-instruct`. Point `SCOUT_OLLAMA_URL` (or `--ollama-url`) at 11435.
+the models live under a user-level server on `http://127.0.0.1:11435`, which `demo-serve.sh`
+starts and pulls the default model into. Point `SCOUT_OLLAMA_URL` (or `--ollama-url`) at 11435.
 
 The proxy trap. `HTTP_PROXY`, `HTTPS_PROXY` and `http_proxy` are set here for a corporate
 proxy, and urllib honours them even for 127.0.0.1 whenever `NO_PROXY` does not name it —
@@ -22,7 +22,8 @@ and here it names 127.0.1.1, not 127.0.0.1. A naive client therefore sends a loo
 request to the proxy and gets its HTML error page back. So a loopback base URL gets an
 opener with no proxy handling at all, and only a non-loopback one honours the environment.
 
-Speed, measured on this machine against `qwen2.5:7b-instruct`. With ollama's default
+Speed, measured on this machine against `qwen2.5:7b-instruct`, which recorded the committed
+demo replays and is the same size as the default `qwen2.5-coder:7b`. With ollama's default
 thread count output ran at 1.7 tokens/s, 108 s for a single answer. With
 `options.num_thread=16` and `num_predict` capped it ran at about 23 tokens/s, roughly 13 s
 per question, and prompt evaluation at about 140 tokens/s. Hence the defaults: 16 threads,
@@ -75,7 +76,7 @@ DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434"
 OLLAMA_URL_ENV = "SCOUT_OLLAMA_URL"
 OLLAMA_HOST_ENV = "OLLAMA_HOST"
 DEFAULT_OLLAMA_PORT = 11434
-DEFAULT_MODEL = "qwen2.5:7b-instruct"
+DEFAULT_MODEL = "qwen2.5-coder:7b"
 DEFAULT_TIMEOUT_S = 3000.0
 DEFAULT_NUM_THREAD = 16
 DEFAULT_SEED = 20260924

@@ -358,7 +358,7 @@ only), each with a Wilson 95% interval. See [models-and-evaluation.md](models-an
 ### 6.4 Model provider and cost control
 
 `Provider` (`scout_impl/provider.py`) has one live implementation, `OllamaProvider`
-(`scout_impl/ollama.py`, default model `qwen2.5:7b-instruct`), which calls a local ollama server, so
+(`scout_impl/ollama.py`, default model `qwen2.5-coder:7b`), which calls a local ollama server, so
 no code leaves the machine; loopback calls bypass HTTP proxies. `ReplayProvider` serves recorded
 responses and `RecordingProvider` records a live one. Cost is bounded by the brief's finite question
 list, the per-question budgets, the run budget and the deadline.

@@ -11,6 +11,7 @@ the trap this machine sets for any urllib client talking to 127.0.0.1.
 
 import dataclasses
 import json
+import re
 import socket
 import threading
 import time
@@ -22,6 +23,7 @@ from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 import pytest
 
+from scout_impl.cli import _parse_args
 from scout_impl.ollama import (
     DEFAULT_KEEP_ALIVE,
     DEFAULT_MODEL,
@@ -602,3 +604,14 @@ def test_a_recorded_answer_replays_identically_with_the_server_gone(tmp_path: Pa
 
     assert replayed.cached is True
     assert dataclasses.replace(replayed, cached=False) == recorded
+
+
+def test_the_demos_and_the_cli_default_to_the_same_model() -> None:
+    root = Path(__file__).resolve().parent.parent
+    demo_defaults = {
+        name: re.findall(r"SCOUT_OLLAMA_MODEL:-([^}]+)\}", (root / name).read_text())
+        for name in ("demo.sh", "demo-env.sh", "demo-serve.sh")
+    }
+    assert all(demo_defaults.values()), demo_defaults
+    assert {model for models in demo_defaults.values() for model in models} == {DEFAULT_MODEL}
+    assert _parse_args(["review", "--range", "a..b"]).model == DEFAULT_MODEL

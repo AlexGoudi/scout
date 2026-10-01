@@ -97,7 +97,7 @@ Run all stages and write `scout-brief.json`, `scout-report.json`, `scout-comment
 | `--range BASE..HEAD` | | Commit range. |
 | `--fixture PATH` | | A pinned review fixture (`review.json`) or tree fixture; offline. Takes neither `--pr` nor `--range`. |
 | `--provider {ollama,replay,none}` | `ollama` | Who answers the brief's questions. `none` runs degraded: brief and deterministic findings only. |
-| `--model NAME` | `qwen2.5:7b-instruct` | Model the ollama provider asks. |
+| `--model NAME` | `qwen2.5-coder:7b` | Model the ollama provider asks. |
 | `--ollama-url URL` | `$SCOUT_OLLAMA_URL`, then `$OLLAMA_HOST`, then ollama's default | The ollama server. |
 | `--replay-dir DIR` | the fixture's replay directory | Recorded responses for `--provider replay`. |
 | `--record DIR` | | Also record every live response here, for later replay. |

@@ -53,7 +53,7 @@ python3 run_scout.py --remote sonic-net/sonic-buildimage review --pr 24811 --pro
 ```
 
 For model judgements, run an ollama server and use `--provider ollama` (default model
-`qwen2.5:7b-instruct`; see `--model` and `--ollama-url` in [cli-reference.md](cli-reference.md#review)).
+`qwen2.5-coder:7b`; see `--model` and `--ollama-url` in [cli-reference.md](cli-reference.md#review)).
 `./demo-serve.sh` starts one; see [demos.md](demos.md).
 
 A local clone works too: `--repo-root ~/data/git/sonic-buildimage review --range BASE..HEAD`.

@@ -54,7 +54,7 @@ opted in:
 | File | Opt-in | Other variables |
 | --- | --- | --- |
 | `integration_test_remote_fetch.py` | `SCOUT_NETWORK_TESTS=1` | `SCOUT_NETWORK_REMOTE` (default `sonic-net/sonic-buildimage`) |
-| `integration_test_ollama.py` | `SCOUT_OLLAMA_TESTS=1` | `SCOUT_OLLAMA_URL` (default `http://127.0.0.1:11435`), `SCOUT_OLLAMA_MODEL` (default `qwen2.5:7b-instruct`) |
+| `integration_test_ollama.py` | `SCOUT_OLLAMA_TESTS=1` | `SCOUT_OLLAMA_URL` (default `http://127.0.0.1:11435`), `SCOUT_OLLAMA_MODEL` (default `qwen2.5-coder:7b`) |
 | `integration_test_review_ollama.py` | `SCOUT_OLLAMA_TESTS=1` | `SCOUT_OLLAMA_URL`, `SCOUT_BUILDIMAGE_REPO`; `SCOUT_RECORD_DEMO=1` re-records `tests/fixtures/demo/<case>/` |
 
 ```bash
