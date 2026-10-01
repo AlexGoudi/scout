@@ -400,7 +400,7 @@ PR builds and job timelines, up to three attempts per PR; `mine-labels` joins th
 changed paths into the `model-*` files and `scoring-plan.json`, split 70/15/15 by PR in time order
 ([calibration-and-labels.md](calibration-and-labels.md)). `score-pr` applies the phase-0 rule to a
 diff offline ([scoring.md](scoring.md)). `ml train-pr-job` may replace that rule only if it beats it
-on validation and test, and `ml watch` and `ml grade` score open PRs before Azure answers and grade
+on validation (test is reported, never used to decide), and `ml watch` and `ml grade` score open PRs before Azure answers and grade
 them afterwards. Separately, `dataset build` and `ml train-risk` build a commit dataset with revert
 and SZZ labels and train commit-risk baselines on it
 ([models-and-evaluation.md](models-and-evaluation.md)).

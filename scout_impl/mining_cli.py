@@ -71,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     pr_job.add_argument("--out", default="models")
     pr_job.add_argument("--repo-type", choices=("sonic-mgmt", "sonic-buildimage"), required=True)
     pr_job.add_argument("--repo-root", required=True)
+    pr_job.add_argument("--final", action="store_true", help="refit a kept model on train, valid and test")
 
     walk = ml.add_parser("walk-forward", help="score held-out commits into the online ledger")
     walk.add_argument("--dataset", required=True)
@@ -189,6 +190,7 @@ def _ml_pr_job(arguments: argparse.Namespace) -> int:
         out=Path(arguments.out),
         repo_type=arguments.repo_type,
         repo_root=Path(arguments.repo_root),
+        final=arguments.final,
     )
     if arguments.quiet:
         logger.info("train-pr-job: wrote %s", arguments.out)

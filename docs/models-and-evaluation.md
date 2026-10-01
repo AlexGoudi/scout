@@ -127,11 +127,20 @@ default cache) and refuses to run unless:
 - `scoring-plan.json` exists;
 - train, valid and test rows exist, and train and valid each have at least one failure.
 
-It fits one class-balanced, standardized logistic regression on the numeric PR features, the row's
-`heuristic_p` and a one-hot job indicator. It writes `pr-job-<repo-type>.json` with validation and
-test PR-AUC for both the model and the heuristic, and `selected` set to `logistic_pr_job` only when
-the model beats the heuristic on **both** splits; otherwise `heuristic_p_job`. The
-`pr-job-<repo-type>.joblib` is written only in the first case. There is no `--final` option.
+Rows with `path_bag_usable: false` (two-dot diff fallbacks, whose path features are empty) are left
+out of every split; the card counts them under `rows_excluded_two_dot`.
+
+It fits one class-balanced, standardized logistic regression on the train split's numeric PR
+features, the row's `heuristic_p` and a one-hot job indicator. It writes `pr-job-<repo-type>.json`
+with validation and test PR-AUC for both the model and the heuristic. `selected` is
+`logistic_pr_job` when the model beats the heuristic on **validation**, otherwise `heuristic_p_job`;
+test PR-AUC is reported for information and never decides. The `pr-job-<repo-type>.joblib` is
+written only when the model is kept.
+
+`--final` makes the same decision, then refits a kept model on train, valid and test together and
+writes `pr-job-<repo-type>-final.{json,joblib}` with `final_refit: true`. Its reported metrics
+describe the train-only fit. `ml walk-forward` takes commit risk models only, so it refuses both PR-job
+models and any `--final` model.
 
 Read these metrics with the split sizes in mind. On `sonic-buildimage`, a breaking PR fails eight or
 nine image jobs at once, so a test split with a few dozen failing rows may rest on three or four PRs.

@@ -229,7 +229,7 @@ Build the commit dataset from the first-parent history of `--rev`. The clone mus
 | `ml train-risk` | `--dataset DIR` (required), `--label {bug_introducing,reverted_within_90d}` (default `bug_introducing`), `--out DIR` (default `models`), `--seed N` (default 0), `--refresh`, `--final` | Writes `risk-<label>[-final].{joblib,model_card.json,report.md}` into `--out`. |
 | `ml similar` | `--dataset DIR` (required), exactly one of `--commit SHA` or `--evaluate`, `-k N` (default 10) | Prints JSON. |
 | `ml score` | `--dataset DIR`, `--model PATH`, `--repo PATH`, `--commit SHA` (all required), `-k N` (default 5) | Prints the risk bundle as JSON. |
-| `ml train-pr-job` | `--repo-type` (required), `--repo-root PATH` (required), `--calibration DIR`, `--out DIR` (default `models`) | Gated on fidelity. No `--final`. `--repo-root` is recorded in the card only. |
+| `ml train-pr-job` | `--repo-type` (required), `--repo-root PATH` (required), `--calibration DIR`, `--out DIR` (default `models`), `--final` | Gated on fidelity; kept only if it beats `heuristic_p` on validation. `--final` refits a kept model on every split into `pr-job-<repo-type>-final.*`. `--repo-root` is recorded in the card only. |
 | `ml walk-forward` | `--dataset DIR`, `--model PATH`, `--repo-type` (all required) | Refuses a `--final` model. |
 | `ml watch` | `--remote OWNER/REPO` (required), `--repo-type` (required), `--calibration DIR`, `--max-prs N` (default 100) | Calls the GitHub API. |
 | `ml grade` | `--repo-type` (required), `--calibration DIR` | Writes `online-scorecard.json` next to the ledger. |

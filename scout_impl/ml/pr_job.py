@@ -1,4 +1,9 @@
-"""PR-grain job failure model (gated by fidelity; must beat the path heuristic on valid and test)."""
+"""PR-grain job failure model, gated by fidelity and kept only if it beats the path heuristic.
+
+The keep-or-discard decision reads validation alone; test PR-AUC is reported but never decides.
+Rows whose diff fell back to two dots carry an empty path bag, so they are left out of training
+and evaluation.
+"""
 
 from __future__ import annotations
 
@@ -69,9 +74,16 @@ def _split_rows(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     buckets: dict[str, list[dict[str, Any]]] = {"train": [], "valid": [], "test": []}
     for row in rows:
         split = row.get("split")
-        if split in buckets:
+        if split in buckets and row.get("path_bag_usable") is not False:
             buckets[split].append(row)
     return buckets
+
+
+def _fit(x: np.ndarray, y: np.ndarray, seed: int) -> Any:
+    return make_pipeline(
+        StandardScaler(),
+        LogisticRegression(C=1.0, class_weight="balanced", max_iter=5000, random_state=seed),
+    ).fit(x, y)
 
 
 def train_pr_job(
@@ -81,7 +93,9 @@ def train_pr_job(
     repo_type: str,
     repo_root: Path,
     seed: int = 0,
+    final: bool = False,
 ) -> dict[str, Any]:
+    """Fit on train, decide on validation, report test. ``final`` refits a kept model on every split."""
     adapter = get_adapter(repo_type)
     if adapter is None:
         raise ValueError(f"unknown repo type {repo_type!r}")
@@ -118,15 +132,15 @@ def train_pr_job(
     if y_train.sum() == 0 or y_valid.sum() == 0:
         raise ValueError("train or validation has no positive job failures")
 
-    model = make_pipeline(
-        StandardScaler(),
-        LogisticRegression(C=1.0, class_weight="balanced", max_iter=5000, random_state=seed),
-    ).fit(x_train, y_train)
+    model = _fit(x_train, y_train, seed)
     valid_model = average_precision(y_valid, model.predict_proba(x_valid)[:, 1])
     valid_heuristic = average_precision(y_valid, h_valid)
     test_model = average_precision(y_test, model.predict_proba(x_test)[:, 1])
     test_heuristic = average_precision(y_test, h_test)
-    beats = valid_model > valid_heuristic and test_model > test_heuristic
+    beats = valid_model > valid_heuristic
+    if beats and final:
+        model = _fit(np.vstack([x_train, x_valid, x_test]), np.concatenate([y_train, y_valid, y_test]), seed)
+    suffix = "-final" if final else ""
 
     out.mkdir(parents=True, exist_ok=True)
     card = {
@@ -134,6 +148,8 @@ def train_pr_job(
         "repo_root": str(repo_root),
         "calibration": str(directory),
         "rows": len(rows),
+        "rows_by_split": {name: len(split_rows) for name, split_rows in by_split.items()},
+        "rows_excluded_two_dot": sum(1 for row in rows if row.get("path_bag_usable") is False),
         "jobs": jobs,
         "fidelity": coverage,
         "metrics": {
@@ -142,12 +158,15 @@ def train_pr_job(
         },
         "selected": "logistic_pr_job" if beats else "heuristic_p_job",
         "beats_heuristic": beats,
+        "gate": "validation PR-AUC above heuristic_p; test is reported, not used to decide",
+        "final_refit": final,
     }
-    card_path = out / f"pr-job-{repo_type}.json"
+    card_path = out / f"pr-job-{repo_type}{suffix}.json"
     card_path.write_text(json.dumps(card, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if beats:
         joblib.dump(
-            {"model": model, "jobs": jobs, "feature_keys": list(_NUMERIC_FEATURE_KEYS) + ["heuristic_p"]},
-            out / f"pr-job-{repo_type}.joblib",
+            {"model": model, "jobs": jobs, "feature_keys": list(_NUMERIC_FEATURE_KEYS) + ["heuristic_p"],
+             "final_refit": final},
+            out / f"pr-job-{repo_type}{suffix}.joblib",
         )
     return card

@@ -329,6 +329,7 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     ml_pr.add_argument("--out", default="models")
     ml_pr.add_argument("--repo-type", choices=available_adapters(), required=True)
     ml_pr.add_argument("--repo-root", required=True)
+    ml_pr.add_argument("--final", action="store_true", help="refit a kept model on train, valid and test")
     ml_walk = ml_sub.add_parser("walk-forward", help="score held-out commits into the online ledger")
     ml_walk.add_argument("--dataset", required=True)
     ml_walk.add_argument("--model", required=True)
