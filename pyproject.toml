@@ -33,7 +33,6 @@ extend-exclude = [
     ".scout-cache",
     "corpus",
     "models",
-    "mined-data",
 ]
 
 [tool.ruff.lint]
@@ -61,7 +60,7 @@ line-ending = "auto"
 max-line-length = 120
 # E203 conflicts with `ruff format` slice spacing.
 extend-ignore = ["E203"]
-extend-exclude = [".scout-cache", ".venv", "venv", "corpus", "models", "mined-data", ".ruff_cache"]
+extend-exclude = [".scout-cache", ".venv", "venv", "corpus", "models", ".ruff_cache"]
 # Long calibration tables and model-schema strings are intentional one-liners.
 per-file-ignores = [
     "scout_impl/repos/sonic_mgmt_calibration.py:E501",

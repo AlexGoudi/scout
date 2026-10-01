@@ -211,7 +211,7 @@ CI_SURFACES = (
     ),
 )
 
-# The counting rules of HLD section 4.3.1, as data. C1 is `max_link_hops`, C2 is implied
+# The counting rules, as data. C1 is `max_link_hops`, C2 is implied
 # by the extractor parsing `declaration_file` to a set, C3 is `shared_suffix`, and C4 is
 # the deliberate absence of `hwsku_markers` from the exclusion test — they are recorded so
 # the brief can publish how many platforms own no HWSKU and were kept anyway, never to
@@ -253,10 +253,9 @@ ENTITY_MODEL = DirectoryEntitySpec(
 # Both stages that schedule `.azure-pipelines/azure-pipelines-build.yml` are in scope,
 # because both run on a pull request and both therefore build. Scoping to the stage
 # literally named `Build` drops `vs`, `vpp` and `alpinevs` and moves the headline from
-# 196/88 to 194/90; HLD section 6.2.2 names the scope as `Build` while HLD section 6.2
-# publishes the nine-group list that only `Build` plus `BuildVS` produces. The nine-group
-# list is the normative one, so it wins, and the divergence is recorded here next to the
-# code that depends on it. Every name in `stages` must exist or the parse fails loudly.
+# 196/88 to 194/90. The nine job groups that only `Build` plus `BuildVS` produce are what
+# PR CI actually builds, so both stages are scoped. Every name in `stages` must exist or
+# the parse fails loudly.
 COVERAGE_SPEC = PipelineCoverageSpec(
     model="pr-build-stage",
     path="azure-pipelines.yml",

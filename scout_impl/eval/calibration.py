@@ -1,4 +1,4 @@
-"""Chronological split calibration for detector prior and posting threshold (HLD 4.9, FR-10)."""
+"""Chronological split calibration for detector prior and posting threshold (FR-10)."""
 
 from __future__ import annotations
 

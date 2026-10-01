@@ -1,8 +1,8 @@
-"""Build `scout-report.json` from a brief and the agent stage's result (HLD section 4.10).
+"""Build `scout-report.json` from a brief and the agent stage's result.
 
 One finding per brief question, because a finding's adjudication answers exactly one
-question and question binding is a rule at this boundary too. Each finding carries HLD
-4.10's blocks: a `deterministic` half stated from the brief's own numbers, `proven` by
+question and question binding is a rule at this boundary too. Each finding carries four
+blocks: a `deterministic` half stated from the brief's own numbers, `proven` by
 construction; an `adjudication` half holding the model's answers group by group, with
 what each check made of them and a band of its own; the evidence both rest on, every item
 with the quote the resolver re-read; and the affected platforms, which are the brief's and

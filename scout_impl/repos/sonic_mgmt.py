@@ -1,6 +1,6 @@
 """Adapter for `sonic-net/sonic-mgmt`, the test and lab automation repository.
 
-The path rules and their ranking are HLD section 4.3 verbatim: playbooks and
+The path rules are ranked by blast radius: playbooks and
 `ansible/library/` first, then shared test infrastructure, then the data-file families,
 then the pipeline, then leaf tests, then anything unrecognized, then documentation.
 Documentation ranks below `other` because a `.md` change is the one class that reliably
@@ -138,7 +138,7 @@ CI_SURFACES = (
 )
 
 # The second adapter exists to falsify the claim that the core is repo-agnostic, and it
-# ships at smoke level with no detector of its own (HLD section 3). A topology is a file,
+# ships at smoke level with no detector of its own. A topology is a file,
 # not a directory carrying a declaration, so none of counting rules C1 to C4 has anything
 # to act on here; the index reports zero for each rather than a number that looks measured.
 ENTITY_MODEL = FileEntitySpec(

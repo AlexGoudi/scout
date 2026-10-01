@@ -10,7 +10,7 @@
 [flake8]
 max-line-length = 120
 extend-ignore = E203
-extend-exclude = .scout-cache,.venv,venv,corpus,models,mined-data,.ruff_cache
+extend-exclude = .scout-cache,.venv,venv,corpus,models,.ruff_cache
 per-file-ignores =
     scout_impl/repos/sonic_mgmt_calibration.py:E501
     scout_impl/repos/sonic_buildimage_calibration.py:E501

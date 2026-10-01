@@ -137,7 +137,7 @@ def test_the_example_answer_cites_the_first_groups_own_ids_and_offers_every_verd
 
 
 def test_a_right_answer_for_a_wrong_reason_is_dropped_by_the_cited_job_group_check():
-    """HLD 4.5.1 case C: right that it is covered, wrong about which job group builds it."""
+    """Right that it is covered, wrong about which job group builds it."""
     reply = answers(ambiguity("A", False, cite=A_CITES), ambiguity("B", True, "marvell-prestera-armhf", B_CITES),
                     ambiguity("C", True, "marvell-prestera-armhf", C_CITES))
     result, _, _ = _run([reply], questions=("q-001",))
@@ -147,7 +147,7 @@ def test_a_right_answer_for_a_wrong_reason_is_dropped_by_the_cited_job_group_che
 
 
 def test_disagreeing_with_the_rule_is_kept_contested_and_never_overrides_it():
-    """HLD 4.5.1 case D: the armhf platform called not covered, with the armhf group in the list."""
+    """The armhf platform called not covered, with the armhf group in the list."""
     reply = answers(ambiguity("A", False, cite=A_CITES), ambiguity("B", True, "marvell-prestera-arm64", B_CITES),
                     ambiguity("C", False, "", C_CITES, reason="no job group builds armhf"))
     result, _, log = _run([reply], questions=("q-001",))

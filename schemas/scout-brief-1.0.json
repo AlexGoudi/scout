@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/sonic-net/scout/schemas/scout-brief-1.0.json",
   "title": "SONiC Scout risk brief",
-  "description": "The contract between the deterministic static stage and the agent stage (HLD section 4.4). Stage 1 validates on write, stage 2 on read. Every block here is either a fact the static stage established or a question it refused to guess at.",
+  "description": "The contract between the deterministic static stage and the agent stage. Stage 1 validates on write, stage 2 on read. Every block here is either a fact the static stage established or a question it refused to guess at.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "brief", "hotspots", "entities", "coverage", "rules", "questions", "unresolved", "entity_closure", "budget"],
@@ -153,7 +153,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["model", "job_groups", "job_group_names", "parse", "declarations_in_tree", "platforms_in_tree", "excluded_as_non_platform", "kept_without_hwsku", "affected", "covered", "uncovered", "ambiguous"],
-      "description": "The four sets are exhaustive and disjoint over `affected`.",
+      "description": "`covered`, `uncovered` and `ambiguous` are exhaustive and disjoint over `affected`.",
       "properties": {
         "model": {"type": "string", "minLength": 1},
         "job_groups": {"type": "integer", "minimum": 0},
@@ -162,7 +162,7 @@
           "type": "object",
           "additionalProperties": false,
           "required": ["scope", "strict", "loose_scan_agrees"],
-          "description": "The parse is published, not just its result. `loose_scan_agrees: false` is a test failure, not a warning (HLD section 6.2.2).",
+          "description": "The parse is published, not just its result. `loose_scan_agrees: false` is an error, not a warning: the parser raises and the brief builder refuses it.",
           "properties": {
             "scope": {"type": "string", "minLength": 1},
             "strict": {"type": "boolean"},

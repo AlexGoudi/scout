@@ -218,7 +218,7 @@ class LocalPatch:
     """A fork-local commit that is not upstream; the input to detector D3.
 
     `overlapping_paths` is the intersection with the incoming change set, which is where
-    conflict resolution can silently drop a local fix (HLD section 4.2).
+    conflict resolution can silently drop a local fix.
     """
 
     sha: str
@@ -304,7 +304,7 @@ class ChangeSetSpec:
 
 @dataclass(frozen=True)
 class ChangeSet:
-    """Normalized change set produced by ingest (HLD section 4.2)."""
+    """Normalized change set produced by ingest."""
 
     base_sha: str
     head_sha: str

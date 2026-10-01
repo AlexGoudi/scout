@@ -1,4 +1,4 @@
-"""Azure label join and model-* calibration files (outside HLD training)."""
+"""Azure label join and the model-* calibration files."""
 
 from __future__ import annotations
 
@@ -702,7 +702,6 @@ def run_labels(
                 "git-commit-file-changes.json — unlabeled / revert-era",
                 "azure-pr-job-timelines.json — includes excluded jobs",
                 f"pipelineResult on any record — {parent_note}",
-                "git-authors.json — vendor/author identity",
             ],
             "class_balance": class_balance,
             "still_missing": still_missing,

@@ -90,7 +90,7 @@ def test_a_covered_claim_through_a_group_of_the_wrong_architecture_is_refused():
 
 
 def test_a_covered_claim_through_a_group_of_the_wrong_family_is_refused():
-    """The HLD 4.5.1 failure: 'aspeed-arm64 builds armhf platforms, matching marvell-prestera-armhf'."""
+    """A measured 7B failure: 'aspeed-arm64 builds armhf platforms, matching marvell-prestera-armhf'."""
     problem = cited_job_group(_answer(job_group="broadcom"), ARM64, _world())
     assert "broadcom" in problem and "do not declare" in problem
 

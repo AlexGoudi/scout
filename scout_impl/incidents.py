@@ -1,10 +1,9 @@
 """Incident miner: turns the repo's revert history into the labelled seed corpus.
 
-Git history is already a labelled dataset (HLD section 6.3). This module finds the
-`^Revert` commits, links the ones carrying a `This reverts commit <sha>` trailer back to
-the commit they revert, and emits one JSONL record per incident. `detector_category` is
-deliberately left unset: R2 adjudicates it in the joint triage session on D2, per
-docs/scout-plan.md section 8.
+Git history is already a labelled dataset. This module finds the `^Revert` commits, links
+the ones carrying a `This reverts commit <sha>` trailer back to the commit they revert, and
+emits one JSONL record per incident. `detector_category` is deliberately left unset: which
+detector an incident belongs to is a human triage decision, and nothing here guesses it.
 """
 
 import json

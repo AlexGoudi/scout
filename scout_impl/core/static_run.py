@@ -78,7 +78,7 @@ def run_static(
 
 
 def write_brief(run: StaticRun, path: Path) -> str:
-    """Write the brief and return its sha, which is stage 2's cache key (HLD section 6.4)."""
+    """Write the brief and return its sha, which is stage 2's cache key."""
     sha = run.brief.write(Path(path))
     logger.info("Wrote %s (%s)", path, sha[:12])
     return sha

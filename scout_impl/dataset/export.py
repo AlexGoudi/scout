@@ -34,7 +34,8 @@ LABEL_DEFINITIONS = {
         for days in REVERT_WINDOWS_DAYS
     },
     "bug_introducing": "SZZ: git blame -w -M, at the fix's first parent, of the lines a fix-like commit removed or "
-    "changed in code, config, build, YANG or patch files attributes at least one non-trivial line to this commit.",
+    "changed in the file classes the adapter's taxonomy lets SZZ blame (szz_file_classes) attributes at least one "
+    "non-trivial line to this commit.",
     "null": "Labels are null for merges, and bug_introducing is also null for commits that only move gitlinks "
     "and when SZZ is skipped.",
     "split_aware": "features.parquet holds labels as known when each split ends: train at the validation "

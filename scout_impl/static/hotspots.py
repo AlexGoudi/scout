@@ -1,4 +1,4 @@
-"""Hotspot ranking, with a score breakdown that sums to the score (HLD section 4.3).
+"""Hotspot ranking, with a score breakdown that sums to the score.
 
 Four signals, each contributing an explicit component: the path class of the changed
 file, how many entities it reaches, how much of what it reaches PR CI never builds, and

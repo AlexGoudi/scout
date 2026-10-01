@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-rm -rf "$ROOT/.scout-cache" "$ROOT/mined-data"
+rm -rf "$ROOT/.scout-cache"
 
 if [[ -d "$ROOT/corpus" ]]; then
     find "$ROOT/corpus" -mindepth 1 ! -name .gitkeep -exec rm -rf {} + 2>/dev/null || true

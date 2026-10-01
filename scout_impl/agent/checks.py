@@ -1,10 +1,9 @@
-"""The constraints that hold the model to the brief, applied to what it returned (HLD 4.5, 4.6).
+"""The constraints that hold the model to the brief, applied to what it returned.
 
 Nothing here asks the model to behave. Each check reads an answer the model already gave
 and passes it, drops it or marks it, and says which and why, and every firing is counted
-so a report can say how often the model needed catching. They run in a fixed order, the
-order of HLD section 4.1's pipeline, and the first to fail decides what an answer is
-recorded as having failed:
+so a report can say how often the model needed catching. They run in a fixed order, and
+the first to fail decides what an answer is recorded as having failed:
 
 1. **Question binding.** The answer names a group the prompt handed out. Checked in the
    runner, because it is about the reply as a whole.
@@ -143,7 +142,7 @@ def rule_consistency(item: AnswerItem, group: Group) -> Tuple[str, str]:
 
 @dataclass
 class CitationResolver:
-    """Re-reads cited evidence at its revision and checks it still says what it quotes (HLD 4.6).
+    """Re-reads cited evidence at its revision and checks it still says what it quotes.
 
     Re-reads go through the toolbox, so they are charged like any other read, and a blob the
     evidence assembly already fetched costs nothing twice. Each item is verified once.

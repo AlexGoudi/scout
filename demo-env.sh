@@ -29,10 +29,12 @@ fi
 # Where mine-*, backtest and the online ledger keep their data (run_scout.py --cache-dir default).
 export SCOUT_EVAL_CACHE="${SCOUT_EVAL_CACHE:-${SCOUT_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/sonic-scout/repos}/eval}"
 
-# ./demo.sh review provider for sonic-buildimage fixtures (offline replay recordings).
+# ./demo.sh review provider for the sonic-buildimage fixture PRs: ollama asks a live model
+# (start ./demo-serve.sh first; with no server the review runs degraded, deterministic findings
+# only), replay serves the fixtures' recorded answers offline, none skips the agent stage.
 export SCOUT_DEMO_PROVIDER="${SCOUT_DEMO_PROVIDER:-ollama}"
-# Live sonic-mgmt review has no fixture replay dir; default none. Set to ollama for live model calls.
+# The live sonic-mgmt review has no recorded answers to replay: none or ollama.
 export SCOUT_DEMO_MGMT_PROVIDER="${SCOUT_DEMO_MGMT_PROVIDER:-none}"
-# When review --provider ollama: tag from `ollama list` (GGUF registered via `ollama create`).
+# When a provider is ollama: a tag from `ollama list`.
 export SCOUT_OLLAMA_MODEL="${SCOUT_OLLAMA_MODEL:-qwen2.5-coder:7b}"
 export SCOUT_OLLAMA_URL="${SCOUT_OLLAMA_URL:-http://127.0.0.1:11435}"

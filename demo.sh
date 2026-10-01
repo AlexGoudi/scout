@@ -4,37 +4,37 @@
 #   ./demo.sh                    both repos
 #   ./demo.sh sonic-buildimage   #24811 and #20860 from pinned fixtures, plus buildimage evaluation
 #   ./demo.sh sonic-mgmt         sonic-net/sonic-mgmt#23052 from the clone, plus mgmt evaluation
-#   ./demo.sh all [OUT_DIR]      keep the artifacts in OUT_DIR (default: a temp dir)
+#   ./demo.sh TARGET [OUT_DIR]   keep the artifacts in OUT_DIR (default: a temp dir)
 #
 # Three parts, each skipped cleanly when its ./demo-setup.sh step has not run:
 #   1. tree     the static stage over a whole tree: platforms PR CI never builds
 #   2. review   per PR: the comment, brief, agent questions, phase-0 job scores, commit risk
 #   3. eval     how good it is: D6 backtest, model cards against baselines, online ledger
 #
+# With a provider of ollama, run ./demo-serve.sh in another terminal first. With no server
+# answering, the review still runs but degraded: the brief and the deterministic findings only.
+#
 # Environment (see demo-env.sh):
 #   SCOUT_DEMO_PARTS           which parts, comma-separated (default: tree,review,eval)
-#   SCOUT_DEMO_PROVIDER        buildimage fixtures: replay | ollama | none (default: replay)
+#   SCOUT_DEMO_PROVIDER        buildimage fixtures: ollama | replay | none (default: ollama)
 #   SCOUT_DEMO_MGMT_PROVIDER   live mgmt #23052: none | ollama (default: none)
 #   SCOUT_OLLAMA_MODEL / SCOUT_OLLAMA_URL   used when provider is ollama
 #   SCOUT_BUILDIMAGE_CLONE     sonic-buildimage checkout (default: ~/data/git/sonic-buildimage)
-#   SCOUT_CLONE / SCOUT_TARGET_REPO         sonic-mgmt checkout (default: ~/data/git/sonic-mgmt)
+#   SCOUT_TARGET_REPO, else SCOUT_CLONE     sonic-mgmt checkout (default: ~/data/git/sonic-mgmt)
 #   PYTHON
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
+case "${1:-}" in
+    -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
+esac
 # shellcheck source=demo-env.sh
 source "$ROOT/demo-env.sh"
 TARGET="${1:-all}"
 PARTS=" ${SCOUT_DEMO_PARTS:-tree,review,eval} "
 PARTS="${PARTS//,/ }"
 FIXTURE_PROVIDER="$SCOUT_DEMO_PROVIDER"
-if [[ -n "${SCOUT_DEMO_MGMT_PROVIDER:-}" ]]; then
-    MGMT_PROVIDER="$SCOUT_DEMO_MGMT_PROVIDER"
-elif [[ "$FIXTURE_PROVIDER" == "replay" ]]; then
-    MGMT_PROVIDER="none"
-else
-    MGMT_PROVIDER="$FIXTURE_PROVIDER"
-fi
+MGMT_PROVIDER="$SCOUT_DEMO_MGMT_PROVIDER"
 
 BI_REPO="${SCOUT_BUILDIMAGE_CLONE:-$HOME/data/git/sonic-buildimage}"
 MGMT_REPO="${SCOUT_TARGET_REPO:-${SCOUT_CLONE:-$HOME/data/git/sonic-mgmt}}"

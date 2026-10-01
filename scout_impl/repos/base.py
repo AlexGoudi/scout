@@ -117,7 +117,7 @@ class DirectoryEntitySpec:
 
     The shape is "a directory under `root` is an entity when it carries
     `declaration_file`, whose contents name the families that entity belongs to". It
-    carries the counting rules of HLD section 4.3.1 as data rather than as code, because
+    carries the counting rules as data rather than as code, because
     those rules are the committed detector's specification and a reader has to be able to
     check them against the document without reading an extractor: `shared_suffix` is C3,
     `hwsku_markers` is what C4 refuses to exclude on, and `max_link_hops` bounds C1.
@@ -194,8 +194,8 @@ class PipelineCoverageSpec:
     """Which stages of which pipeline definition decide what PR CI actually builds.
 
     `stages` is the strict scope and every name in it must be present, because falling
-    back to a whole-file scan when a stage is missing is the silent failure HLD section
-    6.2.2 is written about. `family_variable` is the job-group variable naming the
+    back to a whole-file scan when a stage is missing is how a wrong coverage model ships
+    silently. `family_variable` is the job-group variable naming the
     unqualified family an architecture-qualified group builds, which is what turns the
     `marvell-prestera-arm64` ambiguity into data instead of a hardcoded pair of names.
     """
@@ -252,7 +252,7 @@ class RuleSpec:
 
     `citation_kind` names which artifact the engine must cite for it. Every rule carries
     a citation into the tree, and a rule whose citation cannot be resolved is a bug in
-    the adapter rather than a finding (HLD section 4.4).
+    the adapter rather than a finding.
     """
 
     id: str

@@ -1,4 +1,4 @@
-"""Backtest D6 over the seed corpus: recall on incidents, flag rate on controls (HLD section 6.3).
+"""Backtest D6 over the seed corpus: recall on incidents, flag rate on controls.
 
 Each corpus item is analyzed at its cause, `parent..cause`, from a pinned per-item fixture.
 An incident is recalled when the platforms the static stage reports as never built include

@@ -48,7 +48,7 @@ REVIEW_MAX_OUTPUT_TOKENS = 384
 
 
 def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="SONiC Scout offline utilities")
+    parser = argparse.ArgumentParser(description="SONiC Scout: advisory break-risk review of SONiC changes")
     parser.add_argument(
         "--repo-root",
         help="Working copy to read; mutually exclusive with --remote. Defaults to the current directory",
@@ -64,7 +64,8 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--cache-dir",
-        help=f"Where fetched remotes are cached, keyed by remote. Defaults to {default_cache_root()}",
+        help=f"Where fetched remotes are cached, keyed by remote, with mined eval data under eval/. "
+        f"Defaults to {default_cache_root()}",
     )
     parser.add_argument(
         "--depth",
@@ -154,7 +155,7 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         "--hotspots",
         type=int,
         default=10,
-        help="How many ranked hotspots to keep, capped per NFR-4",
+        help="How many ranked hotspots to keep",
     )
     brief_parser.add_argument("--context-lines", type=int, default=3, help="Diff context lines to retain per hunk")
 
@@ -193,7 +194,12 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         "--repo-name",
         help="Name the brief and report record for the repository; defaults to --remote or the checkout's name",
     )
-    review_parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT_S, help="Seconds per model call")
+    review_parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_TIMEOUT_S,
+        help=f"Seconds per model call (default: {DEFAULT_TIMEOUT_S:g}). Checked against --deadline only between calls",
+    )
     review_parser.add_argument(
         "--deadline",
         type=float,
@@ -231,7 +237,7 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
 
     azure_parser = subparsers.add_parser(
         "mine-azure",
-        help="Fetch Azure PR timelines (and GitHub meta) into the calibration cache",
+        help="Fetch Azure PR build timelines into the calibration cache",
     )
     azure_parser.add_argument("--output", help="Calibration directory override")
     azure_parser.add_argument(
@@ -243,7 +249,7 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     azure_parser.add_argument(
         "--refresh",
         action="store_true",
-        help="Re-fetch GitHub/Azure from scratch (default: resume missing timelines only)",
+        help="Re-fetch Azure from scratch (default: resume missing timelines only)",
     )
 
     labels_parser = subparsers.add_parser(
@@ -259,7 +265,12 @@ def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
 
     score_parser = subparsers.add_parser("score-pr", help="Heuristic break-risk score from changed paths")
     score_parser.add_argument("--base", default="origin/master", help="Diff base ref")
-    score_parser.add_argument("--brief", default=None, help="Optional scout-brief.json (alias view)")
+    score_parser.add_argument(
+        "--brief",
+        default=None,
+        help="Score a scout-brief.json's change instead of BASE...HEAD: its base_sha...head_sha in the "
+        "checkout, or only its hotspots when the checkout lacks those commits (files_complete: false)",
+    )
     score_parser.add_argument(
         "--calibration",
         help="Directory with scoring-plan.json from mine-labels (default: adapter calibration cache)",

@@ -1,4 +1,4 @@
-"""The agent's read-only tools over the fetched tree (HLD section 4.5).
+"""The agent's read-only tools over the fetched tree.
 
 Every tool reads through the same `RepoSource` stage 0 fetched, so the agent reaches no
 network the fetch did not already reach and can neither write nor execute anything. The

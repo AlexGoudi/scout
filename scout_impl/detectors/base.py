@@ -1,6 +1,6 @@
 """What a detector is: a data-driven spec plus one synthesis function.
 
-The spec side is the catalog row from HLD section 4.7 — trigger, question, the evidence
+The spec side is the detector's catalog row — trigger, question, the evidence
 roles a valid answer needs, how the claim is verified, and its confidence prior. The
 synthesis side is the only code a detector owns: given what the static stage established,
 produce the rules the agent must test, the questions it may ask, and the facts that are
@@ -15,7 +15,7 @@ them without a translation layer that could drift from the schema.
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Optional, Tuple
 
-# Evidence roles, from HLD section 4.6.
+# Evidence roles.
 ROLE_CAUSE = "cause"
 ROLE_AFFECTED = "affected"
 ROLE_PRECEDENT = "precedent"

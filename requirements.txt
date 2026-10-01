@@ -5,7 +5,7 @@
 # For tests and lint/format, use: pip install -r requirements-dev.txt
 #
 # PyYAML reads real YAML: the pipeline definitions the static stage parses, which use
-# anchors, template indirection and expression-valued keys (HLD section 6.2.2), and the
+# anchors, template indirection and expression-valued keys, and the
 # commit-mining path taxonomy (scout_impl/repos/buildimage/taxonomy.yaml).
 PyYAML>=5.1
 #

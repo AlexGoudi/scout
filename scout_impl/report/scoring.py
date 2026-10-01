@@ -1,4 +1,4 @@
-"""Confidence, HLD section 4.9: the arithmetic is proven, and the judgement is banded apart from it.
+"""Confidence: the arithmetic is proven, and the judgement is banded apart from it.
 
 Every D6 finding has two halves. The deterministic half is a fact about two files in a
 tree Scout has already read, cited into both, and it is `proven` by construction; that is a
@@ -19,7 +19,7 @@ the model's judgement, and only it is banded, from four factors:
 | `low` | No complete answer, the model could not decide, or a weak prior | Kept in the JSON, not in the comment |
 
 **The constants are provisional.** FR-10 wants the posting threshold set from the backtest,
-and the backtest harness stopped partway (plan Section 0), so `BROAD_AT`, `WEAK_PRIOR` and
+and the backtest corpus is small, so `BROAD_AT`, `WEAK_PRIOR` and
 the score's shape are stated here to be tuned against it, not claimed as calibrated.
 """
 
@@ -126,7 +126,7 @@ def severity_for(never_built: int, benign: bool) -> str:
 
 
 def posts(band: Optional[str], higher_ranked: int) -> bool:
-    """Whether an adjudication of this band is shown in the comment (HLD 4.9's Action column)."""
+    """Whether an adjudication of this band is shown in the comment."""
     if band == BAND_HIGH:
         return True
     if band == BAND_MEDIUM:

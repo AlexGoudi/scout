@@ -174,7 +174,7 @@ stages:
 
 
 def test_a_strict_and_loose_disagreement_raises_rather_than_being_recorded_quietly():
-    """A second job group in a second stage, outside the strict scope. Risk R3, in miniature."""
+    """A second job group in a second stage, outside the strict scope."""
     pipeline = PIPELINE + """
 - stage: BuildVS
   jobs:

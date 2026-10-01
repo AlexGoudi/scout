@@ -1,4 +1,4 @@
-"""Revert history for the seed corpus, fetched without a clone (HLD section 6.3).
+"""Revert history for the seed corpus, fetched without a clone.
 
 Mining needs commit messages and changed paths, never file content, so the history is a
 **treeless** fetch of the whole of master: 13,105 commits in 2.9 s and 10.8 MB, measured

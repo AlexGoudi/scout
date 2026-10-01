@@ -1,18 +1,9 @@
-"""The PR-CI coverage model, parsed out of the pipeline definition (HLD section 6.2.2).
+"""The PR-CI coverage model, parsed out of the pipeline definition.
 
 **This is the detector's source of ground truth and its failure mode is silent.** Every
 finding Scout emits is a statement about what the pipeline builds, so a sloppy parse
 changes every finding while the citations still resolve, the brief still validates and
 the report still renders. Nothing downstream objects.
-
-**The "5 against 8" incident this module used to cite was not a parser disagreement, and
-the claim is withdrawn.** It came from two hand measurements taken with different rules:
-a prefix match on `^- stage: Build`, which also swept up `BuildVS` and returned 9
-upstream, against an exact `^- stage: Build$` on the fork, which returned 5. Two different
-questions, two different answers, no defect. This parser reads both build stages on both
-trees and its strict and loose parses agree on each. What survives is the failure *mode* —
-a coverage model can be wrong in a way nothing downstream detects — and the cross-check
-below, which is worth keeping on its own merits rather than on a story that did not happen.
 
 Four properties follow from that failure mode, each implemented here rather than described:
 
@@ -66,7 +57,7 @@ class PipelineStageNotFound(PipelineParseError):
 
 
 class PipelineParseDisagreement(PipelineParseError):
-    """The strict parse and the loose scan disagree, which is the R3 failure condition."""
+    """The strict parse and the loose scan disagree, so the coverage model cannot be trusted."""
 
 
 _TEMPLATE_REF = re.compile(r"^(?P<path>[^@]+)(?:@(?P<repo>.+))?$")
@@ -187,7 +178,7 @@ def parse_coverage_model(tree: TreeIndex, spec: PipelineCoverageSpec) -> Coverag
     if not model.loose_scan_agrees:
         raise PipelineParseDisagreement(
             f"Two parses of {spec.path} disagree, which is how a wrong coverage model reaches every "
-            f"finding without failing anything (HLD section 6.2.2). Strict scope "
+            f"finding without failing anything. Strict scope "
             f"{'+'.join(spec.stages)} found {len(model.names)}: {list(model.names)}. A loose "
             f"whole-file scan found {len(set(model.loose_names))}: {sorted(set(model.loose_names))}. "
             f"Resolve which is right before trusting any coverage number from this tree."
@@ -214,7 +205,7 @@ def strict_parse(tree: TreeIndex, spec: PipelineCoverageSpec, text: Optional[str
         raise PipelineStageNotFound(
             f"{spec.path} has no stage named {missing}; it declares {sorted(by_name)}. Scout will not fall "
             f"back to a whole-file scan, because a scan that happens to return something is how a wrong "
-            f"coverage model ships silently (HLD section 6.2.2)."
+            f"coverage model ships silently."
         )
 
     resolver = _Resolver(tree, spec)

@@ -2,15 +2,15 @@
 
 A local 7B model is weak at open-ended, multi-step tool use and good at applying a stated
 rule to evidence in front of it, so the agent stage does the looking up itself. For each
-question it gathers the three things the D6 contract says a finding rests on (HLD section
-4.7) — the diff hunk that is the **cause**, the `platform_asic` lines naming the
-**affected** platform's family, and the `azure-pipelines.yml` lines that are the
-**contract** — and numbers them `E1`, `E2`, ... The model cites by number, which it does
-reliably, rather than by path and line, which it does not.
+question it gathers the three things the D6 contract says a finding rests on — the diff
+hunk that is the **cause**, the `platform_asic` lines naming the **affected** platform's
+family, and the `azure-pipelines.yml` lines that are the **contract** — and numbers them
+`E1`, `E2`, ... The model cites by number, which it does reliably, rather than by path and
+line, which it does not.
 
 Every item carries the exact quote it was built from and the revision it was read at, so
-the citation resolver can re-read it and drop a finding whose quote no longer matches
-(HLD section 4.6). Quotes from the diff are taken from the change set rather than from the
+the citation resolver can re-read it and drop a finding whose quote no longer matches.
+Quotes from the diff are taken from the change set rather than from the
 tree, which is what gives that re-read something to catch: a change set and a tree that
 disagree about a line are exactly the case where a finding must not be trusted.
 

@@ -1,7 +1,7 @@
 """The second repository, which exists to falsify the claim that the core is repo-agnostic.
 
 The claim is falsified the moment shipping the `sonic-mgmt` adapter requires a change
-inside the core (HLD section 5.1), and it was: `sonic-buildimage` declares entities as
+inside the core, and it was: `sonic-buildimage` declares entities as
 directories carrying a declaration file and coverage as pipeline stages, `sonic-mgmt`
 declares entities as files and coverage as a Python list literal, and neither pair is a
 parameterisation of the other. Two extractor shapes and a dispatch had to be added.
@@ -77,7 +77,7 @@ def test_the_counting_rules_report_zero_rather_than_a_number_that_looks_measured
 
 
 def test_the_second_adapter_ships_no_detector_so_the_brief_carries_no_questions(mgmt):
-    """Smoke level, by decision (HLD section 3): D8 is deferred and is not built."""
+    """Smoke level, by decision: no detector is built for sonic-mgmt."""
     payload = _brief(mgmt).payload
     assert mgmt.adapter.detectors == ()
     assert payload["rules"] == []

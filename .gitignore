@@ -18,13 +18,14 @@ venv/
 /corpus/*/
 /models/
 
-# Content-addressed tree and blob cache (HLD section 6.5). Keyed by git object SHA, so it
-# is rebuildable from a fetch and never belongs in history.
+# The dataset build's record and blame cache (`dataset build --cache`). Keyed by git object
+# SHA, so it is rebuildable from the clone and never belongs in history.
 /.scout-cache/
 .env
 
-scout/
-lib/
-lib64/
-bin/
-pyvenv.cfg
+# A virtualenv created in the repository root itself, or as `scout/`.
+/scout/
+/lib/
+/lib64/
+/bin/
+/pyvenv.cfg

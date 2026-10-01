@@ -9,7 +9,7 @@ local path in it, which is what lets a replay key match the recording it was mad
 Two things the prompts deliberately do not do. They do not ask the model to decide the
 architecture question: the rule's answer is printed beside each group and the model is
 asked to confirm it or to contest it with evidence, because at 7B it was measured flipping
-that answer with the wording and inventing reasons for right ones (HLD section 4.5.1). And
+that answer with the wording and inventing reasons for right ones. And
 they do not rely on the model to obey its rules: citing only listed ids, naming only listed
 entities and answering only listed groups are all checked in code afterwards, and the
 prompt states them only so that a compliant answer is the likely one.

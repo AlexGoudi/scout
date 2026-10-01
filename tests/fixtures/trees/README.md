@@ -7,18 +7,15 @@ from. None of them is a clone: the largest is 461 KB against a 20,155-path tree.
 
 | Fixture | Tree | Revision | Why it is pinned |
 | --- | --- | --- | --- |
-| `sonic-buildimage-master-62cfe50.json` | `sonic-net/sonic-buildimage` master | `62cfe5086`, 2026-09-21 | The tree [../../../docs/scout-hld.md](../../../docs/scout-hld.md) sections 4.3.1 and 6.2 were measured against: 20,155 paths, 287 declarations, 287 platforms, 9 job groups, 196 built, 91 never built under string matching and 80 under the architecture rule |
+| `sonic-buildimage-master-62cfe50.json` | `sonic-net/sonic-buildimage` master | `62cfe5086`, 2026-09-21 | The tree the headline figures in [the HLD](../../../docs/scout-hld.md) were measured against: 20,155 paths, 287 declarations, 287 platforms, 9 job groups, 196 built, 91 never built under string matching and 80 under the architecture rule |
 | `nokia-fork-202605.json` | The Nokia downstream fork, branch `202605` | `faef5faca`, 2026-09-08 | A second tree for rules C5 and C6 — 277 declarations, 278 platforms, 8 job groups — and the tree the `Build`-only scoping check is run against |
 | `sonic-buildimage-3589b56.json` | `sonic-net/sonic-buildimage` at commit `3589b565d` | `3589b565d`, 2026-01-05 | The reverse-reach case. That commit edited `device/arista/x86_64-arista_common/pmon_daemon_control.json`, which through inbound symlinks is the pmon configuration of **38** Arista platforms; the stage reported zero before rule C6 |
 | `sonic-mgmt-8355f75.json` | The Nokia downstream fork of `sonic-mgmt` | `8355f7581`, 2026-09-15 | The second adapter, present only to falsify the repo-agnostic claim. 183 topologies, 9 PR-checker topology types |
 
-**The fork fixture is not a parser-defect exhibit, and it used to be described as one.**
-The "5 job groups against 8" attributed to it was two hand measurements taken with
-different stage patterns — a prefix match on `^- stage: Build` that also caught `BuildVS`,
-against an exact match that did not — rather than two parses disagreeing. Scout's parser
-reads 8 on this tree and its strict and loose parses agree. The `Build`-only scope is still
-exercised, because a scope narrower than the pipeline is a real failure mode worth
-catching; it is provoked by the test, not inherited from history.
+**The fork fixture is not a parser-defect exhibit.** Scout's parser reads 8 job groups on
+this tree and its strict and loose parses agree. The test scopes it to `Build` alone to
+provoke a disagreement, because a scope narrower than the pipeline is a real failure mode
+worth catching.
 
 `sonic-buildimage-3589b56.json` is reached through the Nokia clone, which mirrors upstream
 commits under the same sha, so it is genuinely upstream at that revision.

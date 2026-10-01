@@ -1,4 +1,4 @@
-"""D6, the CI coverage gap — the one detector committed for 1 October (HLD section 4.7).
+"""D6, the CI coverage gap — the one committed detector.
 
 The deterministic half is settled before this module runs: changed paths have already
 resolved to platforms, platforms to ASIC families, families to Build job groups, and the
@@ -15,12 +15,12 @@ the brief, and so does the architecture rule's answer for every individual platf
 `rule_candidate`. The agent's job is not to re-derive that set — it is to contest a named
 platform's answer with cited counter-evidence, or to leave it standing. The entities stay
 in `coverage.ambiguous` either way, because a convention read off a directory name is
-weaker than a declaration and the report bands it accordingly (HLD section 4.3.2).
+weaker than a declaration and the report bands it accordingly.
 
 No verification method is registered, and that is the honest answer rather than a gap:
 the claim is a fact about two files in a tree Scout has already fetched, shipped with
 citations into both, and re-running the lookup would return the same answer over the same
-bytes (HLD section 4.8).
+bytes.
 """
 
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -213,7 +213,7 @@ def _rule_candidate(
         })
 
     # The same number the `architecture-aware` candidate reports, because it is the same
-    # call. The two used to be computed separately and disagreed by six platforms.
+    # call; computing it separately lets the two drift apart.
     total = coverage.uncovered_under[ARCHITECTURE_AWARE]
     undetermined = (f" and {implied[RESOLUTION_UNDETERMINED]} follow no known prefix"
                     if implied[RESOLUTION_UNDETERMINED] else "")

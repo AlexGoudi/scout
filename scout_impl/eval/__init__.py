@@ -1,4 +1,4 @@
-"""The evaluation harness: seed corpus, backtest runner and scorecard (HLD section 6.3).
+"""The evaluation harness: seed corpus, backtest runner and scorecard.
 
 Nothing here is imported by the stages it measures. The static stage is driven through its
 public functions, and the agent stage only through `agent_adapter`, which is the single

@@ -2,8 +2,8 @@
 
 Two shapes each, and the second of each was added when the `sonic-mgmt` adapter landed.
 That is recorded here rather than smoothed over, because "does a second repository fit
-without a core change" is the falsifiable claim the second adapter exists to test (HLD
-section 5.1), and the answer is no: `sonic-buildimage` declares entities as directories
+without a core change" is the falsifiable claim the second adapter exists to test, and
+the answer is no: `sonic-buildimage` declares entities as directories
 carrying a declaration file and coverage as pipeline stages, `sonic-mgmt` declares
 entities as files and coverage as a Python constant, and neither pair is a
 parameterisation of the other.

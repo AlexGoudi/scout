@@ -1,4 +1,4 @@
-"""The budget governor: what stage 2 may spend, per question and per run (HLD sections 4.5, 6.4).
+"""The budget governor: what stage 2 may spend, per question and per run.
 
 Two layers, charged together. Each question carries its own tool-call and blob-read budget
 in the brief, and gets a share of the run's input tokens; the run carries the brief's

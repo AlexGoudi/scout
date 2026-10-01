@@ -1,6 +1,6 @@
 """`scout-run.jsonl`: one structured record per stage boundary, model call, tool call and read.
 
-HLD section 6.7. The run log is the trace behind the report's summary numbers, and the
+The run log is the trace behind the report's summary numbers, and the
 place NFR-9 is made auditable: every excerpt that left the trust boundary for the model is
 named in the `model_call` record that sent it, by path, revision and line range.
 

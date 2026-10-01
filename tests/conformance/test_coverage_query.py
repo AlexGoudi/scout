@@ -134,7 +134,7 @@ def test_the_fork_gets_the_same_treatment_and_its_own_numbers(fork):
 
 
 def test_a_family_distribution_row_from_the_document_still_holds(upstream):
-    """Spot-check the largest rows of HLD section 6.2, with C6's aliases folded in.
+    """Spot-check the largest rows of the family distribution, with C6's aliases folded in.
 
     `broadcom-dnx` gains two and `barefoot` one against the declaration-only count, because
     all three aliased directories inherit those families. `broadcom` and `mellanox` do not

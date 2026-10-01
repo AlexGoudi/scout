@@ -1,6 +1,6 @@
 """One review end to end: brief, then the agent stage, then the report, and all four artifacts.
 
-The orchestrator's contract (HLD section 6.1) is that a brief and a report are always
+The orchestrator's contract is that a brief and a report are always
 produced, including when no model was reachable, so the order of writes is part of the
 design. The brief is written the moment stage 1 finishes, before any model is asked
 anything, so a run that dies in stage 2 still leaves the artifact that needed no model; the

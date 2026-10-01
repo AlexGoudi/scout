@@ -1,4 +1,4 @@
-"""The coverage-gap query (FR-5), and rule C5 (HLD sections 4.3.1, 4.3.2 and 6.2).
+"""The coverage-gap query (FR-5), and rule C5.
 
 Three sets, never two. An entity is **covered** when some job group builds a family it
 declares — rule C5, "any declared family", which is why the index is set-valued. It is
@@ -88,7 +88,7 @@ class CoverageResult:
 
     @property
     def is_exhaustive(self) -> bool:
-        """The contract HLD section 4.4 states for the `coverage` block, checked in code."""
+        """The brief's contract for the `coverage` block: the three sets partition `affected`."""
         partition = set(self.covered) | set(self.uncovered) | set(self.ambiguous)
         sizes = len(self.covered) + len(self.uncovered) + len(self.ambiguous)
         return partition == set(self.affected) and sizes == len(self.affected)

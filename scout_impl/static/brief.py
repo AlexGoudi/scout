@@ -1,4 +1,4 @@
-"""The risk brief: stage 1's deliverable and stage 2's entire input (HLD section 4.4).
+"""The risk brief: stage 1's deliverable and stage 2's entire input.
 
 It is a file, it is versioned, and both stages validate it — stage 1 on write, stage 2 on
 read — so either can run without the other. Three of its blocks earn their place by
@@ -92,7 +92,7 @@ class Brief:
         `static_duration_s` is wall-clock, and `id` and `measured_at` are per-run by
         construction, so three fields of the artifact are not functions of the tree. They
         are what NFR-3's byte-identical test has to look past, and they are also what would
-        otherwise make the cache key of HLD section 6.4 unique per run and the cache
+        otherwise make stage 2's cache key unique per run and the cache
         useless. Everything that is a fact about the tree stays in.
         """
         payload = json.loads(json.dumps(self.payload))
@@ -186,7 +186,7 @@ def rule_pack_sha(rules: Tuple[Any, ...]) -> str:
 
 
 def _check_invariants(payload: Dict[str, Any]) -> None:
-    """The contracts HLD section 4.4 states in prose, checked in code before the file lands.
+    """The brief's contracts that a schema cannot state, checked in code before the file lands.
 
     A schema cannot express "the components sum to the score" or "the three sets partition
     the affected set", and those two are exactly the properties a reader would otherwise
@@ -272,7 +272,7 @@ def _check_invariants(payload: Dict[str, Any]) -> None:
                 f"but its per-platform answers imply {implied}"
             )
         # The headline the candidate list reports and the per-platform breakdown underneath
-        # it are the same claim, and used to be computed twice and disagree by six.
+        # it are the same claim, so they must agree exactly.
         for named_candidate in item["candidates"]:
             if named_candidate["rule"] == candidate.get("candidate"):
                 if named_candidate["uncovered"] != candidate["uncovered"]:

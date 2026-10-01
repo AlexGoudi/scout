@@ -23,7 +23,7 @@ def is_revert(subject: str) -> bool:
 
 
 def is_headline_revert(subject: str) -> bool:
-    """HLD / git log --grep='^Revert' — subject must start with Revert (no leading tag)."""
+    """Same rule as git log --grep='^Revert': subject must start with Revert (no leading tag)."""
     return subject.strip().startswith("Revert")
 
 

@@ -1,11 +1,12 @@
-"""Model provider abstraction and the offline replay implementation (HLD section 6.4).
+"""Model provider abstraction and the offline replay implementation.
 
-`Provider.complete` is the only entry point call sites use. A live HTTP-backed provider
-is added later by subclassing `Provider` and registering a factory under a name; nothing
-that calls `complete` has to change, and no provider SDK is a dependency of this package.
+`Provider.complete` is the only entry point call sites use. A live provider, such as
+`ollama.OllamaProvider`, subclasses `Provider` and registers a factory under a name;
+nothing that calls `complete` has to change, and no provider SDK is a dependency of this
+package.
 
 `ReplayProvider` serves recorded responses addressed by `(prompt_sha, model_id,
-input_hash)` per HLD section 6.5, which is what makes the backtest and these unit tests
+input_hash)`, which is what makes the backtest and these unit tests
 hermetic and free (NFR-10). `RecordingProvider` captures a live provider's responses into
 that same on-disk layout so they can be replayed afterwards.
 """
@@ -71,7 +72,7 @@ class Message:
 
 @dataclass(frozen=True)
 class ToolSpec:
-    """Declaration of a read-only repo tool offered to the model (HLD section 4.4)."""
+    """Declaration of a read-only repo tool offered to the model."""
 
     name: str
     description: str = ""
@@ -225,7 +226,7 @@ class Completion:
 
 @dataclass(frozen=True)
 class RequestKey:
-    """Content address of one request, per the cache key in HLD section 6.5."""
+    """Content address of one request: the replay and cache key."""
 
     prompt_sha: str
     input_hash: str

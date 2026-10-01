@@ -1,4 +1,4 @@
-"""Stage 4, the report: `scout-report.json` and the advisory comment rendered from it (HLD 4.10).
+"""Stage 4, the report: `scout-report.json` and the advisory comment rendered from it.
 
 The JSON is the single source of truth, versioned and validated on write against
 `schemas/scout-report-2.0.json` plus the contracts a schema cannot state; the comment is a

@@ -1,4 +1,4 @@
-# Path taxonomy for sonic-buildimage commit records.
+# Path taxonomy for sonic-mgmt commit records.
 #
 # Pattern semantics:
 #   - a pattern without "/" matches the file name at any depth ("*.md", "Makefile")

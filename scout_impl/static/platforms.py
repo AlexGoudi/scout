@@ -1,7 +1,6 @@
-"""The entity index, and with it counting rules C1 to C4 (HLD section 4.3.1).
+"""The entity index, and with it counting rules C1 to C4.
 
-Ported from `reference/headline.py`, which produced the figures the documents quote, and
-kept in the same order for the same reasons. The order is not cosmetic:
+The rules run in a fixed order, and the order is not cosmetic:
 
 * the `_common` exclusion of C3 happens **before** any declaration is resolved, so the
   three shared directories cost no blob read and cannot contribute a family;
@@ -34,7 +33,7 @@ class EntityIndexError(RuntimeError):
 class SymlinkEscapesTree(EntityIndexError):
     """A declaration symlink resolved outside the repository root.
 
-    An error rather than a best-effort read (HLD section 4.3.3): a target above the root
+    An error rather than a best-effort read: a target above the root
     is a fact about the tree Scout does not understand, and reading whatever the join
     happens to land on would answer a different question than the one asked.
     """
@@ -44,12 +43,12 @@ class SymlinkEscapesTree(EntityIndexError):
 class Declaration:
     """One `<root>/<vendor>/<name>/<declaration_file>` path, and what it resolves to.
 
-    Every declaration is resolved, including the ones C3 excludes. `reference/headline.py`
-    resolves only the kept ones, which is right for the headline and wrong for the audit:
-    the single declaration naming two families **is** `x86_64-arista_common`, so a C2
-    count taken over platforms rather than declarations reports zero and the rule looks
-    untested. HLD section 4.3.1 states C1's "0 unresolved" over all 287 as well. The extra
-    cost is three reads, of which the blob cache absorbs two.
+    Every declaration is resolved, including the ones C3 excludes. Resolving only the kept
+    ones would be right for the headline and wrong for the audit: the single declaration
+    naming two families **is** `x86_64-arista_common`, so a C2 count taken over platforms
+    rather than declarations reports zero and the rule looks untested. C1's "0 unresolved"
+    is stated over all 287 declarations as well. The extra cost is three reads, of which the
+    blob cache absorbs two.
     """
 
     path: str

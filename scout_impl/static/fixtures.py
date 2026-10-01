@@ -1,8 +1,8 @@
 """Pinned tree fixtures: a `RepoSource` that never touches git or the network (NFR-10).
 
-The conformance suite is what replaces a verification stage for the committed detector
-(HLD section 4.8), so it has to run everywhere, every time, with no clone and no remote.
-A fixture holds three things, which section 4.2 says is all the static stage needs: a
+The conformance suite is what replaces a verification stage for the committed detector,
+so it has to run everywhere, every time, with no clone and no remote. A fixture holds the
+three things the static stage needs, and nothing else: a
 filtered tree listing carrying paths, modes and blob shas; the handful of blobs the stage
 actually reads; and the size of the tree it was captured from.
 

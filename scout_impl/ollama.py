@@ -26,8 +26,9 @@ Speed, measured on this machine against `qwen2.5:7b-instruct`. With ollama's def
 thread count output ran at 1.7 tokens/s, 108 s for a single answer. With
 `options.num_thread=16` and `num_predict` capped it ran at about 23 tokens/s, roughly 13 s
 per question, and prompt evaluation at about 140 tokens/s. Hence the defaults: 16 threads,
-256 output tokens, a 300 s timeout for a box that is shared, and `keep_alive` of 30 minutes
-so the model is not reloaded between questions of one run.
+256 output tokens, and `keep_alive` of 30 minutes so the model is not reloaded between
+questions of one run. The per-call timeout is 3000 s, because CPU-only inference on a
+shared box can take minutes for one answer and a timeout degrades the whole run.
 
 The context window is pinned too. Left unset, ollama sizes it from the VRAM it finds, 4096
 tokens on this GPU-less host and more elsewhere, and a prompt longer than the window is

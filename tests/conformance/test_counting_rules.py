@@ -1,6 +1,6 @@
 """Counting rules C1 to C4, asserted one at a time against a pinned tree.
 
-The rules are normative (HLD section 4.3.1) and every number Scout reports about platform
+The rules are normative and every number Scout reports about platform
 coverage is a consequence of them, so each gets its own test rather than being implied by
 the headline. A single test asserting 284 would pass with two rules wrong in opposite
 directions.
@@ -29,10 +29,9 @@ def test_c1_follows_18_symlinked_declarations_and_leaves_none_unresolved(upstrea
 
 
 def test_c1_resolves_every_symlink_by_path_arithmetic_to_a_sibling_declaration(upstream):
-    """Where the 18 links actually point, which is not where HLD section 4.3.3 says.
+    """Where the 18 links actually point, which is not into the shared directories C3 excludes.
 
-    That section reads "many of those links point into the shared directories C3
-    excludes". On the pinned tree none of them does: all 18 are relative links to a
+    On the pinned tree none of them does: all 18 are relative links to a
     **sibling platform's** declaration, one hop, and the shared directories are the target
     of 406 *other* symlinks under `device/arista/` — plugins, thermal policy, pmon config —
     none of which is a `platform_asic`. The arithmetic is the same either way; the claimed

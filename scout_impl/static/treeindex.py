@@ -3,8 +3,8 @@
 Every analyzer in this package reads through a `TreeIndex` rather than through a
 `RepoSource` directly, for two reasons. The listing is taken once and answered from
 memory afterwards, so "which paths exist" stays the free operation `scout_impl/source.py`
-promises it is. And reads are memoized on the blob sha rather than on the path, which is
-the cache HLD section 6.5 specifies and which matters more here than it looks: a
+promises it is. And reads are memoized on the blob sha rather than on the path, which
+matters more here than it looks: a
 `platform_asic` file holding `broadcom` is byte-identical across all 156 platforms that
 declare it, so git stores one blob and Scout reads it once. Memoizing on the path instead
 would pay 156 round trips for the same bytes.

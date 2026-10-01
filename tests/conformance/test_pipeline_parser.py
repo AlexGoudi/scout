@@ -1,17 +1,11 @@
-"""The pipeline parser, against both pinned trees (HLD section 6.2.2, risk R3).
+"""The pipeline parser, against both pinned trees.
 
-**R3 has not occurred, and the claim that it had is withdrawn here.** The "8 job groups
-against 5" once cited as a parser disagreement on the fork was two hand measurements taken
-with different rules: a prefix match on `^- stage: Build`, which also matched `BuildVS` and
-returned 9 upstream, against an exact `^- stage: Build$` on the fork, which returned 5. Two
-questions, two answers, no defect. This parser reads 9 upstream and 8 on the fork and its
-strict and loose parses agree on both.
-
-What is real is the failure *mode*: a coverage model can be wrong in a way that changes
-every finding while the citations still resolve, the brief still validates and the report
-still renders. The cross-check is kept for that reason, and
-`test_a_build_only_scope_disagrees_with_the_whole_file_scan` still drives it to raise —
-described now as what it is, a scope narrower than the pipeline, rather than as history.
+The parser reads 9 job groups upstream and 8 on the fork, and its strict and loose parses
+agree on both. The failure it guards against is silent: a coverage model can be wrong in a
+way that changes every finding while the citations still resolve, the brief still
+validates and the report still renders. The cross-check exists for that reason, and
+`test_a_build_only_scope_disagrees_with_the_whole_file_scan` drives it to raise with a
+scope narrower than the pipeline.
 
 Four properties are asserted: the job-group list for both trees, that the strict parse
 resolves template indirection rather than scanning, that a missing stage is fatal instead

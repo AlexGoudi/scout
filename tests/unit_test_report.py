@@ -1,4 +1,4 @@
-"""The report: HLD 4.10's structure, banded per HLD 4.9, refused when it breaks its own contracts."""
+"""The report: its structure, its confidence bands, refused when it breaks its own contracts."""
 
 import copy
 import json

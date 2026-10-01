@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/sonic-net/scout/schemas/scout-report-2.0.json",
   "title": "SONiC Scout report",
-  "description": "The single source of truth for one review (HLD section 4.10); the advisory comment is a rendering of it. It references the brief rather than inlining it, so the two artifacts version independently. Version 2.0 splits each finding into a `deterministic` half, proven from the tree, and an `adjudication` half, the model's judgement, banded separately.",
+  "description": "The single source of truth for one review; the advisory comment is a rendering of it. It references the brief rather than inlining it, so the two artifacts version independently. Version 2.0 splits each finding into a `deterministic` half, proven from the tree, and an `adjudication` half, the model's judgement, banded separately.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "run", "findings", "suppressed", "degraded_reason"],

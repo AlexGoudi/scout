@@ -1,8 +1,7 @@
-"""The seed corpus: incidents and controls selected by rule rather than by hand (HLD section 6.3).
+"""The seed corpus: incidents and controls selected by rule rather than by hand.
 
-The plan had R4 pre-filter and R2 adjudicate relevance in a joint session. No domain expert
-is available, so adjudication is replaced by the rules below, and **every item is marked
-auto-selected, not human-adjudicated**, here and in the scorecard. Every step records what
+No domain expert adjudicates relevance, so adjudication is replaced by the rules below,
+and **every item is marked auto-selected, not human-adjudicated**, here and in the scorecard. Every step records what
 it removed and why, so the counts can be audited from `candidates.jsonl` alone.
 
 Incidents, in order:

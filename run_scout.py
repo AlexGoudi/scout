@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Entrypoint for the SONiC Scout offline utilities."""
+"""Entrypoint for every SONiC Scout command."""
 
 from scout_impl.cli import run
 from scout_impl.mining_cli import build_parser, main

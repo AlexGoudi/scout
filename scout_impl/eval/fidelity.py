@@ -1,4 +1,4 @@
-"""Coverage-model fidelity: parsed pipeline job groups vs Azure Build jobs (HLD 9.1 / R3)."""
+"""Coverage-model fidelity: an adapter's gold job names vs the jobs Azure actually ran."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture a pinned tree fixture for the conformance suite (HLD section 4.8, NFR-10).
+"""Capture a pinned tree fixture for the conformance suite (NFR-10).
 
 Run once per tree, by hand, against a source that can reach the revision — a remote, or a
 checkout that already has it. The output is committed and the suite reads it offline

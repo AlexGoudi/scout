@@ -2,7 +2,7 @@
 
 Every test in this directory runs against a committed tree fixture and calls no model and
 no network. That is the whole point — the conformance suite is what replaces a
-verification stage for the committed detector (HLD section 4.8), so it has to be cheap
+verification stage for the committed detector, so it has to be cheap
 enough to run on every change and hermetic enough to be believed.
 
 The fixtures are session-scoped because analyzing one costs about 80 ms and there is no

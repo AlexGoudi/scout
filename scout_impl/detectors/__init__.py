@@ -1,12 +1,12 @@
-"""The detector catalog (HLD section 4.7): what Scout looks for, as data.
+"""The detector catalog: what Scout looks for, as data.
 
 Each detector is a spec — trigger, question, required evidence roles, verification
 method, confidence prior — plus a synthesis function that turns the static stage's result
 into the rules, questions and unresolved items the brief carries. Adding one is a module
 and a `register_detector` call; the agent loop is not touched (NFR-11).
 
-Exactly one is committed for 1 October: D6, the CI coverage gap. The rest of the catalog
-is in HLD section 9.2 and is deliberately absent rather than stubbed.
+Exactly one is committed: D6, the CI coverage gap. The rest of the catalog is deliberately
+absent rather than stubbed.
 """
 
 from typing import Dict, List

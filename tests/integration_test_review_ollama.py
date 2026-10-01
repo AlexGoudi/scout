@@ -359,8 +359,8 @@ BLIND_TASK = ("For each group, decide from the rules and the evidence whether it
 class BlindingProvider(Provider):
     """Withholds the rule's answer from the ambiguity prompt, so the model decides and the checks judge it.
 
-    An experiment, never a product path: it reproduces HLD 4.5.1's case C, the rules and every
-    job group but no answer, and lets the real loop's checks rule on what comes back.
+    An experiment, never a product path: the prompt keeps the rules and every job group but
+    not the rule's answer, and the real loop's checks rule on what comes back.
     """
 
     def __init__(self, delegate: Provider) -> None:

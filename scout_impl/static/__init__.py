@@ -1,8 +1,8 @@
-"""Stage 1: the deterministic static analyzer (HLD section 4.3).
+"""Stage 1: the deterministic static analyzer.
 
 No model, no credential, no network beyond the fetch stage 0 already performed. Every
 module here is a program with a written specification and a conformance suite, which is
-what replaces a verification stage for the committed detector (HLD section 4.8).
+what replaces a verification stage for the committed detector.
 
 This package deliberately imports nothing at package level. The repo adapters declare
 their static-analysis knowledge as data in `scout_impl/repos/base.py`, and the mechanisms

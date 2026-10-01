@@ -1,6 +1,6 @@
 """The static analyzer engine: run an adapter over a tree and produce a brief.
 
-Substages in the order HLD section 4.3 gives them — classify paths, resolve entities,
+Substages in a fixed order — classify paths, resolve entities,
 model coverage, query the gap, rank hotspots, synthesize rules and questions — then the
 feature groups the change touches (`related.py`), with the
 whole thing timed and its blob reads counted, because `static_duration_s` and

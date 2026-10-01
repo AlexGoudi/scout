@@ -1,4 +1,4 @@
-"""Render the advisory comment from `scout-report.json` (HLD section 4.10).
+"""Render the advisory comment from `scout-report.json`.
 
 The one other input is the brief's optional `paths_to_assess` block, a fact of the static
 stage the report does not carry; without a brief, or without that block, the comment is
@@ -12,7 +12,7 @@ checks made of the model's; the rule's answer is always the one that stands.
 
 The comment is capped the way NFR-4 caps the report: at most `MAX_FINDINGS` findings, a
 few names per list, a few lines per snippet, and `MAX_CHARS` in all. An adjudication the
-report banded `low` is not shown, only noted, because HLD 4.9 suppresses it.
+report banded `low` is not shown, only noted, because `scoring.posts` suppresses it.
 """
 
 from typing import Any, Dict, List, Optional, Sequence, Union

@@ -1,4 +1,4 @@
-"""Ground truth per incident, derived mechanically from the revert (HLD section 6.3).
+"""Ground truth per incident, derived mechanically from the revert.
 
 The eval question asks whether Scout's uncovered-or-ambiguous set names "the platform or ASIC
 family the revert names". The plan had a domain expert decide that; with none available it

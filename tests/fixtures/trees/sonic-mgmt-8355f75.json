@@ -5,7 +5,7 @@
  "rev": "8355f75811b854751414ea2d20dc4aba1b7c0f18",
  "rev_date": "2026-09-15T03:47:00-04:00",
  "captured_at": "2026-09-25T07:53:48Z",
- "note": "The Nokia downstream fork of sonic-mgmt, pinned only to prove the core is repo-agnostic. Smoke level: no detector runs against it (HLD section 3).",
+ "note": "The Nokia downstream fork of sonic-mgmt, pinned only to prove the core is repo-agnostic. Smoke level: no detector runs against it.",
  "tree_paths": 5571,
  "path_globs": [
   ".azure-pipelines/impacted_area_testing/constant.py",
