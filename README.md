@@ -11,29 +11,118 @@ standalone directory: nothing here reads its own history, and it does not need t
 inside the tree it analyzes. `sonic-buildimage` is the primary target and `sonic-mgmt` is a
 thin second adapter kept to prove the core is repo-agnostic.
 
-This directory holds stage 0 (ingest) and **stage 1, the deterministic static analysis
-stage**, which calls no model and emits `scout-brief.json` — the versioned contract the
-agent stage consumes. The agent loop, detectors' adjudication half, verifier and report
-renderer are not here yet; the schedule is [docs/scout-plan.md](docs/scout-plan.md)
-section 4.
+All four stages are here, and `review` runs them end to end:
+
+| Stage | Package | Output |
+| --- | --- | --- |
+| 0, ingest | `ingest.py`, `remote.py`, `source.py` | `changeset.json` |
+| 1, deterministic static analysis, no model | `static/`, `detectors/` | `scout-brief.json`, the versioned contract the agent consumes |
+| 2, agent bounded by the brief | `agent/`, `provider.py`, `ollama.py` | adjudicated findings |
+| 3 and 4, verifier and report | `verify/`, `report/` | `scout-report.json` and the rendered comment |
+
+Beside the review path sit the evaluation tools. `backtest` grades detector D6 on a seed
+corpus. `mine-*` builds Azure calibration labels. `score-pr` is the phase-0 path heuristic.
+`dataset` and `ml` are the commit-risk baselines and the online ledger. What has landed
+against the plan is in [docs/scout-plan.md](docs/scout-plan.md) section 0.
 
 ## Requirements
 
-Python 3 (developed and tested on 3.10) and a `git` binary on `PATH`. `requirements.txt`
-lists the runtime dependencies and why each is there: **PyYAML** for the pipeline
-definitions and the commit-mining path taxonomy, and **numpy, pandas, pyarrow and
-scikit-learn** for the commit dataset's feature table and its risk and similarity
-baselines. Running the tests additionally needs `pytest`, and `jsonschema` for the
-record-schema checks:
+Python 3 (developed and tested on 3.10) and a `git` binary on `PATH`.
+
+| File | Use |
+| --- | --- |
+| [`requirements.txt`](requirements.txt) | Runtime: PyYAML, numpy, pandas, pyarrow, scikit-learn, scipy, joblib |
+| [`requirements-dev.txt`](requirements-dev.txt) | Runtime plus **pytest**, **jsonschema**, **ruff**, **flake8**, **flake8-pyproject** |
 
 ```bash
-python3 -m pip install -r requirements.txt pytest jsonschema
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-dev.txt   # develop / CI
+.venv/bin/pip install -r requirements.txt       # run Scout + ML commands only
 ```
 
-## Current entrypoint
+`./demo-setup.sh` uses `.venv/bin/python3` by default (creates `.venv` once if needed).
+Override with `PYTHON=…` if you use another environment.
 
-`run_scout.py`, run from this directory, with `--repo-root` pointing at the `sonic-mgmt`
-working copy to analyze. That checkout is only ever read.
+## Entrypoint
+
+All commands go through `python3 run_scout.py` from this directory (`scout_impl.cli`).
+Use `--repo-root` for a local clone or `--remote owner/repo` for anonymous fetch.
+
+### Cache and reruns
+
+`<cache>` below is `--cache-dir`, `~/.cache/sonic-scout/repos` by default. Calibration
+outputs live under `<cache>/eval/calibration/<adapter>/`, with no tip sha in the path; the
+backtest and the online ledger sit beside them in `<cache>/eval/backtest/<adapter>/` and
+`<cache>/eval/online/<adapter>/`. Each step writes `manifest.json` with a fingerprint and cursor. Re-run `mine-incidents`,
+`mine-git-dumps`, `mine-azure`, and `mine-labels` after `git fetch`; only new commits,
+builds, or PR heads are processed. Pass `--refresh` on any step to force a full rebuild of
+that step.
+
+### Paths to assess
+
+The static brief may include `paths_to_assess`: related paths in other repos from
+`static/datapath.json` (feature groups). Tree-mode briefs omit the block.
+
+### Recommended workflow
+
+**Clean slate:** `./demo-clean.sh --all` removes corpus, models, mined-data, `.scout-cache`,
+root `scout-*` outputs, eval calibration under `~/.cache/sonic-scout`, and `.venv`.
+**Setup:** `./demo-setup.sh [sonic-mgmt|sonic-buildimage|all]` runs every step in order, each
+resuming from cache: `fetch`, `calibration`, `score-pr`, `dataset`, `models`, `online` and
+`backtest`. Use `--only` or `--skip` with step names to run part of it, and `--offline` to skip
+the network steps. It ends with a recap of what exists.
+
+**Demo:** `./demo.sh [sonic-mgmt|sonic-buildimage|all]` has three parts:
+1. The whole-tree static headline.
+2. Each example PR's comment, brief, agent questions, per-job phase-0 risk, and ML commit risk
+   with similar history. For mgmt the example is
+   [sonic-net/sonic-mgmt#23052](https://github.com/sonic-net/sonic-mgmt/pull/23052).
+3. How good it is: the D6 backtest, model cards against their baselines, the PR-job gate, and
+   the online ledger.
+
+Pick parts with `SCOUT_DEMO_PARTS=tree,review,eval`. Each part skips cleanly if its setup step
+hasn't run. See `--help` on both scripts for the `SCOUT_*` overrides.
+
+```bash
+REPO=sonic-mgmt            # or sonic-buildimage
+CLONE=~/data/git/$REPO
+git -C "$CLONE" fetch origin master
+
+python3 run_scout.py --repo-root "$CLONE" --repo-type "$REPO" mine-incidents --output scout-corpus.jsonl
+python3 run_scout.py --repo-root "$CLONE" --repo-type "$REPO" mine-git-dumps --revision origin/master
+python3 run_scout.py --repo-root "$CLONE" --repo-type "$REPO" mine-azure --workers 8
+python3 run_scout.py --repo-root "$CLONE" --repo-type "$REPO" mine-labels
+python3 run_scout.py --repo-root "$CLONE" --repo-type "$REPO" check-fidelity
+
+python3 run_scout.py --repo-root "$CLONE" --repo-type "$REPO" score-pr --base origin/master > scout-score-pr.json
+
+python3 run_scout.py dataset build --repo-type "$REPO" --repo "$CLONE" --rev origin/master
+python3 run_scout.py ml train-risk --dataset corpus/$REPO-<sha> --out models
+python3 run_scout.py ml walk-forward --repo-type "$REPO" --dataset corpus/$REPO-<sha> \
+  --model models/risk-bug_introducing.joblib
+python3 run_scout.py ml watch --repo-type "$REPO" --remote sonic-net/$REPO   # needs GITHUB_TOKEN
+python3 run_scout.py ml grade --repo-type "$REPO"
+```
+
+`score-pr` scores `git diff --name-only BASE...HEAD`, the files the branch changed since it
+forked, not the difference to the base's current tip. With `--brief` and a checkout it diffs
+the brief's `base_sha...head_sha`; without a checkout it falls back to the brief's hotspots
+and says so with `"files_complete": false`. Each gold job gets its own score: the job's Azure
+failure rate on the train split, times the largest revert lift among changed paths whose blast
+radius reaches that job, capped at 0.35. A path's lift is its revert rate divided by the repo's
+overall revert rate. A path that is safer than average never lowers a score.
+
+### Azure labels
+
+`mine-azure` keeps up to `builds_per_pr` (3) Azure builds per PR, reruns included, for up to
+800 PRs out of the most recent 3,000 builds. `mine-labels` counts a gold job as failed if it
+failed on **any** attempt; `y_latest` beside it keeps the final attempt's result, so a model
+can be trained on either and a flaky job is visible as `fail_attempts` that the latest
+attempt hides. Job base rates and path-job rates come from the train split only.
+
+## Examples
+
+`run_scout.py` with `--repo-root` pointing at the tree to analyze. That checkout is only ever read.
 
 ```bash
 SONIC_MGMT=/path/to/sonic-mgmt
@@ -230,6 +319,41 @@ un-reverts rather than incidents and would otherwise pollute a recall measuremen
 Lead time is computed from **committer** dates, which are when the commits landed, not
 author dates, which are when the patches were written. Both are recorded per side.
 
+## Mining (calibration corpus and Azure labels)
+
+All commands use the same `run_scout.py` entrypoint and global flags as `brief` / `ingest`.
+Revert incidents go to a path you choose; git/GitHub/Azure calibration dumps and the
+`model-*` join land under `<cache>/eval/calibration/<adapter>/`.
+
+```bash
+python3 run_scout.py --repo-root ~/data/git/sonic-buildimage --repo-type sonic-buildimage \
+  mine-incidents --output scout-corpus.jsonl
+
+python3 run_scout.py --repo-root ~/data/git/sonic-buildimage --repo-type sonic-buildimage \
+  mine-git-dumps
+python3 run_scout.py --repo-root ~/data/git/sonic-buildimage --repo-type sonic-buildimage \
+  mine-azure --workers 8
+python3 run_scout.py --repo-root ~/data/git/sonic-buildimage --repo-type sonic-buildimage \
+  mine-labels
+python3 run_scout.py --repo-root ~/data/git/sonic-buildimage score-pr --base origin/master
+```
+
+Collectors live under `scout_impl/eval/` (`git_dumps`, `github_dumps`, `azure_dumps`,
+`join_labels`). Per-repo Azure job maps and path buckets are on each `RepoAdapter`
+(`calibration`, `azure_devops`, `github_api`), not loose JSON under `repos/`.
+
+Calibration commands **resume by default**: they read and write under
+`<cache>/eval/calibration/<adapter>/` (override with `--output`). Re-running `mine-azure` skips
+cached `github-*` files and only fetches **missing** Azure timelines (by build id); when the caps
+grow it backfills older builds. `mine-git-dumps` skips when `git-*` for the same `ref` and
+`tip_sha` already exist. `mine-labels` skips when its fingerprint, which includes the join
+version, is unchanged. Pass **`--refresh`** on any step to force a full redo.
+
+`mine-azure` fetches one timeline per sampled build over HTTPS; that step uses a thread pool
+(`--workers` or `SCOUT_AZURE_WORKERS`, default 6) because the HTTP client is synchronous
+stdlib `urllib`. `mine-git-dumps` and `mine-labels` stay mostly serial: they walk one git
+repository and parallel `git fetch` on the same `.git` directory tends to fight on locks.
+
 ## Commit mining, dataset and risk baseline
 
 These `run_scout.py` commands turn a `sonic-buildimage` clone into a commit dataset for
@@ -281,6 +405,13 @@ is SZZ: `git blame -w -M` at a fix-like commit's parent attributes a non-trivial
 removed or changed to this commit. Merges have no labels. Categories (fix, feature,
 submodule-bump, platform-support and so on) are rule-based and carry their evidence.
 
+SZZ blames only files in the taxonomy's `szz_file_classes`, `code`, `config`, `build`, `yang`
+and `patch` by default. A commit touching none of those has `bug_introducing` **unknown**, not
+false, so it drops out of training. Otherwise, for example, every docs-only commit would be a
+free negative that a model learns from its file mix. `sonic-mgmt` adds `test` to the list,
+because there the tests are the product. Before this rule, `is_test_only` alone separated
+0% positives from 13.4%.
+
 **No lookahead.** History features for a commit read only commits that landed before it, so
 building the dataset up to that commit gives the same values. The split follows landing order
 (70% train, 15% validation, 15% test) with a 90-day gap before each boundary and before the
@@ -291,7 +422,12 @@ snapshot. `features.parquet` counts a revert or fix only if it landed before its
 and blame results are cached under `.scout-cache/` (`--cache ""` disables the cache). Training
 with the same seed gives an identical model card.
 
-Measured at `d89a360e2` on 8 cores:
+**No identity features.** The feature table keeps the author history columns
+(`author_*`, `file_prior_authors`) for analysis. `ml/matrix.py` never passes them, or any
+`committer_*` column, to a model: who wrote a change is not a property of the change.
+
+Measured at `d89a360e2` on 8 cores. These figures predate the identity exclusion and the SZZ
+eligibility rule, and are to be re-measured after a rebuild and retrain:
 
 | | |
 | --- | --- |
@@ -320,6 +456,17 @@ found bug-introducing when it landed, against 12.7% for the other test commits: 
 validation, and every model is near chance. The label is in the dataset for when there is more
 history, but it is not a usable risk signal today.
 
+**Online ledger.** `ml walk-forward`, `ml watch` and `ml grade` share one append-only ledger
+per adapter, `<cache>/eval/online/<adapter>/ledger.jsonl`, keyed by subject and model:
+
+- `walk-forward` scores the validation and test commits with a model trained without `--final`
+  and records each commit's label. It refuses a `--final` model, which has seen every split.
+- `watch` scores each open PR head once with the phase-0 heuristic, using GitHub's list of the
+  PR's files, at most `--max-prs` new heads per run.
+- `grade` fills a PR's outcome from the first Azure build in the calibration join that finished
+  after the PR was scored. It then writes `online-scorecard.json` with ROC-AUC and PR-AUC per
+  model, at PR and at job grain.
+
 `ml score` returns one JSON bundle for a language model: the commit's label-free document; the
 calibrated risk with its percentile among labelled commits and the logistic regression's five
 largest contributions; and the five most similar earlier commits with their outcomes as known
@@ -334,11 +481,31 @@ Known limits:
 - Recall at effort ranks by probability, so a model that learns "big commits are risky" scores
   low on it even when its PR-AUC is good; read the two together.
 
+## Backtest
+
+`backtest` grades detector D6 on the seed corpus of `sonic-buildimage` reverts: recall on
+incidents, and how often it flags a never-reverted control.
+
+```bash
+# First run: pin the corpus and capture one tree fixture per item at its cause commit
+python3 run_scout.py backtest --capture          # fetches upstream history into <cache>/eval/history
+# Every later run: replay the pinned fixtures, no network, about two seconds
+python3 run_scout.py backtest
+```
+
+Each rate is reported with its Wilson 95% interval under both coverage readings, string
+equality and architecture-aware, in `<cache>/eval/backtest/sonic-buildimage/scorecard.json`.
+On the current corpus of 20 incidents and 20 controls, D6 catches 2 of 20 incidents
+(interval 0.03 to 0.30) and flags 1 of 20 controls (0.01 to 0.24). The corpus is
+auto-selected, not adjudicated. `sonic-mgmt` has no seed corpus and is refused.
+
 ## Tests
 
 ```bash
 python3 -m pytest -q
 ```
+
+738 tests, offline and model-free.
 
 `pytest.ini` teaches discovery about the `unit_test_*.py` naming, so the obvious command
 finds the whole suite — the units and the conformance suite together. Network-dependent
@@ -368,8 +535,8 @@ never built**, and the ambiguity resolving to 88 or 71. The fixtures and how to 
 them are in [tests/fixtures/trees/README.md](tests/fixtures/trees/README.md).
 
 Two of them instead exercise real history, so they need a `sonic-mgmt` checkout supplied.
-They take it from the **`SCOUT_TARGET_REPO`** environment variable, falling back to
-`/home/goudi/ws/sonic-mgmt` when that variable is unset:
+They take it from the **`SCOUT_TARGET_REPO`** environment variable, falling back to a
+`sonic-mgmt` clone beside this directory (`../sonic-mgmt`) when that variable is unset:
 
 ```bash
 SCOUT_TARGET_REPO=/path/to/sonic-mgmt python3 -m pytest tests/unit_test_*.py -q
@@ -378,11 +545,19 @@ SCOUT_TARGET_REPO=/path/to/sonic-mgmt python3 -m pytest tests/unit_test_*.py -q
 If neither is a git working copy those two skip, and the skip reason names the variable so
 the fix is obvious. Nothing else in the suite needs it.
 
-## Lint
+## Lint and format
 
-`.flake8` pins the 120-column limit this package had while it lived inside `sonic-mgmt`,
-where it came from that repository's `.pre-commit-config.yaml`:
+Line length stays **120** (same as when this tree lived inside `sonic-mgmt`). Settings
+live in [`pyproject.toml`](pyproject.toml) (`[tool.ruff]` and `[tool.flake8]`); [`.flake8`](.flake8)
+mirrors flake8 for a plain `python3 -m flake8` run.
 
 ```bash
-python3 -m flake8
+pip install -r requirements-dev.txt        # if not already installed
+python3 -m flake8                          # clean; reads .flake8, or pyproject [tool.flake8]
+ruff check --select E,F .                  # clean; the same error classes as flake8
 ```
+
+A plain `ruff check .` also runs the pyupgrade (`UP`) and isort (`I`) rules from
+`pyproject.toml`, and reports about 1,250 findings, nearly all of them `typing.List` to `list`
+style annotations. They are auto-fixable, and are left for one mechanical commit of their own
+rather than mixed into behavioural changes.
