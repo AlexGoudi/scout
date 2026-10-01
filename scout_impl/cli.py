@@ -807,10 +807,18 @@ def _pop_global_quiet(argv: list[str]) -> Tuple[bool, list[str]]:
     return quiet, rest
 
 
+def _mining_argv(argv: list[str]) -> bool:
+    """True when ``argv`` is a mining group, optionally after the ``--cache-dir`` both parsers share."""
+    index = 0
+    while index < len(argv) and argv[index].startswith("--cache-dir"):
+        index += 1 if "=" in argv[index] else 2
+    return index < len(argv) and argv[index] in MINING_GROUPS
+
+
 def run(argv: Optional[list[str]] = None) -> int:
     argv = list(argv if argv is not None else sys.argv[1:])
     global_quiet, argv = _pop_global_quiet(argv)
-    if argv and argv[0] in MINING_GROUPS:
+    if _mining_argv(argv):
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
         try:
             return mining_main(argv, quiet=global_quiet)

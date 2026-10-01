@@ -94,12 +94,13 @@ def train_pr_job(
     repo_root: Path,
     seed: int = 0,
     final: bool = False,
+    cache_root: Path | None = None,
 ) -> dict[str, Any]:
     """Fit on train, decide on validation, report test. ``final`` refits a kept model on every split."""
     adapter = get_adapter(repo_type)
     if adapter is None:
         raise ValueError(f"unknown repo type {repo_type!r}")
-    directory = calibration_dir or eval_calibration_dir(adapter, None)
+    directory = calibration_dir or eval_calibration_dir(adapter, None, cache_root)
     timelines = load(str(directory), "azure-pr-job-timelines.json")
     cfg = adapter.calibration.tables if adapter.calibration else {}
     gold = set((cfg.get("jobs") or {}).get("gold") or [])

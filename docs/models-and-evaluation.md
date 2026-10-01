@@ -151,7 +151,7 @@ evidence of a real improvement.
 ## Online evaluation
 
 All three commands share one ledger per adapter, `<cache>/eval/online/<adapter>/ledger.jsonl`,
-where `<cache>` is `$SCOUT_CACHE_DIR` or its default; the ledger ignores `--cache-dir`. A row is keyed
+where `<cache>` is `--cache-dir` (given in front of `ml`), else `$SCOUT_CACHE_DIR` or its default. A row is keyed
 by `(subject, model)` and appended once; only `ml grade` rewrites rows, to fill outcomes.
 
 | Command | What it appends | Subject | Model id |

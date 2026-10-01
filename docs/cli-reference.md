@@ -27,9 +27,10 @@ These belong to the top-level parser, so they go **before** the command name.
 | `--log-level LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING` or `ERROR`. Logs go to stderr. |
 | `-q`, `--quiet` | off | Do not print JSON summaries to stdout; log progress only. Accepted anywhere on the command line. |
 
-The `mine`, `dataset` and `ml` groups have their own parser and accept only `-q` from this list.
-Put no other global option in front of them: `python3 run_scout.py --log-level DEBUG ml ...` is
-parsed by the wrong parser and fails with "Unknown command".
+The `mine`, `dataset` and `ml` groups have their own parser and accept only `-q` (anywhere) and
+`--cache-dir` (in front of the group) from this list. Put no other global option in front of them:
+`python3 run_scout.py --log-level DEBUG ml ...` is parsed by the wrong parser and fails with
+"Unknown command".
 
 ### Exit codes
 
@@ -234,9 +235,9 @@ Build the commit dataset from the first-parent history of `--rev`. The clone mus
 | `ml watch` | `--remote OWNER/REPO` (required), `--repo-type` (required), `--calibration DIR`, `--max-prs N` (default 100) | Calls the GitHub API. |
 | `ml grade` | `--repo-type` (required), `--calibration DIR` | Writes `online-scorecard.json` next to the ledger. |
 
-`--calibration` defaults to `<cache>/eval/calibration/<adapter>` with the default cache root, since
-this group does not accept `--cache-dir`; set `SCOUT_CACHE_DIR` to move it. Errors print
-`error: <message>` to stderr and exit 1.
+`--calibration` defaults to `<cache>/eval/calibration/<adapter>`, and the online ledger lives at
+`<cache>/eval/online/<adapter>/ledger.jsonl`, where `<cache>` is `--cache-dir` given in front of
+`ml`, else `$SCOUT_CACHE_DIR` or its default. Errors print `error: <message>` to stderr and exit 1.
 
 ## Environment variables
 

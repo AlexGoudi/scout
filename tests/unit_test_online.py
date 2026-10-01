@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import run_scout
 from scout_impl.ml import online
 from scout_impl.ml.matrix import column_spec
 
@@ -37,6 +38,22 @@ def table():
             "label_bug_introducing": [True, False, True, None],
         }
     )
+
+
+def test_cache_dir_places_the_ledger_for_every_online_command(tmp_path, monkeypatch, capsys):
+    frame = table()
+    monkeypatch.setattr(online, "load_table", lambda _: frame)
+    monkeypatch.setattr(online, "load_model", lambda _: risk_bundle(frame))
+    monkeypatch.setenv("SCOUT_CACHE_DIR", str(tmp_path / "elsewhere"))
+    walk = ["ml", "walk-forward", "--dataset", "ds", "--model", "m", "--repo-type", "sonic-buildimage"]
+    assert run_scout.main(["--cache-dir", str(tmp_path), *walk]) == 0
+    ledger = tmp_path / "eval" / "online" / "sonic-buildimage" / "ledger.jsonl"
+    assert ledger == online.ledger_path("sonic-buildimage", tmp_path)
+    assert json.loads(capsys.readouterr().out)["ledger"] == str(ledger)
+    assert len(ledger.read_text().splitlines()) == 2
+    assert run_scout.main([f"--cache-dir={tmp_path}", "ml", "grade", "--repo-type", "sonic-buildimage"]) == 0
+    assert json.loads(capsys.readouterr().out)["ledger"] == str(ledger)
+    assert not (tmp_path / "elsewhere").exists()
 
 
 def test_walk_forward_scores_only_held_out_rows_once(tmp_path, monkeypatch):

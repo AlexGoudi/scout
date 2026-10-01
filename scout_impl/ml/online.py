@@ -35,12 +35,13 @@ def _adapter(repo_type: str) -> RepoAdapter:
     return adapter
 
 
-def _calibration(adapter: RepoAdapter, calibration: Path | None) -> Path:
-    return calibration or eval_calibration_dir(adapter, None)
+def _calibration(adapter: RepoAdapter, calibration: Path | None, cache_root: Path | None = None) -> Path:
+    return calibration or eval_calibration_dir(adapter, None, cache_root)
 
 
-def ledger_path(repo_type: str) -> Path:
-    return eval_cache_root(None) / "online" / _adapter(repo_type).name / "ledger.jsonl"
+def ledger_path(repo_type: str, cache_root: Path | None = None) -> Path:
+    """The adapter's ledger under ``<cache_root>/eval/online/``; ``None`` means the default cache root."""
+    return eval_cache_root(cache_root) / "online" / _adapter(repo_type).name / "ledger.jsonl"
 
 
 def _now() -> str:
@@ -70,7 +71,9 @@ def _append(path: Path, rows: Iterable[dict[str, Any]]) -> int:
     return len(fresh)
 
 
-def walk_forward(dataset: str, model_path: str, repo_type: str, ledger: Path | None = None) -> dict:
+def walk_forward(
+    dataset: str, model_path: str, repo_type: str, ledger: Path | None = None, cache_root: Path | None = None
+) -> dict:
     """Score the validation and test commits the model never fit, with the label they carry.
 
     A ``--final`` model was refit on every split, so nothing it could score is out of sample.
@@ -101,7 +104,7 @@ def walk_forward(dataset: str, model_path: str, repo_type: str, ledger: Path | N
         }
         for sha, split, score, y in zip(frame["sha"].astype(str), frame["split"].astype(str), scores, labels)
     ]
-    path = ledger or ledger_path(repo_type)
+    path = ledger or ledger_path(repo_type, cache_root)
     return {
         "ledger": str(path),
         "repo_type": repo_type,
@@ -127,13 +130,14 @@ def watch_open_prs(
     ledger: Path | None = None,
     list_prs: Callable[[str, str], list[dict]] = list_open_prs,
     pr_files: Callable[[str, str, int], list[str]] = list_pr_files,
+    cache_root: Path | None = None,
 ) -> dict:
     """Score each open PR head once with the phase-0 path heuristic, before Azure has an answer."""
     owner, repo = remote.split("/")[-2:]
     adapter = _adapter(repo_type)
-    calibration = _calibration(adapter, calibration)
+    calibration = _calibration(adapter, calibration, cache_root)
     model = f"phase0:{_plan_sha(calibration)}"
-    path = ledger or ledger_path(repo_type)
+    path = ledger or ledger_path(repo_type, cache_root)
     seen = {(row.get("subject"), row.get("model")) for row in _read(path)}
     open_prs = list_prs(owner, repo)
     rows = []
@@ -215,11 +219,13 @@ def _metrics(pairs: list[tuple[float, int]]) -> dict[str, Any]:
     }
 
 
-def grade_ledger(repo_type: str, calibration: Path | None = None, ledger: Path | None = None) -> dict:
+def grade_ledger(
+    repo_type: str, calibration: Path | None = None, ledger: Path | None = None, cache_root: Path | None = None
+) -> dict:
     """Fill PR outcomes from the calibration join, then score every model on its graded rows."""
     adapter = _adapter(repo_type)
-    calibration = _calibration(adapter, calibration)
-    path = ledger or ledger_path(repo_type)
+    calibration = _calibration(adapter, calibration, cache_root)
+    path = ledger or ledger_path(repo_type, cache_root)
     rows = _read(path)
     outcomes = _pr_outcomes(calibration)
     newly = 0

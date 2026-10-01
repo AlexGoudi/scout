@@ -32,6 +32,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Log progress only; do not print JSON summaries to stdout",
     )
+    parser.add_argument(
+        "--cache-dir",
+        help="Cache root whose eval/ holds the calibration directories and the online ledger "
+        "(default: $SCOUT_CACHE_DIR, else the XDG cache)",
+    )
     groups = parser.add_subparsers(dest="group", required=True)
 
     mine = groups.add_parser("mine", help="extract records from a local clone").add_subparsers(
@@ -108,6 +113,7 @@ def main(argv: Sequence[str] | None = None, quiet: bool = False) -> int:
     arguments = build_parser().parse_args(argv)
     if quiet:
         arguments.quiet = True
+    arguments.cache_root = Path(arguments.cache_dir) if arguments.cache_dir else None
     try:
         handler = HANDLERS[(arguments.group, arguments.command)]
         return handler(arguments)
@@ -191,6 +197,7 @@ def _ml_pr_job(arguments: argparse.Namespace) -> int:
         repo_type=arguments.repo_type,
         repo_root=Path(arguments.repo_root),
         final=arguments.final,
+        cache_root=arguments.cache_root,
     )
     if arguments.quiet:
         logger.info("train-pr-job: wrote %s", arguments.out)
@@ -202,7 +209,7 @@ def _ml_pr_job(arguments: argparse.Namespace) -> int:
 def _ml_walk(arguments: argparse.Namespace) -> int:
     from .ml.online import walk_forward
 
-    summary = walk_forward(arguments.dataset, arguments.model, arguments.repo_type)
+    summary = walk_forward(arguments.dataset, arguments.model, arguments.repo_type, cache_root=arguments.cache_root)
     if arguments.quiet:
         logger.info("walk-forward: %s", summary)
     else:
@@ -218,6 +225,7 @@ def _ml_watch(arguments: argparse.Namespace) -> int:
         arguments.repo_type,
         Path(arguments.calibration) if arguments.calibration else None,
         max_prs=arguments.max_prs,
+        cache_root=arguments.cache_root,
     )
     if arguments.quiet:
         logger.info("watch: %s", summary)
@@ -229,7 +237,11 @@ def _ml_watch(arguments: argparse.Namespace) -> int:
 def _ml_grade(arguments: argparse.Namespace) -> int:
     from .ml.online import grade_ledger
 
-    summary = grade_ledger(arguments.repo_type, Path(arguments.calibration) if arguments.calibration else None)
+    summary = grade_ledger(
+        arguments.repo_type,
+        Path(arguments.calibration) if arguments.calibration else None,
+        cache_root=arguments.cache_root,
+    )
     if arguments.quiet:
         logger.info("grade: %s", summary)
     else:
