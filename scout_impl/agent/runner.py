@@ -14,7 +14,7 @@ Failure is shaped, never raised past `run_agent`:
 | The brief has no questions | No provider call at all, not even a preflight; `complete` |
 | No provider, a failed preflight, or a provider error | `degraded`, with what was answered so far |
 | A question's own budget, or the prompt outgrowing the window | That question `truncated`; `partial` |
-| The run's budget or its wall-clock deadline | The rest `not-run`; `degraded` |
+| The run's budget or its wall-clock deadline, which also caps each model call | The rest `not-run`; `degraded` |
 | A reply that is not the requested JSON | That question `unanswered`; `partial` |
 
 The prompt-size cap is a constant rather than whatever the live provider reports, so a
@@ -383,7 +383,11 @@ class _Loop:
             self.budget.require(INPUT_TOKENS, estimate, quota)
 
             began = self.clock()
-            completion = self.provider.complete(messages, [response])
+            try:
+                completion = self.provider.complete(messages, [response], timeout_s=self.budget.remaining_s())
+            except ProviderError:
+                self.budget.check_deadline()
+                raise
             latency = self.clock() - began
             self.budget.record(INPUT_TOKENS, max(completion.usage.input_tokens, estimate), quota)
             try:

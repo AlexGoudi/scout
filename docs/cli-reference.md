@@ -103,8 +103,8 @@ Run all stages and write `scout-brief.json`, `scout-report.json`, `scout-comment
 | `--record DIR` | | Also record every live response here, for later replay. |
 | `--output-dir DIR` | `.` | Where the four artifacts are written. |
 | `--repo-name NAME` | `--remote` or the checkout's directory name | Repository name recorded in the brief and report. |
-| `--timeout S` | 3000 | Seconds per model call. |
-| `--deadline S` | 1200 | Wall-clock seconds the agent stage may spend before the run degrades. |
+| `--timeout S` | 3000 | Seconds per model call, lowered to whatever is left of `--deadline`. |
+| `--deadline S` | 1200 | Wall-clock seconds the agent stage may spend before the run degrades. A model call still running at the deadline is cut off. |
 | `--hotspots N` | 10 | Ranked hotspots the brief keeps. |
 | `--context-lines N` | 3 | Diff context lines kept per hunk. |
 

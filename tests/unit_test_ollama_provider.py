@@ -411,6 +411,17 @@ def test_a_404_that_is_not_about_the_model_is_a_protocol_error(stub: StubServer)
     assert "not JSON" in str(error.value)
 
 
+def test_a_per_call_timeout_lowers_the_provider_timeout(stub: StubServer) -> None:
+    stub.route("POST", "/api/chat", Reply(body=json.dumps(chat_payload()), delay_s=1.0))
+
+    started = time.monotonic()
+    with pytest.raises(OllamaTimeout) as error:
+        provider_for(stub.url, timeout_s=3000).complete(MESSAGES, timeout_s=0.2)
+
+    assert time.monotonic() - started < 1.0
+    assert "within 0.2s" in str(error.value)
+
+
 def test_a_slow_answer_times_out_and_says_what_to_change(stub: StubServer) -> None:
     stub.route("POST", "/api/chat", Reply(body=json.dumps(chat_payload()), delay_s=1.0))
 

@@ -112,8 +112,12 @@ class Budget:
     def elapsed(self) -> float:
         return self._clock() - self._started
 
+    def remaining_s(self) -> float:
+        """Wall-clock seconds left before the deadline; the cap for the next model call."""
+        return max(0.0, self.deadline_s - self.elapsed())
+
     def check_deadline(self) -> None:
-        if self.elapsed() > self.deadline_s:
+        if self.elapsed() >= self.deadline_s:
             raise BudgetExhausted(SCOPE_RUN, WALL_CLOCK, self.deadline_s, round(self.elapsed(), 3), 0)
 
     def require(self, kind: str, amount: float, question: Optional[QuestionBudget] = None) -> None:

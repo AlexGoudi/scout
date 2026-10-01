@@ -309,6 +309,44 @@ def test_the_run_deadline_stops_the_rest_and_degrades():
     assert [question.status for question in result.questions] == ["truncated", "not-run"]
 
 
+class _LateProvider(ScriptedProvider):
+    """Preflight eats 900 s of a 1,200 s deadline; a reply may then run the clock out and fail."""
+
+    def __init__(self, now, replies, overrun=False):
+        super().__init__(replies)
+        self.now = now
+        self.overrun = overrun
+
+    def preflight(self):
+        super().preflight()
+        self.now[0] = 900.0
+
+    def _complete(self, messages, tools, timeout_s):
+        if self.overrun:
+            self.now[0] += timeout_s
+            raise ProviderError(f"did not answer within {timeout_s:g}s")
+        return super()._complete(messages, tools, timeout_s)
+
+
+def test_each_model_call_is_capped_at_the_time_left_before_the_deadline():
+    now = [0.0]
+    provider = _LateProvider(now, [_confirming()])
+    result = run_agent(world.brief(("q-001",)), world.source(), change_set=world.change_set(),
+                       provider=provider, run_log=RunLog(), clock=lambda: now[0], deadline_s=1200)
+    assert result.status == "complete"
+    assert [request["timeout_s"] for request in provider.requests] == [300.0]
+
+
+def test_a_call_cut_off_by_the_deadline_degrades_on_the_wall_clock():
+    now = [0.0]
+    provider = _LateProvider(now, [], overrun=True)
+    result = run_agent(world.brief(("q-001", "q-002")), world.source(), change_set=world.change_set(),
+                       provider=provider, run_log=RunLog(), clock=lambda: now[0], deadline_s=1200)
+    assert result.status == "degraded"
+    assert "wall_clock" in result.degraded_reason
+    assert [question.status for question in result.questions] == ["truncated", "not-run"]
+
+
 def test_an_unusable_reply_leaves_the_question_unanswered():
     result, _, log = _run(["this is not json"], questions=("q-002",))
     assert result.question("q-002").status == "unanswered"

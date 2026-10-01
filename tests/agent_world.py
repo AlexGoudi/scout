@@ -246,9 +246,9 @@ class ScriptedProvider(Provider):
         if self.preflight_error:
             raise ProviderError(self.preflight_error)
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
         self.requests.append({"messages": [message.to_dict() for message in messages],
-                              "schema": tools[0].parameters if tools else None})
+                              "schema": tools[0].parameters if tools else None, "timeout_s": timeout_s})
         if not self.replies:
             raise AssertionError("the scripted provider ran out of replies: the agent asked more than expected")
         reply = self.replies.pop(0)
@@ -264,7 +264,7 @@ class RefusingProvider(ScriptedProvider):
     def preflight(self) -> None:
         raise AssertionError("the provider was preflighted, but this run must cost no model call at all")
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
         raise AssertionError("the provider was called, but this run must cost no model call at all")
 
 

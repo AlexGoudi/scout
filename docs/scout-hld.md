@@ -203,8 +203,9 @@ Five constraints are enforced in code on what the model returned, in this order,
 | Rule consistency | An answer that disagrees with the brief's `rule_candidate` is kept but marked `contested`, and never overrides the rule. |
 
 `budget.py` charges tool calls, blob reads and input tokens per question and per run, against a
-wall-clock deadline (`--deadline`, default 1,200 s). An exhausted question is `truncated`; an
-exhausted run degrades. A missing or unreachable provider never raises.
+wall-clock deadline (`--deadline`, default 1,200 s). Each model call's timeout is capped at the
+time left before that deadline, so one slow answer cannot overrun it. An exhausted question is
+`truncated`; an exhausted run degrades. A missing or unreachable provider never raises.
 
 #### 4.5.1 Why the brief carries rules, not only facts
 

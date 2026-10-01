@@ -368,11 +368,11 @@ class BlindingProvider(Provider):
         self.delegate = delegate
         self.sent: List[str] = []
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
         blinded = [Message(role=message.role, content=_blind(message.content)) if message.role == "user" else message
                    for message in messages]
         self.sent.extend(message.content for message in blinded if message.role == "user")
-        return self.delegate.complete(blinded, tools)
+        return self.delegate.complete(blinded, tools, timeout_s)
 
 
 def _blind(text: str) -> str:

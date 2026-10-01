@@ -28,7 +28,8 @@ thread count output ran at 1.7 tokens/s, 108 s for a single answer. With
 per question, and prompt evaluation at about 140 tokens/s. Hence the defaults: 16 threads,
 256 output tokens, and `keep_alive` of 30 minutes so the model is not reloaded between
 questions of one run. The per-call timeout is 3000 s, because CPU-only inference on a
-shared box can take minutes for one answer and a timeout degrades the whole run.
+shared box can take minutes for one answer and a timeout degrades the whole run. A caller
+with a deadline passes `timeout_s` to `complete`, which lowers that cap for one call.
 
 The context window is pinned too. Left unset, ollama sizes it from the VRAM it finds, 4096
 tokens on this GPU-less host and more elsewhere, and a prompt longer than the window is
@@ -228,8 +229,9 @@ class OllamaProvider(Provider):
             return
         raise self._model_missing(f"it has {sorted(names) or 'no models at all'}")
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
-        payload = self._request("POST", "/api/chat", self._chat_body(messages, tools))
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
+        limit = self.timeout_s if timeout_s is None else min(self.timeout_s, timeout_s)
+        payload = self._request("POST", "/api/chat", self._chat_body(messages, tools), timeout_s=limit)
         message = payload.get("message")
         if not isinstance(message, dict):
             raise OllamaProtocolError(
@@ -316,15 +318,18 @@ class OllamaProvider(Provider):
             )
         return ToolCall(id=f"call-{index}", name=str(function["name"]), arguments=arguments)
 
-    def _request(self, method: str, path: str, body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _request(
+        self, method: str, path: str, body: Optional[Dict[str, Any]] = None, timeout_s: Optional[float] = None
+    ) -> Dict[str, Any]:
         """One HTTP exchange, with every way it can fail turned into an `OllamaError`."""
+        limit = self.timeout_s if timeout_s is None else timeout_s
         url = f"{self._base_url}{path}"
         data = json.dumps(body).encode("utf-8") if body is not None else None
         request = urllib.request.Request(url, data=data, method=method, headers={"Content-Type": "application/json"})
 
         started = time.monotonic()
         try:
-            with self._opener.open(request, timeout=self.timeout_s) as response:
+            with self._opener.open(request, timeout=limit) as response:
                 status = response.status
                 text = response.read().decode("utf-8", errors="replace")
         except urllib.error.HTTPError as error:
@@ -335,10 +340,10 @@ class OllamaProvider(Provider):
             raise self._http_error(url, error.code, text) from None
         except urllib.error.URLError as error:
             if _is_timeout(error.reason):
-                raise self._timeout(url, time.monotonic() - started) from None
+                raise self._timeout(url, limit, time.monotonic() - started) from None
             raise self._unreachable(url, error.reason) from None
         except (socket.timeout, TimeoutError):
-            raise self._timeout(url, time.monotonic() - started) from None
+            raise self._timeout(url, limit, time.monotonic() - started) from None
         except HTTPException as error:
             raise OllamaProtocolError(f"{url} did not speak HTTP: {type(error).__name__}: {error}") from None
         except OSError as error:
@@ -394,9 +399,9 @@ class OllamaProvider(Provider):
             f"Pull it with: OLLAMA_HOST={self._host_port} ollama pull {self._spec.model_id}"
         )
 
-    def _timeout(self, url: str, elapsed_s: float) -> OllamaTimeout:
+    def _timeout(self, url: str, limit_s: float, elapsed_s: float) -> OllamaTimeout:
         return OllamaTimeout(
-            f"{url} did not answer within {self.timeout_s:g}s (gave up after {elapsed_s:.1f}s). A shared machine "
+            f"{url} did not answer within {limit_s:g}s (gave up after {elapsed_s:.1f}s). A shared machine "
             f"can be slow to generate: raise timeout_s, or cap num_predict with a smaller max_output_tokens "
             f"(currently {self._spec.max_output_tokens})."
         )

@@ -1,7 +1,7 @@
 import json
 import socket
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import pytest
 
@@ -66,7 +66,7 @@ class StubProvider(Provider):
         self.completion = completion
         self.requests: List[List[Message]] = []
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
         self.requests.append(messages)
         return self.completion
 

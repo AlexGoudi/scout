@@ -310,17 +310,19 @@ class Provider(abc.ABC):
         self,
         messages: Sequence[Message],
         tools: Optional[Sequence[ToolSpec]] = None,
+        timeout_s: Optional[float] = None,
     ) -> Completion:
+        """One model call. `timeout_s`, when given, caps this call below the provider's own timeout."""
         if not messages:
             raise ProviderError("complete() requires at least one message")
 
-        completion = self._complete(list(messages), list(tools or []))
+        completion = self._complete(list(messages), list(tools or []), timeout_s)
         self._usage = self._usage + completion.usage
         self._call_count += 1
         return completion
 
     @abc.abstractmethod
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
         raise NotImplementedError
 
 
@@ -355,7 +357,7 @@ class ReplayProvider(Provider):
     def fixture_path(self, key: RequestKey) -> Path:
         return self.fixture_dir / f"{key.digest}.json"
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
         key = request_key(self._spec, messages, tools)
         path = self.fixture_path(key)
         if not path.is_file():
@@ -388,8 +390,8 @@ class RecordingProvider(Provider):
     def preflight(self) -> None:
         self.delegate.preflight()
 
-    def _complete(self, messages: List[Message], tools: List[ToolSpec]) -> Completion:
-        completion = self.delegate.complete(messages, tools)
+    def _complete(self, messages: List[Message], tools: List[ToolSpec], timeout_s: Optional[float]) -> Completion:
+        completion = self.delegate.complete(messages, tools, timeout_s)
         key = request_key(self._spec, messages, tools)
         path = self.fixture_dir / f"{key.digest}.json"
         if path.exists():
