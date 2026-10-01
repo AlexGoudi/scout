@@ -5,6 +5,7 @@ regression on log churn, a standardized logistic regression over every feature, 
 histogram gradient-boosting classifier. Hyperparameters come from a small fixed grid chosen
 by validation PR-AUC, probabilities are Platt-calibrated on validation, and every test
 metric carries a 1,000-sample bootstrap 95% interval. The same seed gives the same metrics.
+``final=True`` then refits the selected model and its calibrator on every split.
 """
 
 from __future__ import annotations
@@ -28,6 +29,8 @@ LOGISTIC_GRID = (0.01, 0.1, 1.0)
 BOOSTING_GRID = tuple(
     {"learning_rate": rate, "max_leaf_nodes": leaves} for rate in (0.05, 0.1) for leaves in (15, 31)
 )
+CARD_VERSION = "2"
+FINAL_CALIBRATION_FOLDS = 5
 TOP_REASONS = 5
 IMPORTANCE_REPEATS = 5
 IMPORTANCE_TOP = 15
@@ -141,7 +144,7 @@ def train_risk(
     card_path = dataset / "dataset_card.json"
     card_sha = hashlib.sha256(card_path.read_bytes()).hexdigest() if card_path.is_file() else ""
     suffix = "-final" if final else ""
-    input_hash = hashlib.sha256(f"{card_sha}:{label}:{seed}{suffix}".encode()).hexdigest()[:16]
+    input_hash = hashlib.sha256(f"{CARD_VERSION}:{card_sha}:{label}:{seed}{suffix}".encode()).hexdigest()[:16]
     out_path = Path(out)
     model_file = out_path / f"risk-{label}{suffix}.joblib"
     model_card_file = out_path / f"risk-{label}{suffix}.model_card.json"
@@ -232,14 +235,26 @@ def train_risk(
             for i in order
         ]
 
+    final_calibration = None
+    if final:
+        everything = masks["train"] | masks["validation"] | masks["test"]
+        x_all, y_all = matrix.x[everything], matrix.y[everything]
+        calibrators[selected] = _out_of_fold_platt(fitted[selected], x_all, y_all)
+        fitted[selected].fit(x_all, y_all)
+        final_calibration = (
+            f"Platt on out-of-fold scores of {FINAL_CALIBRATION_FOLDS} contiguous landing-order folds of "
+            "train, validation and test; validation and test metrics describe the train-only fit"
+        )
+
     labeled = np.ones(len(matrix.y), dtype=bool)
     reference = np.sort(probability(selected, matrix.x[labeled]))
     card = {
-        "card_version": "1",
+        "card_version": CARD_VERSION,
         "label": label,
         "seed": seed,
         "input_hash": input_hash,
         "final_refit": final,
+        "final_calibration": final_calibration,
         "dataset": {
             "path_name": dataset.name,
             "card_sha256": hashlib.sha256((dataset / "dataset_card.json").read_bytes()).hexdigest(),
@@ -266,9 +281,6 @@ def train_risk(
     }
 
     out_path.mkdir(parents=True, exist_ok=True)
-    if final:
-        train_mask = matrix.mask("train") | matrix.mask("validation") | matrix.mask("test")
-        fitted[selected].fit(matrix.x[train_mask], matrix.y[train_mask])
     joblib.dump(
         {
             "label": label,
@@ -285,6 +297,24 @@ def train_risk(
     model_card_file.write_text(json.dumps(card, indent=2, sort_keys=True) + "\n")
     (out_path / f"risk-{label}{suffix}.report.md").write_text(render_report(card))
     return card
+
+
+def _out_of_fold_platt(model: Any, x: np.ndarray, y: np.ndarray, folds: int = FINAL_CALIBRATION_FOLDS) -> Platt:
+    """Platt fitted on scores each row got from a clone of ``model`` trained without its fold.
+
+    Calibrating on the rows the final model was fitted on would be overconfident; out-of-fold
+    scores use the same rows without that bias.
+    """
+    from sklearn.base import clone
+
+    scores = np.empty(len(y))
+    for rows in np.array_split(np.arange(len(y)), folds):
+        held = np.zeros(len(y), dtype=bool)
+        held[rows] = True
+        if len(np.unique(y[~held])) < 2:
+            raise ValueError("a --final calibration fold leaves a single class to train on")
+        scores[held] = clone(model).fit(x[~held], y[~held]).predict_proba(x[held])[:, 1]
+    return Platt.fit(scores, y)
 
 
 def logistic_reasons(pipeline: Any, x_row: np.ndarray, names: Sequence[str], k: int = TOP_REASONS) -> list[dict]:

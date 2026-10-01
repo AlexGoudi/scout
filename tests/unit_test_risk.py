@@ -136,6 +136,27 @@ def test_saved_model_predicts_and_explains(trained):
     assert len(reasons) == 5 and {reason["direction"] for reason in reasons} <= {"raises", "lowers"}
 
 
+def test_final_refit_recalibrates_on_every_split(trained, tmp_path):
+    root, dataset, card = trained
+    final = train_risk(dataset, "bug_introducing", tmp_path, seed=0, final=True)
+    selected = final["selected_model"]
+    assert final["final_refit"] and "out-of-fold" in final["final_calibration"]
+    assert card["final_calibration"] is None
+    assert final["calibration"][selected] != card["calibration"][selected]
+    assert final["test_metrics"] == card["test_metrics"]
+
+    bundle = load_model(tmp_path / "risk-bug_introducing-final.joblib")
+    matrix = build_matrix(load_table(dataset), "bug_introducing")
+    labeled = matrix.mask("train") | matrix.mask("validation") | matrix.mask("test")
+    slope, intercept = bundle["calibrators"][selected]
+    assert (slope, intercept) == (
+        pytest.approx(final["calibration"][selected]["slope"], abs=1e-6),
+        pytest.approx(final["calibration"][selected]["intercept"], abs=1e-6),
+    )
+    mean = predict(bundle, matrix.x[labeled]).mean()
+    assert mean == pytest.approx(matrix.y[labeled].mean(), abs=0.03)
+
+
 def test_cli_trains(trained, tmp_path, capsys):
     root, dataset, card = trained
     arguments = ["ml", "train-risk", "--dataset", str(dataset), "--label", "reverted_within_90d",

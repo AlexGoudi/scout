@@ -93,8 +93,11 @@ Outputs go directly into `--out`:
 
 A rerun with the same dataset card, label and seed reuses the cached model unless `--refresh` is
 given. `--final` refits the selected model on train, validation and test together and writes
-`risk-<label>-final.*`. Its card still reports the held-out metrics of the non-final fit, and
-`ml walk-forward` refuses it, because nothing it could score is out of sample.
+`risk-<label>-final.*`. The selected model's calibrator is refitted too, on the same rows: each row's
+score comes from a copy of the model trained without that row's fold (five contiguous folds in
+landing order), so the calibration is not fitted to scores the model has already seen. The card
+records this under `final_calibration` and still reports the held-out metrics of the non-final fit.
+`ml walk-forward` refuses a final model, because nothing it could score is out of sample.
 
 ### `ml similar` and `ml score`
 
