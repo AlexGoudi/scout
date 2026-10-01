@@ -222,7 +222,7 @@ def scan_docker_from(clone: str):
 
 
 JOIN_STEP = "join-labels"
-JOIN_VERSION = "3"
+JOIN_VERSION = "4"
 
 
 def join_fingerprint(adapter: RepoAdapter, tip_sha: str, build_ids: list[int], cfg: dict) -> str:

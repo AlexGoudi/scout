@@ -81,6 +81,11 @@ def jobs_for_path(path: str, cfg: dict) -> list[str]:
     b = bucket_of(path, cfg)
     if b in set(blast.get("all_gold_buckets") or []):
         return gold[:]
+    # Vendor paths are SKU-local: the vendor map outranks the bucket table, whose
+    # catch-all buckets (device_sku, platform_other) reach no job.
+    vendor_jobs = _vendor_jobs(path, blast, pre, gold)
+    if vendor_jobs is not None:
+        return vendor_jobs
     bucket_jobs = (blast.get("bucket_jobs") or {}).get(b)
     if bucket_jobs is not None:
         return _expand_job_list(bucket_jobs, pre, gold)
@@ -98,25 +103,23 @@ def jobs_for_path(path: str, cfg: dict) -> list[str]:
         if default_feat == "pretest":
             return pre[:]
         return gold[:]
-    platform_prefix = blast.get("platform_prefix")
-    if platform_prefix and path.startswith(platform_prefix):
-        vendor = path.split("/")[1] if "/" in path else ""
-        vendor_map = blast.get("platform_to_jobs") or {}
-        if vendor in vendor_map:
-            return _expand_job_list(vendor_map[vendor], pre, gold)
-        key = vendor.replace("-", "_")
-        if key in gold:
-            return _uniq(pre + [key])
-    device_prefix = blast.get("device_prefix")
-    if device_prefix and path.startswith(device_prefix):
-        vendor = path.split("/")[1] if "/" in path else ""
-        vendor_map = blast.get("device_to_jobs") or {}
-        if vendor in vendor_map:
-            return _expand_job_list(vendor_map[vendor], pre, gold)
-        key = vendor.replace("-", "_")
-        if key in gold:
-            return _uniq(pre + [key])
     return pre[:] if pre else []
+
+
+def _vendor_jobs(path: str, blast: dict, pre: list[str], gold: list[str]) -> list[str] | None:
+    """Jobs of the vendor a ``platform/<vendor>/`` or ``device/<vendor>/`` path belongs to, or None."""
+    for prefix_key, map_key in (("platform_prefix", "platform_to_jobs"), ("device_prefix", "device_to_jobs")):
+        prefix = blast.get(prefix_key)
+        if not prefix or not path.startswith(prefix):
+            continue
+        vendor = path.split("/")[1] if "/" in path else ""
+        vendor_map = blast.get(map_key) or {}
+        if vendor in vendor_map:
+            return _expand_job_list(vendor_map[vendor], pre, gold)
+        key = vendor.replace("-", "_")
+        if key in gold:
+            return _uniq(pre + [key])
+    return None
 
 
 def heuristic_p(files, job, cfg, priors, base, job_base):

@@ -54,6 +54,20 @@ class PathRulesBuildimage(unittest.TestCase):
         jobs = jobs_for_path("slave.mk", self.cfg)
         self.assertIn("broadcom", jobs)
 
+    def test_device_vendor_reaches_only_its_image_job(self):
+        path = "device/mellanox/x86_64-mlnx_msn2700-r0/platform.json"
+        self.assertEqual(bucket_of(path, self.cfg), "device_sku")
+        self.assertEqual(jobs_for_path(path, self.cfg), ["mellanox"])
+        self.assertEqual(jobs_for_path("device/arista/x86_64-arista_7050_qx32/hwsku", self.cfg), ["broadcom"])
+
+    def test_platform_vendor_reaches_only_its_image_job(self):
+        self.assertEqual(jobs_for_path("platform/broadcom/rules.mk", self.cfg), ["broadcom"])
+        self.assertEqual(jobs_for_path("platform/vs/docker-sonic-vs.mk", self.cfg), ["vs", "vpp", "alpinevs"])
+
+    def test_unmapped_vendor_reaches_no_job(self):
+        self.assertEqual(jobs_for_path("device/unknownvendor/x86_64-foo/platform.json", self.cfg), [])
+        self.assertEqual(jobs_for_path("platform/centec/rules.mk", self.cfg), [])
+
 
 class PrParse(unittest.TestCase):
     def test_last_pr(self):

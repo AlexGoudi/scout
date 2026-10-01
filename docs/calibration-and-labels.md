@@ -203,7 +203,7 @@ otherwise. `ml train-pr-job` refuses to train when this check fails.
 
 | Change | Bump | Invalidates | Rerun |
 | --- | --- | --- | --- |
-| Label or join logic in `scout_impl/eval/join_labels.py` or `calibration_rules.py` | `JOIN_VERSION` in `join_labels.py` (currently `"3"`) | the `join-labels` step | `mine-labels`, then `ml train-pr-job`, `ml grade` |
+| Label or join logic in `scout_impl/eval/join_labels.py` or `calibration_rules.py` | `JOIN_VERSION` in `join_labels.py` (currently `"4"`) | the `join-labels` step | `mine-labels`, then `ml train-pr-job`, `ml grade` |
 | Calibration tables in `repos/*_calibration.py` | none needed | `join-labels` (table is fingerprinted); `git-dumps` if buckets change | `mine-git-dumps` and `mine-labels`, then models |
 | Commit labels in `scout_impl/dataset/labels.py` | `LABELS_VERSION` (currently `"2"`) | `dataset build` | `dataset build`, then `ml train-risk`, `ml walk-forward` |
 | Record extraction in `scout_impl/mining/` | `EXTRACTOR_VERSION` in `mining/__init__.py` | record cache and `dataset build` | `dataset build` and models |

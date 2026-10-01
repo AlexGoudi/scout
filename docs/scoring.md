@@ -41,7 +41,7 @@ The JSON goes to stdout even under `-q`.
     {"path": "rules/sonic-utilities.mk", "bucket": "build_system",
      "path_class": "sonic-buildimage:build_rule", "prior": 0.025, "jobs": ["vs", "vpp", "..."]},
     {"path": "device/dell/x/platform.json", "bucket": "device_sku",
-     "path_class": "sonic-buildimage:platform_data", "prior": 0.008, "jobs": []}
+     "path_class": "sonic-buildimage:platform_data", "prior": 0.008, "jobs": ["broadcom"]}
   ],
   "source": "scoring-plan"
 }
@@ -92,22 +92,24 @@ raised every job's base rate above every revert prior, it returned the base rate
 `jobs_for_path` decides which gold jobs a path can affect, in this order:
 
 1. A bucket in `all_gold_buckets` reaches every gold job.
-2. A bucket listed in `bucket_jobs` reaches the listed jobs (`pretest` and `gold` expand to their
+2. Under `platform_prefix` or `device_prefix`, a vendor directory found in `platform_to_jobs` or
+   `device_to_jobs` (or named like a gold job) reaches that vendor's jobs only. Vendor paths are
+   SKU-local, so this outranks the bucket table.
+3. A bucket listed in `bucket_jobs` reaches the listed jobs (`pretest` and `gold` expand to their
    groups). An empty list reaches nothing.
-3. Under `tests_prefix` (`sonic-mgmt`), the feature directory is looked up in `feature_to_jobs` and
+4. Under `tests_prefix` (`sonic-mgmt`), the feature directory is looked up in `feature_to_jobs` and
    reaches Pre_test plus the mapped jobs; an unknown feature reaches Pre_test plus every gold job.
-4. Under `platform_prefix` or `device_prefix`, the vendor directory is looked up in
-   `platform_to_jobs` or `device_to_jobs`.
 5. Anything else reaches the Pre_test jobs, or nothing on a repository without them.
 
 | Repository | Reaches every gold job | Notes |
 | --- | --- | --- |
-| `sonic-buildimage` | buckets `build_system`, `docker`, `slave`, `image_rootfs`, `ci` | `platform/<vendor>` buckets reach only that vendor's image job (`platform_vs` reaches `vs`, `vpp`, `alpinevs`). `device_sku`, `submodule`, `github`, `platform_other` and `other` reach none. |
+| `sonic-buildimage` | buckets `build_system`, `docker`, `slave`, `image_rootfs`, `ci` | `platform/<vendor>/` and `device/<vendor>/` reach only that vendor's image jobs through `platform_to_jobs` and `device_to_jobs` (`platform/vs/` reaches `vs`, `vpp`, `alpinevs`; `device/arista/` reaches `broadcom`). A vendor in neither map, `submodule`, `github` and `other` reach none. |
 | `sonic-mgmt` | buckets `shared_pytest`, `ci`, `testbed_ansible`, `ansible_lib`, `ansible_other` | `tests/<feature>/` goes through `feature_to_jobs`. `spytest` and `sdn_tests` reach Pre_test only. |
 
 The tables are in `scout_impl/repos/sonic_buildimage_calibration.py` and
 `scout_impl/repos/sonic_mgmt_calibration.py`. Changing them changes the fingerprint of the
-`join-labels` step, so the next `mine-labels` recomputes the baseline.
+`join-labels` step, so the next `mine-labels` recomputes the baseline. Changing the rule's code bumps
+`JOIN_VERSION` instead (version 4 moved the vendor maps ahead of the bucket table).
 
 ## Measured baseline
 
